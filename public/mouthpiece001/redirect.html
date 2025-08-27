@@ -138,12 +138,9 @@
                     async loadCompiledData() {
                         console.log('📊 compiled-data.json読み込み中...');
                         try {
-                            // mouthpiece では data copy が正規のランキング/クリニックセット
-                            let response = await fetch('./data copy/compiled-data.json');
-                            if (!response.ok) {
-                                console.warn('⚠️ data copy/compiled-data.json が見つからないため data/ にフォールバックします');
-                                response = await fetch('./data/compiled-data.json');
-                            }
+                            // medical-diet001 と同じ構成に合わせて ranking/compiled-data.json を参照
+                            const response = await fetch('./data/ranking/compiled-data.json');
+                            if (!response.ok) throw new Error('Failed to load ranking/compiled-data.json');
                             const data = await response.json();
                             this.clinics = data.clinics || [];
                             console.log('📊 クリニック数:', this.clinics.length);

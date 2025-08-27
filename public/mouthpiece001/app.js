@@ -3446,7 +3446,46 @@ class RankingApp {
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- 症例写真（1位のみ表示） -->
+                ${(() => {
+                    if (rank !== 1) return '';
+                    return `
+                    <div class=\"clinic-points-section\" data-case-section>
+                        <h4 class=\"section-title\">症例写真</h4>
+                        <div class=\"case-slider\" style=\"position: relative; overflow: hidden;\">
+                            <div class=\"case-track\" style=\"display:flex;\">
+                                <div class=\"case-slide\" style=\"min-width:100%;box-sizing:border-box;\">
+                                    <img data-case-index=\"1\" src=\"\" alt=\"症例写真1\" loading=\"lazy\" style=\"width:100%;height:auto;object-fit:contain;\">
+                                    <div class=\"case-info\" style=\"margin-top: 5px; padding: 0 5%; text-align: left; font-size: 12px; line-height: 1.6; width: 100%;\">
+                                        <table class=\"case-table\" style=\"width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; line-height: 1.6 !important; display: table !important; table-layout: fixed !important;\"><tbody><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important; width: 30% !important;\">コース名</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">施術の説明</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">副作用<br>（リスク）</td><td style=\"padding: 0 8px !important; color: #666 !important;\"></td></tr></tbody></table>
+                                    </div>
+                                </div>
+                                <div class=\"case-slide\" style=\"min-width:100%;box-sizing:border-box;\">
+                                    <img data-case-index=\"2\" src=\"\" alt=\"症例写真2\" loading=\"lazy\" style=\"width:100%;height:auto;object-fit:contain;\">
+                                    <div class=\"case-info\" style=\"margin-top: 5px; padding: 0 5%; text-align: left; font-size: 12px; line-height: 1.6; width: 100%;\">
+                                        <table class=\"case-table\" style=\"width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; line-height: 1.6 !important; display: table !important; table-layout: fixed !important;\"><tbody><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important; width: 30% !important;\">コース名</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">施術の説明</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">副作用<br>（リスク）</td><td style=\"padding: 0 8px !important; color: #666 !important;\"></td></tr></tbody></table>
+                                    </div>
+                                </div>
+                                <div class=\"case-slide\" style=\"min-width:100%;box-sizing:border-box;\">
+                                    <img data-case-index=\"3\" src=\"\" alt=\"症例写真3\" loading=\"lazy\" style=\"width:100%;height:auto;object-fit:contain;\">
+                                    <div class=\"case-info\" style=\"margin-top: 5px; padding: 0 5%; text-align: left; font-size: 12px; line-height: 1.6; width: 100%;\">
+                                        <table class=\"case-table\" style=\"width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; line-height: 1.6 !important; display: table !important; table-layout: fixed !important;\"><tbody><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important; width: 30% !important;\">コース名</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">施術の説明</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">副作用<br>（リスク）</td><td style=\"padding: 0 8px !important; color: #666 !important;\"></td></tr></tbody></table>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class=\"case-nav case-nav-prev\" aria-label=\"前へ\" style=\"position:absolute;left:6px;top:45%;transform:translateY(-50%);background:#ffffffdd;border:1px solid #ddd;border-radius:50%;width:30px;height:30px;cursor:pointer;\">‹</button>
+                            <button class=\"case-nav case-nav-next\" aria-label=\"次へ\" style=\"position:absolute;right:6px;top:45%;transform:translateY(-50%);background:#ffffffdd;border:1px solid #ddd;border-radius:50%;width:30px;height:30px;cursor:pointer;\">›</button>
+                        </div>
+                        <div class=\"case-dots\" style=\"text-align:center;margin-top:10px;\">
+                            <button class=\"case-dot active\" data-index=\"0\" style=\"width:8px;height:8px;border-radius:50%;border:none;background:#ccc;margin:0 4px;cursor:pointer;\"></button>
+                            <button class=\"case-dot\" data-index=\"1\" style=\"width:8px;height:8px;border-radius:50%;border:none;background:#ccc;margin:0 4px;cursor:pointer;\"></button>
+                            <button class=\"case-dot\" data-index=\"2\" style=\"width:8px;height:8px;border-radius:50%;border:none;background:#ccc;margin:0 4px;cursor:pointer;\"></button>
+                        </div>
+                    </div>
+                    `;
+                })()}
+
                 
                 <!-- 口コミ -->
                 <div class="reviews-section">
@@ -3626,6 +3665,98 @@ class RankingApp {
             `;
             
             detailsList.appendChild(detailItem);
+
+            // 症例写真の画像パス・テキストを1位クリニックに応じて動的に差し替え（mouthpiece001版）
+            if (rank === 1) {
+                try {
+                    const clinicCode = this.dataManager.getClinicCodeById(clinicId) || '';
+                    const root = detailItem;
+                    const caseSection = root.querySelector('[data-case-section]');
+                    const imgNodes = Array.from(root.querySelectorAll('.case-slider img[data-case-index]'));
+
+                    if (!caseSection || imgNodes.length === 0) {
+                        // 何もしない
+                    } else {
+                        // 画像の推測パス（mouthpiece001配下のローカルimagesを参照）
+                        // 例: images/omt_case01.webp, images/omt_case02.jpg など
+                        const localBase = `images/${clinicCode}_case0`;
+                        const candidates = (n) => [
+                            `${localBase}${n}.webp`,
+                            `${localBase}${n}.jpg`,
+                            `${localBase}${n}.png`
+                        ];
+
+                        // ロード状況を管理して、全失敗のときだけ非表示にする
+                        let loadedCount = 0;
+                        let completedImages = 0;
+                        const totalImages = imgNodes.length;
+                        imgNodes.forEach(img => {
+                            const idx = parseInt(img.getAttribute('data-case-index') || '1', 10);
+                            const list = candidates(idx);
+                            let tried = 0;
+                            const finishOne = () => {
+                                completedImages++;
+                                if (completedImages === totalImages && loadedCount === 0 && caseSection) {
+                                    caseSection.style.display = 'none';
+                                }
+                            };
+                            const tryNext = () => {
+                                if (tried >= list.length) { finishOne(); return; }
+                                img.src = list[tried++];
+                            };
+                            img.onerror = () => { tryNext(); };
+                            img.onload = () => { loadedCount++; finishOne(); };
+                            tryNext();
+                        });
+
+                        // 症例テキスト（コース名・説明・副作用）をCSV/JSONから動的に反映
+                        try {
+                            const dm = this.dataManager;
+                            if (dm && typeof dm.getClinicText === 'function') {
+                                const slides = root.querySelectorAll('.case-slider .case-slide');
+                                slides.forEach((slide, sIdx) => {
+                                    const rows = slide.querySelectorAll('table.case-table tbody tr');
+                                    const keyBase = `case${sIdx + 1}`;
+                                    const nameVal = dm.getClinicText(clinicCode, `${keyBase}コース名`, '');
+                                    const descVal = dm.getClinicText(clinicCode, `${keyBase}施術の説明`, '');
+                                    const riskVal = dm.getClinicText(clinicCode, `${keyBase}副作用（リスク）`, '');
+                                    if (rows[0]?.children?.[1] && nameVal) rows[0].children[1].textContent = nameVal;
+                                    if (rows[1]?.children?.[1] && descVal) rows[1].children[1].textContent = descVal;
+                                    if (rows[2]?.children?.[1] && riskVal) rows[2].children[1].textContent = riskVal;
+                                });
+                            }
+                        } catch (e) { /* noop */ }
+
+                        // 非同期ロード中でも、全画像の成否が確定したら上のロジックで非表示化されます
+
+                        // 症例カルーセル初期化
+                        try {
+                            const track = root.querySelector('.case-track');
+                            const slides = root.querySelectorAll('.case-slide');
+                            const dots = root.querySelectorAll('.case-dot');
+                            const prevBtn = root.querySelector('.case-nav-prev');
+                            const nextBtn = root.querySelector('.case-nav-next');
+                            if (track && slides.length) {
+                                let current = 0;
+                                function show(i){
+                                    if (i<0) i = slides.length-1;
+                                    if (i>=slides.length) i = 0;
+                                    current = i;
+                                    track.style.display = 'flex';
+                                    track.style.transform = `translateX(-${current*100}%)`;
+                                    track.style.transition = 'transform .3s ease';
+                                    slides.forEach(s=>{ s.style.minWidth='100%'; s.style.boxSizing='border-box'; });
+                                    dots.forEach((d,idx)=>{ d.classList.toggle('active', idx===current); d.style.background = idx===current ? '#2CC7C5' : '#ccc'; });
+                                }
+                                prevBtn && prevBtn.addEventListener('click', ()=>show(current-1));
+                                nextBtn && nextBtn.addEventListener('click', ()=>show(current+1));
+                                dots.forEach((d,idx)=> d.addEventListener('click', ()=>show(idx)));
+                                show(0);
+                            }
+                        } catch(e) { /* noop */ }
+                    }
+                } catch (e) { /* noop */ }
+            }
         });
     }
 
