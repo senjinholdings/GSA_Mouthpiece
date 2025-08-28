@@ -965,7 +965,7 @@ text-align: center;
                             console.log('Saved redirect params to localStorage:', params);
 
                             // redirect.htmlに移動
-                            window.location.href = link.href;
+                            window.open(link.href, '_blank', 'noopener');
                         } catch (error) {
                             console.error('Failed to save redirect params:', error);
                         }
@@ -983,7 +983,7 @@ text-align: center;
                             };
                             localStorage.setItem('redirectParams', JSON.stringify(params));
                             console.log('Saved redirect params from URL to localStorage:', params);
-                            window.location.href = link.href;
+                            window.open(link.href, '_blank', 'noopener');
                         }
                     }
                 } else {

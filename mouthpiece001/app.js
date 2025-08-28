@@ -290,7 +290,7 @@ class DisplayManager {
             // バナー画像をclinic-texts.jsonから取得
             const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
             const clinicCodeForImage = window.dataManager.getClinicCodeById(clinic.id);
-            let bannerImage = `${imagesPath}/clinics/dio/dio-logo.webp`; // デフォルト
+            let bannerImage = `../common_data/images/clinics/tcb/tcb-logo.webp`; // デフォルト
             
             if (clinicCodeForImage) {
                 // clinic-texts.jsonからパスを取得
@@ -299,7 +299,7 @@ class DisplayManager {
                     bannerImage = imagePath;
                 } else {
                     // フォールバック：コードベースのパス
-                    bannerImage = `${imagesPath}/clinics/${clinicCodeForImage}/${clinicCodeForImage}-logo.webp`;
+                    bannerImage = `../common_data/images/clinics/${clinicCodeForImage}/${clinicCodeForImage}-logo.webp`;
                 }
             }
 
@@ -516,91 +516,27 @@ class DataManager {
         }
         // 地域データ用のパス（data/rankingを使用）
         this.regionDataPath = './data/ranking/';
+        // 共通データ用のパス（common_data/data を使用）
+        this.commonDataPath = '../common_data/data/';
     }
 
     async init() {
         try {
-            // JSONファイルの読み込み（地域データはdata/rankingから）
-            const response = await fetch(this.regionDataPath + 'compiled-data.json');
-            if (!response.ok) {
-                throw new Error('Failed to load compiled-data.json');
-            }
-            const data = await response.json();
-            
-            // データの設定
-            this.regions = data.regions;
-            this.clinics = data.clinics;
-            
-            // ランキングデータの変換
-            this.rankings = Object.entries(data.rankings).map(([regionId, ranks]) => ({
-                regionId: regionId,
-                ranks: ranks
-            }));
-            
-            // 店舗ビューデータの変換
-            this.storeViews = Object.entries(data.storeViews).map(([regionId, clinicStores]) => ({
-                regionId: regionId,
-                clinicStores: clinicStores
-            }));
-            
-            // キャンペーンデータの設定
-            this.campaigns = data.campaigns;
+            // CSV群から各データを読み込み
+            await this.loadRegions();
+            await this.loadClinics();
+            await this.loadRankings();
+            await this.loadStoreViews();
+            await this.loadStores();
+            // キャンペーンは任意。存在しなければスキップ
+            // キャンペーンCSVは任意。存在しないので読み込みをスキップ
+            // try { await this.loadCampaigns(); } catch (_) {}
             
             // 共通テキストデータの読み込み
             this.commonTexts = {};
             
-            // まずローカルのsite-common-texts.jsonを読み込み（appeal_textフォルダから）
-            try {
-                const localTextResponse = await fetch(this.dataPath + 'appeal_text/site-common-texts.json');
-                if (localTextResponse.ok) {
-                    const localJsonText = await localTextResponse.text();
-                    try {
-                        this.commonTexts = JSON.parse(localJsonText);
-                    } catch (parseError) {
-                        console.warn('⚠️ ローカルsite-common-texts.jsonのパースエラー:', parseError);
-                    }
-                }
-            } catch (error) {
-                console.warn('⚠️ ローカルsite-common-texts.jsonの読み込みエラー:', error);
-            }
-            
-            // 次にcommon_dataから共通項目を読み込み、上書き
-            try {
-                const commonTextResponse = await fetch('../../../common_data/data/site-common-texts.json');
-                if (commonTextResponse.ok) {
-                    const jsonText = await commonTextResponse.text();
-                    try {
-                        const commonData = JSON.parse(jsonText);
-                        // common_dataの値で上書き
-                        this.commonTexts = { ...this.commonTexts, ...commonData };
-                        // console.log('✅ common_dataのsite-common-texts.jsonで上書きしました');
-                        
-                        // ファビコンとヘッダーロゴアイコンを動的に設定
-                        if (this.commonTexts['ファビコン画像パス']) {
-                            const faviconElement = document.getElementById('favicon');
-                            if (faviconElement) {
-                                faviconElement.href = this.commonTexts['ファビコン画像パス'];
-                                // console.log('✅ ファビコンを設定:', this.commonTexts['ファビコン画像パス']);
-                            }
-                            
-                            const headerLogoIcon = document.getElementById('header-logo-icon');
-                            if (headerLogoIcon) {
-                                headerLogoIcon.src = this.commonTexts['ファビコン画像パス'];
-                                // console.log('✅ ヘッダーロゴアイコンを設定:', this.commonTexts['ファビコン画像パス']);
-                            }
-                        }
-                    } catch (parseError) {
-                        console.error('❌ JSONパースエラー:', parseError);
-                        this.commonTexts = {};
-                    }
-                } else {
-                    console.warn('⚠️ common_dataのsite-common-texts.json が見つかりません。ローカルのみ使用します。Status:', commonTextResponse.status);
-                    this.commonTexts = {};
-                }
-            } catch (error) {
-                console.warn('⚠️ 共通テキストの読み込みに失敗しました:', error);
-                this.commonTexts = {};
-            }
+            // 共通テキスト（appeal_text）をCSVから読み込み
+            await this.loadCommonTextsFromCsv();
             
             // 画像パスを動的に設定（DOMの構築を待つ）
             setTimeout(() => {
@@ -657,39 +593,305 @@ class DataManager {
                 }
             }, 100);
             
-            // クリニック別テキストデータの読み込み（clinic_textフォルダから）
-            try {
-                const clinicTextResponse = await fetch(this.dataPath + 'clinic_text/clinic-texts.json');
-                if (clinicTextResponse.ok) {
-                    this.clinicTexts = await clinicTextResponse.json();
-                } else {
-                    this.clinicTexts = {};
-                }
-            } catch (error) {
-                console.warn('⚠️ クリニック別テキストの読み込みに失敗しました:', error);
-                this.clinicTexts = {};
-            }
+            // クリニック別テキストデータの読み込み（CSVを直接読み込んで構築）
+            await this.loadClinicTextsFromCsv();
             
-            // 店舗データをクリニックから抽出
-            this.stores = [];
-            this.clinics.forEach(clinic => {
-                clinic.stores.forEach(store => {
-                    this.stores.push({
-                        id: store.id,
-                        clinicName: clinic.name,
-                        storeName: store.name,
-                        name: store.name,  // 両方のフィールドで互換性を保つ
-                        address: store.address,
-                        zipcode: store.zipcode,
-                        access: store.access,
-                        regionId: this.getRegionIdFromAddress(store.address)
+            // 旧: compiled-data.jsonの clinic.stores から抽出していた処理
+            // 新: stores.csvから読み込むため、未設定の場合のみ抽出を試みる
+            if (!this.stores || this.stores.length === 0) {
+                try {
+                    this.stores = [];
+                    this.clinics.forEach(clinic => {
+                        if (!clinic.stores) return;
+                        clinic.stores.forEach(store => {
+                            this.stores.push({
+                                id: store.id,
+                                clinicName: clinic.name,
+                                storeName: store.name,
+                                name: store.name,
+                                address: store.address,
+                                zipcode: store.zipcode,
+                                access: store.access,
+                                regionId: this.getRegionIdFromAddress(store.address)
+                            });
+                        });
                     });
-                });
-            });
+                } catch (_) {}
+            }
             
         } catch (error) {
             throw error;
         }
+    }
+
+    // site-common-texts.csv を読み込んで key->value のオブジェクトに変換
+    async loadCommonTextsFromCsv() {
+        this.commonTexts = {};
+        try {
+            const primary = this.dataPath + 'site-common-texts.csv';
+            const legacy = this.dataPath + 'appeal_text/site-common-texts.csv';
+            let respLocal = await fetch(primary);
+            if (!respLocal.ok) {
+                respLocal = await fetch(legacy);
+            }
+            if (respLocal.ok) {
+                const obj = await this.readSiteCommonCsvFromResponse(respLocal);
+                this.commonTexts = { ...this.commonTexts, ...obj };
+            }
+        } catch (e) {
+            console.warn('⚠️ ローカル site-common-texts.csv 読込エラー:', e);
+        }
+        // 次に common_data/data のJSONがあれば上書き（従来の上書き仕様維持）
+        try {
+            const respCommon = await fetch('../../../common_data/data/site-common-texts.json');
+            if (respCommon.ok) {
+                const jsonText = await respCommon.text();
+                try {
+                    const override = JSON.parse(jsonText);
+                    this.commonTexts = { ...this.commonTexts, ...override };
+                } catch (err) {
+                    console.warn('⚠️ common_dataのsite-common-texts.jsonパースエラー:', err);
+                }
+            }
+        } catch (e) {
+            // 共通の上書きがない場合は無視
+        }
+
+        // ファビコンとヘッダーロゴを反映
+        if (this.commonTexts['ファビコン画像パス']) {
+            const faviconElement = document.getElementById('favicon');
+            if (faviconElement) {
+                faviconElement.href = this.commonTexts['ファビコン画像パス'];
+            }
+            const headerLogoIcon = document.getElementById('header-logo-icon');
+            if (headerLogoIcon) {
+                headerLogoIcon.src = this.commonTexts['ファビコン画像パス'];
+            }
+        }
+    }
+
+    async readSiteCommonCsvFromResponse(response) {
+        const buffer = await response.arrayBuffer();
+        let text = '';
+        try { text = new TextDecoder('utf-8').decode(buffer); } catch (_) {}
+        const replacementCount = (text.match(/\uFFFD|�/g) || []).length;
+        if (!text || replacementCount > 5) {
+            try { text = new TextDecoder('shift_jis').decode(buffer); } catch (_) {}
+        }
+        // BOM除去
+        if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+        const lines = text.split(/\r?\n/).filter(l => l.trim());
+        if (lines.length <= 1) return {};
+        const result = {};
+        // ヘッダー: 1列目=キー, 3列目=値（CSVの構造に合わせる）
+        for (let i = 1; i < lines.length; i++) {
+            const cols = this.parseCsvLineWithQuotes(lines[i]);
+            if (cols.length >= 3) {
+                const key = (cols[0] || '').trim();
+                let value = (cols[2] || '').trim();
+                if (!key) continue;
+                // 引用符で囲まれていれば外す（エスケープ二重引用符も復元）
+                if (value.startsWith('"') && value.endsWith('"')) {
+                    value = value.slice(1, -1).replace(/""/g, '"');
+                }
+                result[key] = value;
+            }
+        }
+        return result;
+    }
+
+    // 1行用CSVパーサ（ダブルクオート対応）
+    parseCsvLineWithQuotes(line) {
+        const row = [];
+        let cur = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+            const ch = line[i];
+            const next = line[i + 1];
+            if (ch === '"') {
+                if (inQuotes && next === '"') { cur += '"'; i++; }
+                else { inQuotes = !inQuotes; }
+            } else if (ch === ',' && !inQuotes) {
+                row.push(cur); cur = '';
+            } else {
+                cur += ch;
+            }
+        }
+        row.push(cur);
+        return row;
+    }
+
+    // clinic-texts.csv を直接読み込んで clinicTexts 構造を生成
+    async loadClinicTextsFromCsv() {
+        try {
+            const primary = this.dataPath + 'clinic-texts.csv';
+            const legacy = this.dataPath + 'clinic_text/clinic-texts.csv';
+            let resp = await fetch(primary);
+            if (!resp.ok) {
+                resp = await fetch(legacy);
+            }
+            if (!resp.ok) throw new Error(`Failed to load clinic-texts.csv: ${resp.status}`);
+
+            // 文字コードを自動判定（UTF-8優先、ダメならShift_JIS）
+            const buffer = await resp.arrayBuffer();
+            let text = '';
+            try {
+                text = new TextDecoder('utf-8').decode(buffer);
+            } catch (_) {
+                // ignore
+            }
+            // 置換文字が多い（�）場合はShift_JISで再デコード
+            const replacementCount = (text.match(/\uFFFD|�/g) || []).length;
+            if (!text || replacementCount > 10) {
+                try {
+                    text = new TextDecoder('shift_jis').decode(buffer);
+                } catch (_) {
+                    // shift_jis未対応環境の場合はそのまま
+                }
+            }
+
+            const records = this.parseCsvWithQuotes(text);
+            if (!records || records.length === 0) {
+                console.warn('⚠️ clinic-texts.csv にレコードがありません');
+                this.clinicTexts = {};
+                return;
+            }
+
+            // 先頭行: list_name, 項目名, 目的・注意事項, クリニック名...
+            const headers = records[0];
+            const clinicNames = headers.slice(3).map(h => (h || '').trim()).filter(Boolean);
+
+            const clinicsData = {};
+            const comparisonHeaders = {};
+            const detailFields = {};
+
+            clinicNames.forEach(name => {
+                clinicsData[name] = {};
+            });
+
+            for (let i = 1; i < records.length; i++) {
+                const row = records[i];
+                if (!row || row.length === 0) continue;
+                const listName = (row[0] || '').trim();
+                const fieldName = (row[1] || '').trim();
+                if (!listName || !fieldName) continue;
+
+                if (listName.startsWith('comparison')) {
+                    // 比較表ヘッダー設定
+                    const num = listName.replace('comparison', '');
+                    comparisonHeaders[`比較表ヘッダー${num}`] = fieldName;
+                    for (let j = 0; j < clinicNames.length; j++) {
+                        const clinicName = clinicNames[j];
+                        const value = row[j + 3] || '';
+                        clinicsData[clinicName][fieldName] = value;
+                    }
+                } else if (listName.startsWith('detail')) {
+                    // 詳細セクション
+                    let mappingKey = '';
+                    switch (fieldName) {
+                        case '費用': mappingKey = 'priceDetail'; break;
+                        case '目安期間': mappingKey = 'periods'; break;
+                        case '矯正範囲': mappingKey = 'ranges'; break;
+                        case '営業時間': mappingKey = 'hours'; break;
+                        case '店舗': mappingKey = 'stores'; break;
+                        case '特徴タグ': mappingKey = 'featureTags'; break;
+                        default: mappingKey = fieldName; break;
+                    }
+                    if (mappingKey && mappingKey !== '特徴タグ') {
+                        detailFields[mappingKey] = fieldName;
+                    }
+                    for (let j = 0; j < clinicNames.length; j++) {
+                        const clinicName = clinicNames[j];
+                        const value = row[j + 3] || '';
+                        clinicsData[clinicName][`詳細_${fieldName}`] = value;
+                    }
+                } else if (listName.startsWith('tags')) {
+                    // タグ（詳細に含める）
+                    for (let j = 0; j < clinicNames.length; j++) {
+                        const clinicName = clinicNames[j];
+                        const value = row[j + 3] || '';
+                        clinicsData[clinicName][`詳細_${fieldName}`] = value;
+                    }
+                } else if (listName.startsWith('meta')) {
+                    // メタ情報
+                    for (let j = 0; j < clinicNames.length; j++) {
+                        const clinicName = clinicNames[j];
+                        const value = row[j + 3] || '';
+                        clinicsData[clinicName][fieldName] = value;
+                    }
+                } else {
+                    // 特定コード→クリニック名の特例（未使用でも互換のため残す）
+                    const clinicCodeToName = {
+                        'ohmyteeth': 'Oh my teeth',
+                        'invisalign': 'インビザライン',
+                        'kireilign': 'キレイライン矯正',
+                        'zenyum': 'ゼニュム',
+                        'wesmile': 'ウィスマイル'
+                    };
+                    if (clinicCodeToName[listName]) {
+                        const target = clinicCodeToName[listName];
+                        if (clinicsData[target]) {
+                            clinicsData[target][fieldName] = row[3] || '';
+                        }
+                    } else {
+                        for (let j = 0; j < clinicNames.length; j++) {
+                            const clinicName = clinicNames[j];
+                            const value = row[j + 3] || '';
+                            clinicsData[clinicName][fieldName] = value;
+                        }
+                    }
+                }
+            }
+
+            const result = {};
+            result['比較表ヘッダー設定'] = comparisonHeaders;
+            result['詳細フィールドマッピング'] = detailFields;
+            // 公式サイトURLも詳細側に含める
+            result['詳細フィールドマッピング']['officialSite'] = '公式サイトURL';
+            Object.keys(clinicsData).forEach(name => {
+                result[name] = clinicsData[name];
+            });
+
+            this.clinicTexts = result;
+        } catch (e) {
+            console.warn('⚠️ clinic-texts.csv の読み込み/変換に失敗しました:', e);
+            this.clinicTexts = {};
+        }
+    }
+
+    // ダブルクオートを考慮したCSVパーサ
+    parseCsvWithQuotes(csvText) {
+        const lines = csvText.split(/\r?\n/);
+        const records = [];
+        for (let li = 0; li < lines.length; li++) {
+            const raw = lines[li];
+            if (raw == null) continue;
+            const line = String(raw);
+            if (!line.trim()) continue;
+            const row = [];
+            let cur = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') {
+                    // 連続するダブルクオートはエスケープとみなし、1つだけ追加
+                    if (inQuotes && line[i + 1] === '"') {
+                        cur += '"';
+                        i++; // 次をスキップ
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (ch === ',' && !inQuotes) {
+                    row.push(cur);
+                    cur = '';
+                } else {
+                    cur += ch;
+                }
+            }
+            row.push(cur);
+            records.push(row);
+        }
+        return records;
     }
     
     // 住所から地域IDを取得するヘルパーメソッド
@@ -706,46 +908,62 @@ class DataManager {
     // CSVファイルを読み込む汎用関数（エラーハンドリング付き）
     async loadCsvFile(filename) {
         try {
-            // 地域関連のCSVファイルはdata/rankingから、それ以外はdataから読み込む
-            const path = (filename.includes('stores.csv') || filename.includes('ranking.csv') || filename.includes('store_view.csv')) 
-                ? this.regionDataPath + filename 
-                : this.dataPath + filename;
-            const response = await fetch(path);
-            if (!response.ok) {
+            // 読み込み候補（新配置優先 → 旧配置）
+            const candidates = [];
+            if (filename.includes('ranking.csv')) {
+                // 新: data直下, 旧: data/ranking
+                candidates.push(this.dataPath + filename);
+                candidates.push(this.regionDataPath + filename);
+            } else if (filename.includes('items.csv') || filename.includes('region.csv') || filename.includes('store_view.csv') || filename.includes('stores.csv')) {
+                // 共通データはcommon_data固定
+                candidates.push(this.commonDataPath + filename);
+            } else {
+                candidates.push(this.dataPath + filename);
+            }
+
+            let response = null;
+            for (const url of candidates) {
+                try {
+                    const res = await fetch(url);
+                    if (res.ok) { response = res; break; }
+                } catch (_) { /* try next */ }
+            }
+            if (!response) {
                 throw new Error(`Failed to load ${filename}`);
             }
-            const text = await response.text();
-            return this.parseCsv(text);
+
+            const buffer = await response.arrayBuffer();
+            let text = '';
+            try { text = new TextDecoder('utf-8').decode(buffer); } catch (_) {}
+            const replacementCount = (text.match(/\uFFFD|�/g) || []).length;
+            if (!text || replacementCount > 10) {
+                try { text = new TextDecoder('shift_jis').decode(buffer); } catch (_) {}
+            }
+            // レコード配列
+            const records = this.parseCsvWithQuotes(text);
+            if (!records || records.length === 0) return [];
+            const headers = records[0].map(h => (h || '').trim());
+            const rows = [];
+            for (let i = 1; i < records.length; i++) {
+                const rec = records[i];
+                if (!rec || rec.length === 0 || rec.every(v => (v || '').trim() === '')) continue;
+                const obj = {};
+                headers.forEach((h, idx) => {
+                    obj[h] = (rec[idx] || '').trim();
+                });
+                rows.push(obj);
+            }
+            return rows;
         } catch (error) {
             throw error;
         }
-    }
-
-    // CSVパーサー（カンマ区切りのデータをオブジェクト配列に変換）
-    parseCsv(csvText) {
-        const lines = csvText.split('\n').filter(line => line.trim() !== '');
-        if (lines.length === 0) return [];
-
-        const headers = lines[0].split(',').map(h => h.trim());
-        const data = [];
-
-        for (let i = 1; i < lines.length; i++) {
-            const values = lines[i].split(',').map(v => v.trim());
-            const obj = {};
-            headers.forEach((header, index) => {
-                obj[header] = values[index] || '';
-            });
-            data.push(obj);
-        }
-
-        return data;
     }
 
     // 地域データの読み込み
     async loadRegions() {
         const data = await this.loadCsvFile('出しわけSS - region.csv');
         this.regions = data.map(row => ({
-            id: row.parameter_no,
+            id: String(row.parameter_no).padStart(3, '0'),
             name: row.region
         }));
     }
@@ -782,7 +1000,7 @@ class DataManager {
         // 地域ごとにランキングをグループ化
         const rankingMap = {};
         data.forEach(row => {
-            const regionId = row.parameter_no;
+            const regionId = String(row.parameter_no).padStart(3, '0');
             if (!rankingMap[regionId]) {
                 rankingMap[regionId] = {
                     regionId: regionId,
@@ -806,25 +1024,14 @@ class DataManager {
         const data = await this.loadCsvFile('出しわけSS - store_view.csv');
         
         this.storeViews = data.map(row => {
-            const view = {
-                regionId: row.parameter_no,
-                clinicStores: {}
-            };
-            
-            // 各クリニックの店舗IDを取得（新しいヘッダー構造に対応）
-            // dio_stores, urara_stores, dsc_stores, lieto_stores, eminal_stores, sbc_stores
-            const clinicKeys = ['dio_stores', 'urara_stores', 'dsc_stores', 'lieto_stores', 'eminal_stores', 'sbc_stores'];
-            clinicKeys.forEach(key => {
-                if (row[key] && row[key] !== '-') {
-                    // 複数店舗は/で区切られている
-                    view.clinicStores[key] = row[key].split('/');
-                }
+            const view = { regionId: String(row.parameter_no).padStart(3, '0'), clinicStores: {} };
+            // 行の全キーから *_stores を動的に拾う
+            Object.keys(row).forEach(key => {
+                if (!key || !/_stores$/.test(key)) return;
+                const val = row[key];
+                if (!val || val === '-') return;
+                view.clinicStores[key] = String(val).split('/');
             });
-            
-            // 056のデータをデバッグ
-            if (row.parameter_no === '056') {
-            }
-            
             return view;
         });
         
@@ -964,17 +1171,16 @@ class DataManager {
         // クリニックコードからクリニック名を取得
         // コードマッピング（clinic-texts.jsonの実際のクリニックコードに合わせて修正）
         const codeToNameMap = {
-            'omt': 'Oh my teeth',
-            'Oh my teeth': 'Oh my teeth',  // 直接名前が来た場合もサポート
-            'zenyum': 'ゼニュム',
-            'ゼニュム': 'ゼニュム',
-            'kireiline': 'キレイライン矯正',  // 正しいコードに修正
-            'キレイライン矯正': 'キレイライン矯正',
-            'ws': 'ウィスマイル',
-            'ウィスマイル': 'ウィスマイル',
-            'wesmile': 'ウィスマイル',  // 追加：別のコード形式
-            'invisalign': 'インビザライン',  // 正しいコードに修正
-            'インビザライン': 'インビザライン'
+            'tcb': 'TCB',  // ← 正しいクリニックコードに修正
+            'TCB': 'TCB',
+            'luna': 'LUNAビューティークリニック',
+            'LUNAビューティークリニック': 'LUNAビューティークリニック',
+            'rize': 'リゼクリニック',
+            'リゼクリニック': 'リゼクリニック',
+            'shinagawa': '品川美容外科',
+            '品川美容外科': '品川美容外科',
+            'seishin': '聖心美容クリニック',
+            '聖心美容クリニック': '聖心美容クリニック'
         };
         
         // まずマッピングをチェック
@@ -1051,8 +1257,8 @@ class DataManager {
         
         // 通いやすさタブの口コミ（3つ）
         for (let i = 1; i <= 3; i++) {
-            const title = this.getClinicText(clinicCode, `口コミ${i}タイトル（通いやすさ）`, '');
-            const content = this.getClinicText(clinicCode, `口コミ${i}内容（通いやすさ）`, '');
+            const title = this.getClinicText(clinicCode, `口コミ${i}タイトル（スタッフ）`, '');
+            const content = this.getClinicText(clinicCode, `口コミ${i}内容（スタッフ）`, '');
             if (title && content) {
                 reviews.access.push({ title, content });
             }
@@ -1060,8 +1266,8 @@ class DataManager {
         
         // スタッフタブの口コミ（3つ）
         for (let i = 1; i <= 3; i++) {
-            const title = this.getClinicText(clinicCode, `口コミ${i}タイトル（スタッフ）`, '');
-            const content = this.getClinicText(clinicCode, `口コミ${i}内容（スタッフ）`, '');
+            const title = this.getClinicText(clinicCode, `口コミ${i}タイトル（サービス）`, '');
+            const content = this.getClinicText(clinicCode, `口コミ${i}内容（サービス）`, '');
             if (title && content) {
                 reviews.staff.push({ title, content });
             }
@@ -1233,8 +1439,13 @@ class DataManager {
     
     // クリニックの店舗データを取得（地域別）
     getStoreDataForClinic(clinicCode, regionId) {
-        // store_viewから該当地域のデータを取得
-        const storeView = this.storeViews.find(sv => sv.regionId === regionId);
+        // 地域IDをマッピングして正規化（例: '13' -> '013'）
+        const mappedRegionId = this.mapRegionId(regionId);
+        let storeView = this.storeViews.find(sv => sv.regionId === mappedRegionId);
+        if (!storeView) {
+            const normalizedRegionId = String(parseInt(mappedRegionId, 10));
+            storeView = this.storeViews.find(sv => sv.regionId === normalizedRegionId);
+        }
         if (!storeView) return [];
         
         // ランキングデータを取得して、表示されているクリニックを特定
@@ -1449,59 +1660,6 @@ class DataManager {
             return '000';
         }
         
-        // 地域コード別のマッピング（ランキングデータがない地域用）
-        const regionMapping = {
-            // 北海道・東北
-            '001': '013', // 北海道 → 東京
-            '002': '013', // 青森 → 東京
-            '003': '013', // 岩手 → 東京
-            '004': '013', // 宮城 → 東京
-            '005': '013', // 秋田 → 東京
-            '006': '013', // 山形 → 東京
-            '007': '013', // 福島 → 東京
-            
-            // 関東（存在しないもの）
-            '008': '013', // 茨城 → 東京
-            '009': '013', // 栃木 → 東京
-            '010': '013', // 群馬 → 東京
-            '015': '013', // 新潟 → 東京
-            
-            // 中部
-            '016': '023', // 富山 → 愛知
-            '017': '023', // 石川 → 愛知
-            '018': '023', // 福井 → 愛知
-            '019': '023', // 山梨 → 愛知
-            '020': '023', // 長野 → 愛知
-            '021': '023', // 岐阜 → 愛知
-            '022': '023', // 静岡 → 愛知
-            
-            // 関西
-            '024': '027', // 三重 → 大阪
-            '025': '027', // 滋賀 → 大阪
-            '026': '027', // 京都 → 大阪
-            '029': '027', // 奈良 → 大阪
-            '030': '027', // 和歌山 → 大阪
-            
-            // 中国・四国
-            '031': '027', // 鳥取 → 大阪
-            '032': '027', // 島根 → 大阪
-            '033': '028', // 岡山 → 兵庫
-            '034': '028', // 広島 → 兵庫
-            '035': '028', // 山口 → 兵庫
-            '036': '027', // 徳島 → 大阪
-            '037': '027', // 香川 → 大阪
-            '038': '027', // 愛媛 → 大阪
-            '039': '027', // 高知 → 大阪
-            
-            // 九州・沖縄
-            '041': '040', // 佐賀 → 福岡
-            '042': '040', // 長崎 → 福岡
-            '043': '040', // 熊本 → 福岡
-            '044': '040', // 大分 → 福岡
-            '045': '040', // 宮崎 → 福岡
-            '046': '040', // 鹿児島 → 福岡
-            '047': '040', // 沖縄 → 福岡
-        };
         
         // マッピングが存在する場合
         if (regionMapping[paddedRegionId]) {
@@ -1522,9 +1680,7 @@ class DataManager {
         // 全国版（000）の場合は東京（013）のランキングを使用
         // 北海道（001）の場合も東京（013）にフォールバック
         let targetRegionId = mappedRegionId;
-        if (mappedRegionId === '000' || mappedRegionId === '001') {
-            targetRegionId = '013';
-        }
+
         
         // データ構造がオブジェクト形式なので直接参照
         const paddedRegionId = String(targetRegionId).padStart(3, '0');
@@ -1755,7 +1911,9 @@ class RankingApp {
                 
                 // 検索結果ページへ遷移
                 const basePath = window.SITE_CONFIG ? window.SITE_CONFIG.basePath : '';
-                const searchUrl = `${basePath}/search-results.html?${params.toString()}`;
+                // basePathが空なら相対パスで遷移（同ディレクトリ内）
+                const prefix = basePath || '.';
+                const searchUrl = `${prefix}/search-results.html?${params.toString()}`;
                 window.location.href = searchUrl;
             });
         }
@@ -1791,38 +1949,6 @@ class RankingApp {
             });
         }
 
-        // 地図アコーディオンの開閉制御 - モーダル表示に変更したため無効化
-        /*
-        document.addEventListener('click', function(e) {
-            if (e.target.matches('.map-toggle-btn') || e.target.closest('.map-toggle-btn')) {
-                const button = e.target.matches('.map-toggle-btn') ? e.target : e.target.closest('.map-toggle-btn');
-                const storeId = button.getAttribute('data-store-id');
-                const mapElement = document.getElementById(`map-${storeId}`);
-                
-                if (mapElement) {
-                    if (mapElement.style.display === 'none' || mapElement.style.display === '') {
-                        mapElement.style.display = 'block';
-                        button.classList.add('active');
-                    } else {
-                        mapElement.style.display = 'none';
-                        button.classList.remove('active');
-                    }
-                }
-                e.preventDefault();
-            }
-        });
-        */
-
-        // ブラウザの戻る/進むボタン対応（region_idは使用しない）
-        /*
-        window.addEventListener('popstate', () => {
-            const regionId = this.urlHandler.getRegionId();
-            if (regionId !== this.currentRegionId) {
-                this.updatePageContent(regionId);
-                this.displayManager.regionSelect.value = regionId;
-            }
-        });
-        */
     }
 
     changeRegion(regionId) {
@@ -2318,9 +2444,9 @@ class RankingApp {
             // タブタイトルの更新
             const tabTexts = document.querySelectorAll('.tips-container .tab-text');
             if (tabTexts.length >= 3) {
-                tabTexts[0].textContent = this.dataManager.getCommonText('Tipsタブ1タイトル', '脂肪冷却の効果');
-                tabTexts[1].textContent = this.dataManager.getCommonText('Tipsタブ2タイトル', 'クリニック選び');
-                tabTexts[2].textContent = this.dataManager.getCommonText('Tipsタブ3タイトル', '今がおすすめ');
+                tabTexts[0].textContent = this.dataManager.getCommonText('Tipsタブ1タイトル', '効果');
+                tabTexts[1].textContent = this.dataManager.getCommonText('Tipsタブ2タイトル', '選び方');
+                tabTexts[2].textContent = this.dataManager.getCommonText('Tipsタブ3タイトル', 'おすすめ');
             }
             
             // Tips内容の更新（タブコンテンツ内のp要素）
@@ -2328,19 +2454,19 @@ class RankingApp {
             if (tabContents.length >= 3) {
                 const tips1P = tabContents[0].querySelector('p');
                 if (tips1P) {
-                    const tips1Content = this.dataManager.getCommonText('Tips1内容', '本気で痩せたいなら脂肪冷却が最短！科学的根拠に基づき、脂肪細胞そのものを凍結・減少させる痩身治療です。リバウンドしにくく、部分痩せも可能。自己流ダイエットで失敗続きの方にこそ試してほしい、確実な痩身方法です。');
+                    const tips1Content = this.dataManager.getCommonText('Tips1内容', '');
                     tips1P.innerHTML = this.dataManager.processDecoTags(tips1Content);
                 }
                 
                 const tips2P = tabContents[1].querySelector('p');
                 if (tips2P) {
-                    const tips2Content = this.dataManager.getCommonText('Tips2内容', 'クリニック選びの失敗が理想の体型実現の失敗につながります。<br>強引な勧誘は危険信号。次の3条件を満たす医院を選びましょう。<br><br>☑️医師が直接診察する<br>☑️施術後のアフターケア<br>☑️料金を明確に説明する');
+                    const tips2Content = this.dataManager.getCommonText('Tips2内容', '');
                     tips2P.innerHTML = this.dataManager.processDecoTags(tips2Content);
                 }
                 
                 const tips3P = tabContents[2].querySelector('p');
                 if (tips3P) {
-                    const tips3Content = this.dataManager.getCommonText('Tips3内容', '夏本番になると予約が取りにくくなり、料金も高くなりがち。今なら夏直前キャンペーンでお得に始められて、予約もスムーズ！理想の体型で夏を迎えるなら今がラストチャンスです。');
+                    const tips3Content = this.dataManager.getCommonText('Tips3内容', '');
                     tips3P.innerHTML = this.dataManager.processDecoTags(tips3Content);
                 }
             }
@@ -2359,17 +2485,6 @@ class RankingApp {
                     }
                 }
             }
-
-            // 比較表ヘッダーの更新（食事指導を対応部位に変更）
-            const tableHeaders = document.querySelectorAll('.comparison-table th');
-            tableHeaders.forEach(th => {
-                if (th.textContent.includes('食事指導')) {
-                    th.textContent = '対応部位';
-                    th.style.display = ''; // 表示する
-                    th.classList.remove('th-none');
-                }
-            });
-
             // （ヘッダー名の動的変更は行わない）
 
         } catch (error) {
@@ -2425,18 +2540,18 @@ class RankingApp {
         // ヘッダーを動的に生成
         // 最初の「クリニック」は固定、それ以降はheaderConfigから取得
         const headers = [
-            { key: null, default: 'クリニック', class: '', fixed: true },  // 固定項目
-            { key: '比較表ヘッダー1', default: '総合評価', class: '' },
-            { key: '比較表ヘッダー2', default: '費用', class: '' },
-            { key: '比較表ヘッダー3', default: '特徴', class: '' },
-            { key: '比較表ヘッダー10', default: '公式サイト', class: '' },
-            { key: '比較表ヘッダー4', default: '矯正範囲', class: 'th-none', style: 'display: none;' },
-            { key: '比較表ヘッダー5', default: '目安期間', class: 'th-none', style: 'display: none;' },
-            { key: '比較表ヘッダー6', default: '通院頻度', class: 'th-none', style: 'display: none;' },
-            { key: '比較表ヘッダー7', default: '実績/症例数', class: 'th-none', style: 'display: none;' },
-            { key: '比較表ヘッダー8', default: 'ワイヤー矯正の紹介', class: 'th-none', style: 'display: none;' },
-            { key: '比較表ヘッダー9', default: 'サポート', class: 'th-none', style: 'display: none;' },
-            { key: null, default: '詳細', class: 'th-none', style: 'display: none;', fixed: true }
+            { key: null, default: '', class: '', fixed: true },  // 固定項目
+            { key: '比較表ヘッダー1', default: '', class: '' },
+            { key: '比較表ヘッダー2', default: '', class: '' },
+            { key: '比較表ヘッダー3', default: '', class: '' },
+            { key: '比較表ヘッダー10', default: '', class: '' },
+            { key: '比較表ヘッダー4', default: '', class: 'th-none', style: 'display: none;' },
+            { key: '比較表ヘッダー5', default: '', class: 'th-none', style: 'display: none;' },
+            { key: '比較表ヘッダー6', default: '', class: 'th-none', style: 'display: none;' },
+            { key: '比較表ヘッダー7', default: '', class: 'th-none', style: 'display: none;' },
+            { key: '比較表ヘッダー8', default: '', class: 'th-none', style: 'display: none;' },
+            { key: '比較表ヘッダー9', default: '', class: 'th-none', style: 'display: none;' },
+            { key: null, default: '', class: 'th-none', style: 'display: none;', fixed: true }
         ];
         
         headers.forEach(header => {
@@ -2581,10 +2696,16 @@ class RankingApp {
                     // クリニック名とロゴ
                     const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
                     let logoPath = this.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '');
-                    
+
                     if (!logoPath) {
-                        const logoFolder = clinicCode === 'invisalign' ? 'invisalign' : clinicCode;
+                        // clinicCodeをそのままlogoFolderとして使用（invisalignの特別処理を削除）
+                        const logoFolder = clinicCode;
                         logoPath = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
+
+                        // デバッグ用：画像パスの確認（ローカル環境のみ）
+                        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                            console.log(`比較表ロゴパス: clinicCode=${clinicCode}, logoFolder=${logoFolder}, logoPath=${logoPath}`);
+                        }
                     }
                     
                     const redirectUrl = `./redirect.html#clinic_id=${clinicId}&rank=${rankNum}&region_id=${regionId}`;
@@ -2637,21 +2758,6 @@ class RankingApp {
         this.setupDetailScrollLinks();
     }
     
-    // フィールド名からヘッダーキーを取得
-    getHeaderKeyForField(fieldName) {
-        const fieldToHeaderMap = {
-            '総合評価': '比較表ヘッダー1',
-            '費用': '比較表ヘッダー2', 
-            '特徴': '比較表ヘッダー3',
-            '矯正範囲': '比較表ヘッダー4',
-            '目安期間': '比較表ヘッダー5',
-            '通院頻度': '比較表ヘッダー6',
-            '実績/症例数': '比較表ヘッダー7',
-            'ワイヤー矯正の紹介': '比較表ヘッダー8',
-            'サポート': '比較表ヘッダー9'
-        };
-        return fieldToHeaderMap[fieldName] || null;
-    }
     
     // 現在表示されているクリニックのデータを取得
     getCurrentDisplayedClinics() {
@@ -2694,13 +2800,23 @@ class RankingApp {
         // この関数はフォールバック用なので、実際のデータがない場合のみ使用される
         // 実際のランキングはgetCurrentDisplayedClinicsで動的に取得される
         console.warn('フォールバックデータが使用されています。実際のランキングデータが取得できませんでした。');
-        return [
-            { id: '1', name: 'Oh my teeth', code: 'omt', rank: 1 },
-            { id: '2', name: 'インビザライン', code: 'invisalign', rank: 2 },
-            { id: '4', name: 'キレイライン矯正', code: 'kireiline', rank: 3 },
-            { id: '3', name: 'ウィスマイル', code: 'ws', rank: 4 },
-            { id: '5', name: 'ゼニュム', code: 'zenyum', rank: 5 }
-        ];
+
+        // items.csvで有効なクリニックのみを使用
+        if (window.dataManager && window.dataManager.clinics) {
+            const validClinics = window.dataManager.clinics.filter(clinic => {
+                // items.csvで有効とされているクリニックのみ
+                const validIds = ['1', '2', '3', '4', '5']; // TCB, LUNA, リゼ, 品川, 聖心
+                return validIds.includes(clinic.id);
+            });
+
+            return validClinics.slice(0, 5).map((clinic, index) => ({
+                ...clinic,
+                rank: index + 1
+            }));
+        }
+
+        // フォールバック：items.csvで有効なクリニックのみ
+      
     }
     
     // 星評価の初期化
@@ -2782,7 +2898,11 @@ class RankingApp {
         this.setupComparisonTabs();
         
         // 1位クリニックおすすめセクションを更新
-        this.updateFirstChoiceRecommendation(rankedClinics[0]);
+        // setupComparisonTabsの後に、現在表示されているクリニックから1位を取得
+        const displayedClinics = this.getCurrentDisplayedClinics();
+        if (displayedClinics && displayedClinics.length > 0) {
+            this.updateFirstChoiceRecommendation(displayedClinics[0]);
+        }
         
         // レビュータブ切り替え機能の設定
         this.setupReviewTabs();
@@ -2829,7 +2949,7 @@ class RankingApp {
             
             if (!logoPath) {
                 // フォールバック：コードベースのパス
-                const logoFolder = clinicCode === 'invisalign' ? 'invisalign' : clinicCode;
+                const logoFolder = clinicCode;
                 logoPath = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
             }
             
@@ -2854,12 +2974,12 @@ class RankingApp {
                     <a class="link_btn" href="${this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank || rankNum)}" target="_blank">公式サイト &gt;</a><br>
                     <a class="detail_btn" href="#clinic${rankNum}">詳細をみる</a>
                 </td>
-                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('矯正範囲', ''))}</td>
-                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('目安期間', ''))}</td>
-                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('通院頻度', ''))}</td>
-                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('実績/症例数', ''))}</td>
-                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('ワイヤー矯正の紹介', ''))}</td>
-                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('サポート', ''))}</td>
+                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('', ''))}</td>
+                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('', ''))}</td>
+                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('', ''))}</td>
+                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('', ''))}</td>
+                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('', ''))}</td>
+                <td class="th-none" style="display: none;">${this.dataManager.processDecoTags(getClinicData('', ''))}</td>
             `;
             
             tbody.appendChild(tr);
@@ -2912,7 +3032,6 @@ class RankingApp {
     updateFirstChoiceRecommendation(topClinic) {
         if (!topClinic) return;
         
-        
         const clinicCode = window.dataManager.getClinicCodeById(topClinic.id);
         if (!clinicCode) return;
         
@@ -2929,8 +3048,18 @@ class RankingApp {
         // バナー画像を更新
         const bannerImage = document.getElementById('first-choice-banner-image');
         if (bannerImage) {
-            const bannerPath = window.dataManager.getClinicText(clinicCode, 'クリニック詳細バナー画像パス', '') || 
+            const csvBannerPath = window.dataManager.getClinicText(clinicCode, '詳細バナー画像パス', '');
+            const bannerPath = csvBannerPath ||
                              `../common_data/images//clinics/${clinicCode}/${clinicCode}_detail_bnr.webp`;
+
+            console.log(`[DEBUG] Clinic: ${clinicCode}, CSV Banner Path: "${csvBannerPath}", Final Path: "${bannerPath}"`);
+
+            // 追加のデバッグ：すべてのバナー画像要素をチェック
+            const allBannerImages = document.querySelectorAll('img[src*="_detail_bnr"]');
+            allBannerImages.forEach((img, index) => {
+                console.log(`[DEBUG] Banner image ${index}: ${img.src}, class: ${img.className}`);
+            });
+
             bannerImage.src = bannerPath;
             bannerImage.alt = topClinic.name;
         }
@@ -2943,19 +3072,19 @@ class RankingApp {
         const point3Title = document.getElementById('point3-title');
         const point3Desc = document.getElementById('point3-description');
         
-        if (point1Title) point1Title.textContent = window.dataManager.getClinicText(clinicCode, 'おすすめポイント1タイトル', '圧倒的な実績＆成功率99％');
-        if (point1Desc) point1Desc.textContent = window.dataManager.getClinicText(clinicCode, 'おすすめポイント1詳細', 'ダイエット成功率99％、平均13.7kg減の実績。科学的根拠に基づいた医療痩身プログラムで、確実に結果を出します。');
-        
-        if (point2Title) point2Title.textContent = window.dataManager.getClinicText(clinicCode, 'おすすめポイント2タイトル', '最新の医療機器を完備');
-        if (point2Desc) point2Desc.textContent = window.dataManager.getClinicText(clinicCode, 'おすすめポイント2詳細', '脂肪冷却・医療用EMS・医療ハイフ・医療ラジオ波など、最新の痩身機器を多数完備。一人一人の悩みに合わせた最適な治療を提供します。');
-        
-        if (point3Title) point3Title.textContent = window.dataManager.getClinicText(clinicCode, 'おすすめポイント3タイトル', '管理栄養士による完全サポート');
-        if (point3Desc) point3Desc.textContent = window.dataManager.getClinicText(clinicCode, 'おすすめポイント3詳細', '管理栄養士による食事指導で健康的にダイエット。痩せなかったら全額返金、リバウンド防止プログラム付きで安心です。');
+        if (point1Title) point1Title.textContent = window.dataManager.getClinicText(clinicCode, 'POINT1タイトル', '');
+        if (point1Desc) point1Desc.innerHTML = window.dataManager.getClinicText(clinicCode, 'POINT1内容', '');
+
+        if (point2Title) point2Title.textContent = window.dataManager.getClinicText(clinicCode, 'POINT2タイトル', '');
+        if (point2Desc) point2Desc.innerHTML = window.dataManager.getClinicText(clinicCode, 'POINT2内容', '');
+
+        if (point3Title) point3Title.textContent = window.dataManager.getClinicText(clinicCode, 'POINT3タイトル', '');
+        if (point3Desc) point3Desc.innerHTML = window.dataManager.getClinicText(clinicCode, 'POINT3内容', '');
         
         // ロゴ画像を更新
         const infoLogo = document.getElementById('first-choice-info-logo');
         if (infoLogo) {
-            const logoFolder = clinicCode === 'invisalign' ? 'invisalign' : clinicCode;
+            const logoFolder = clinicCode;
             const logoPath = window.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '') || 
                             `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
             infoLogo.src = logoPath;
@@ -2965,14 +3094,14 @@ class RankingApp {
         // キャンペーンテキストを更新
         const campaignText = document.getElementById('first-choice-campaign-text');
         if (campaignText) {
-            const campaign = window.dataManager.getClinicText(clinicCode, 'キャンペーン', '期間限定キャンペーン<br>12ヶ月分0円');
+            const campaign = window.dataManager.getClinicText(clinicCode, 'INFORMATIONキャンペーンテキスト', '');
             campaignText.innerHTML = campaign;
         }
         
         // 実績テキストを更新
         const achievementText = document.getElementById('first-choice-achievement-text');
         if (achievementText) {
-            const achievement = window.dataManager.getClinicText(clinicCode, 'INFORMATIONサブテキスト', '\\月額・総額がリーズナブルなクリニック/');
+            const achievement = window.dataManager.getClinicText(clinicCode, 'INFORMATIONサブテキスト', '');
             achievementText.textContent = achievement;
         }
         
@@ -2987,11 +3116,36 @@ class RankingApp {
         if (ctaLink) {
             ctaLink.href = this.urlHandler.getClinicUrlWithRegionId(topClinic.id, topClinic.rank || 1);
         }
+
+        // 公式サイトリンクを更新
+        const officialLink = document.querySelector('#first-choice-official-link a');
+        if (officialLink) {
+            // リダイレクトURLを使用（案件詳細セクションと同様）
+            officialLink.href = this.urlHandler.getClinicUrlWithRegionId(topClinic.id, topClinic.rank || 1);
+
+            // strongタグには公式サイトURLのテキストを設定
+            const strongElement = officialLink.querySelector('strong');
+            const officialUrl = window.dataManager.getClinicText(clinicCode, '公式サイトURL', '#');
+            if (strongElement) {
+                strongElement.textContent = officialUrl;
+            } else {
+                officialLink.textContent = officialUrl;
+            }
+        }
         
         // 免責事項のタイトルを更新
         const disclaimerTitle = document.getElementById('first-choice-disclaimer-title');
         if (disclaimerTitle) {
             disclaimerTitle.textContent = `${topClinic.name}の確認事項`;
+        }
+
+        // 免責事項の内容を更新
+        const disclaimerContent = document.getElementById('dio-campaign-first-choice-content');
+        if (disclaimerContent) {
+            const disclaimerText = window.dataManager.getClinicText(clinicCode, 'INFORMATION確認事項', '');
+            if (disclaimerText) {
+                disclaimerContent.innerHTML = `<div style="font-size: 9px; color: #777; line-height: 1.4;">${disclaimerText}</div>`;
+            }
         }
     }
 
@@ -3012,20 +3166,7 @@ class RankingApp {
             
             // ダミーデータ（実際のデータに置き換え）
             const ratings = { 1: 4.9, 2: 4.5, 3: 4.3, 4: 4.1, 5: 3.8 };
-            const achievements = { 
-                1: '全国100院以上',
-                2: '累計施術50万件',
-                3: '開院15年の実績',
-                4: '全国80院展開',
-                5: '医療脱毛専門10年'
-            };
-            const benefits = {
-                1: '初回限定50%OFF',
-                2: '学割・ペア割あり',
-                3: '全身脱毛20%割引',
-                4: 'モニター割引30%',
-                5: '平日限定プランあり'
-            };
+            
 
             row.innerHTML = `
                 <td>
@@ -3075,8 +3216,8 @@ class RankingApp {
                         </div>
                     </div>
                 </td>
-                <td>全身＋VIO脱毛</td>
-                <td>最新医療レーザー</td>
+                <td></td>
+                <td></td>
                 <td><i class="fas fa-circle feature-icon"></i></td>
                 <td>
                     <div class="cta-cell">
@@ -3446,46 +3587,73 @@ class RankingApp {
                         </div>
                     </div>
                 </div>
-
-                <!-- 症例写真（1位のみ表示） -->
+                
                 ${(() => {
+                    // 症例写真（参考サイト同様、1位のみ表示）
                     if (rank !== 1) return '';
+                    const clinicCode = this.dataManager.getClinicCodeById(clinicId) || '';
+                    const dm = this.dataManager;
+                    // クリニックごとの症例画像定義
+                    const dynamicCaseImages = {
+                        dio: [
+                            { fallbacks: ['images/dio_case01.jpg'], alt: 'CASE 01' },
+                            { fallbacks: ['images/dio_case02.jpg'], alt: 'CASE 02' },
+                            { fallbacks: ['images/dio_case03.jpg'], alt: 'CASE 03' }
+                        ],
+                        tcb: [
+                            { fallbacks: ['images/tcb_case01.jpg'], alt: 'CASE 01' },
+                            { fallbacks: ['images/tcb_case02.jpg'], alt: 'CASE 02' },
+                            { fallbacks: ['images/tcb_case03.jpg'], alt: 'CASE 03' }
+                        ]
+                    };
+                    const imagesForClinic = dynamicCaseImages[clinicCode] || [];
+                    if (!imagesForClinic.length) return '';
+                    const buildRow = (label, val) => `<tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important; width: 30% !important;\">${label}</td><td style=\"padding: 0 8px !important;\">${val}</td></tr>`;
+                    const slidesHtml = imagesForClinic.map((img, idx) => {
+                        const keyBase = `case${idx + 1}`;
+                        // まずcaseNを参照し、無ければcase1をフォールバックとして使用
+                        const fallbackName = dm.getClinicText(clinicCode, `case1コース名`, '');
+                        const fallbackDesc = dm.getClinicText(clinicCode, `case1施術の説明`, '');
+                        const fallbackRisk = dm.getClinicText(clinicCode, `case1副作用（リスク）`, '');
+
+                        const nameVal = dm.getClinicText(clinicCode, `${keyBase}コース名`, '') || fallbackName || '—';
+                        const descVal = dm.getClinicText(clinicCode, `${keyBase}施術の説明`, '') || fallbackDesc || '—';
+                        const riskVal = dm.getClinicText(clinicCode, `${keyBase}副作用（リスク）`, '') || fallbackRisk || '—';
+                        return `
+                            <div class=\"case-slide\" style=\"min-width:100%;box-sizing:border-box;\">
+                                <img src=\"${img.fallbacks[0]}\" alt=\"${img.alt}\" loading=\"lazy\" style=\"width:100%;height:auto;object-fit:contain;\">
+                                <div class=\"case-info\" style=\"margin-top: 5px; padding: 0 5%; text-align: left; font-size: 12px; line-height: 1.6; width: 100%;\">
+                                    <table class=\"case-table\" style=\"width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; line-height: 1.6 !important; display: table !important; table-layout: fixed !important;\">
+                                        <tbody>
+                                            ${buildRow('コース名', dm.processDecoTags(nameVal))}
+                                            ${buildRow('施術の説明', dm.processDecoTags(descVal))}
+                                            ${buildRow('副作用<br>（リスク）', dm.processDecoTags(riskVal))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    const dotsHtml = imagesForClinic.map((_, i) => `<button class=\"case-dot ${i===0?'active':''}\" data-index=\"${i}\" style=\"width:8px;height:8px;border-radius:50%;border:none;background:${i===0?'#2CC7C5':'#ccc'};margin:0 4px;cursor:pointer;\"></button>`).join('');
+                    
                     return `
-                    <div class=\"clinic-points-section\" data-case-section>
+                    <div class=\"clinic-points-section\">
                         <h4 class=\"section-title\">症例写真</h4>
                         <div class=\"case-slider\" style=\"position: relative; overflow: hidden;\">
                             <div class=\"case-track\" style=\"display:flex;\">
-                                <div class=\"case-slide\" style=\"min-width:100%;box-sizing:border-box;\">
-                                    <img data-case-index=\"1\" src=\"\" alt=\"症例写真1\" loading=\"lazy\" style=\"width:100%;height:auto;object-fit:contain;\">
-                                    <div class=\"case-info\" style=\"margin-top: 5px; padding: 0 5%; text-align: left; font-size: 12px; line-height: 1.6; width: 100%;\">
-                                        <table class=\"case-table\" style=\"width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; line-height: 1.6 !important; display: table !important; table-layout: fixed !important;\"><tbody><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important; width: 30% !important;\">コース名</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">施術の説明</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">副作用<br>（リスク）</td><td style=\"padding: 0 8px !important; color: #666 !important;\"></td></tr></tbody></table>
-                                    </div>
-                                </div>
-                                <div class=\"case-slide\" style=\"min-width:100%;box-sizing:border-box;\">
-                                    <img data-case-index=\"2\" src=\"\" alt=\"症例写真2\" loading=\"lazy\" style=\"width:100%;height:auto;object-fit:contain;\">
-                                    <div class=\"case-info\" style=\"margin-top: 5px; padding: 0 5%; text-align: left; font-size: 12px; line-height: 1.6; width: 100%;\">
-                                        <table class=\"case-table\" style=\"width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; line-height: 1.6 !important; display: table !important; table-layout: fixed !important;\"><tbody><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important; width: 30% !important;\">コース名</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">施術の説明</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">副作用<br>（リスク）</td><td style=\"padding: 0 8px !important; color: #666 !important;\"></td></tr></tbody></table>
-                                    </div>
-                                </div>
-                                <div class=\"case-slide\" style=\"min-width:100%;box-sizing:border-box;\">
-                                    <img data-case-index=\"3\" src=\"\" alt=\"症例写真3\" loading=\"lazy\" style=\"width:100%;height:auto;object-fit:contain;\">
-                                    <div class=\"case-info\" style=\"margin-top: 5px; padding: 0 5%; text-align: left; font-size: 12px; line-height: 1.6; width: 100%;\">
-                                        <table class=\"case-table\" style=\"width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; line-height: 1.6 !important; display: table !important; table-layout: fixed !important;\"><tbody><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important; width: 30% !important;\">コース名</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">施術の説明</td><td style=\"padding: 0 8px !important;\"></td></tr><tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important;\">副作用<br>（リスク）</td><td style=\"padding: 0 8px !important; color: #666 !important;\"></td></tr></tbody></table>
-                                    </div>
-                                </div>
+                                ${slidesHtml}
                             </div>
-                            <button class=\"case-nav case-nav-prev\" aria-label=\"前へ\" style=\"position:absolute;left:6px;top:45%;transform:translateY(-50%);background:#ffffffdd;border:1px solid #ddd;border-radius:50%;width:30px;height:30px;cursor:pointer;\">‹</button>
-                            <button class=\"case-nav case-nav-next\" aria-label=\"次へ\" style=\"position:absolute;right:6px;top:45%;transform:translateY(-50%);background:#ffffffdd;border:1px solid #ddd;border-radius:50%;width:30px;height:30px;cursor:pointer;\">›</button>
+                            <button class=\"case-nav case-nav-prev\" style=\"position:absolute;left:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.8);border:none;border-radius:50%;width:40px;height:40px;font-size:20px;cursor:pointer;z-index:10;\">‹</button>
+                            <button class=\"case-nav case-nav-next\" style=\"position:absolute;right:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.8);border:none;border-radius:50%;width:40px;height:40px;font-size:20px;cursor:pointer;z-index:10;\">›</button>
                         </div>
                         <div class=\"case-dots\" style=\"text-align:center;margin-top:10px;\">
-                            <button class=\"case-dot active\" data-index=\"0\" style=\"width:8px;height:8px;border-radius:50%;border:none;background:#ccc;margin:0 4px;cursor:pointer;\"></button>
-                            <button class=\"case-dot\" data-index=\"1\" style=\"width:8px;height:8px;border-radius:50%;border:none;background:#ccc;margin:0 4px;cursor:pointer;\"></button>
-                            <button class=\"case-dot\" data-index=\"2\" style=\"width:8px;height:8px;border-radius:50%;border:none;background:#ccc;margin:0 4px;cursor:pointer;\"></button>
+                            ${dotsHtml}
                         </div>
                     </div>
                     `;
                 })()}
-
+                
                 
                 <!-- 口コミ -->
                 <div class="reviews-section">
@@ -3605,7 +3773,7 @@ class RankingApp {
                             
                             const campaignHeader = this.dataManager.getClinicText(clinicCode, 'キャンペーンヘッダー', 'INFORMATION!');
                             const campaignDescription = this.dataManager.getClinicText(clinicCode, 'INFORMATIONキャンペーンテキスト', '');
-                            const campaignMicrocopy = this.dataManager.getClinicText(clinicCode, 'INFORMATIONサブテキスト', '＼月額・総額がリーズナブルなクリニック／');
+                            const campaignMicrocopy = this.dataManager.getClinicText(clinicCode, 'INFORMATIONサブテキスト', '');
                             const ctaText = this.dataManager.getClinicText(clinicCode, 'CTAボタンテキスト', `${clinic.name}の公式サイト`);
                             
                             const logoFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
@@ -3666,194 +3834,64 @@ class RankingApp {
             
             detailsList.appendChild(detailItem);
 
-            // 症例写真の画像パス・テキストを1位クリニックに応じて動的に差し替え（mouthpiece001版）
+            // 症例スライダーを初期化（1位のみ）
             if (rank === 1) {
                 try {
-                    const clinicCode = this.dataManager.getClinicCodeById(clinicId) || '';
                     const root = detailItem;
-                    const caseSection = root.querySelector('[data-case-section]');
-                    const imgNodes = Array.from(root.querySelectorAll('.case-slider img[data-case-index]'));
+                    const track = root.querySelector('.case-track');
+                    const slides = root.querySelectorAll('.case-slide');
+                    const dots = root.querySelectorAll('.case-dot');
+                    const prevBtn = root.querySelector('.case-nav-prev');
+                    const nextBtn = root.querySelector('.case-nav-next');
+                    const caseSection = root.querySelector('.case-slider')?.closest('.clinic-points-section');
+                    const imgs = root.querySelectorAll('.case-slider img');
 
-                    if (!caseSection || imgNodes.length === 0) {
-                        // 何もしない
-                    } else {
-                        // 画像の推測パス（mouthpiece001配下のローカルimagesを参照）
-                        // 例: images/omt_case01.webp, images/omt_case02.jpg, images/omt_case1.jpg など
-                        const candidates = (n) => {
-                            const baseZeroPad = `images/${clinicCode}_case0${n}`;
-                            const baseNoPad   = `images/${clinicCode}_case${n}`;
-                            const exts = ['webp', 'jpg', 'png', 'jpeg'];
-                            const list = [];
-                            [baseZeroPad, baseNoPad].forEach(base => {
-                                exts.forEach(ext => list.push(`${base}.${ext}`));
-                            });
-                            // 重複削除
-                            return Array.from(new Set(list));
-                        };
-
-                        // 初期は完全にレイアウトから外す（余白を出さない）
-                        try {
-                            caseSection.dataset._origDisplay = caseSection.style.display || '';
-                            caseSection.dataset._origMargin = caseSection.style.margin || '';
-                            caseSection.dataset._origPadding = caseSection.style.padding || '';
-                            caseSection.dataset._origHeight = caseSection.style.height || '';
-                            caseSection.dataset._origOverflow = caseSection.style.overflow || '';
-                            caseSection.style.display = 'none';
-                            caseSection.style.margin = '0';
-                            caseSection.style.padding = '0';
-                            caseSection.style.height = '0';
-                            caseSection.style.overflow = 'hidden';
-                        } catch (_) {}
-
-                        // ロード状況を管理して、全失敗のときだけ非表示にする
-                        let loadedCount = 0;
-                        let completedImages = 0;
-                        const totalImages = imgNodes.length;
-
-                        // 最終処理: 失敗スライドを除去し、必要ならセクション非表示・スライダー再構築
-                        const finalizeCaseSection = () => {
-                            if (!caseSection) return;
-                            if (loadedCount === 0) {
-                                // 1枚も読み込めない場合はDOMから取り除く（余白ゼロ）
-                                caseSection.remove();
-                                return;
-                            }
-
-                            // 失敗したスライドを取り除く
-                            const slider = caseSection.querySelector('.case-slider');
-                            const track = slider?.querySelector('.case-track');
-                            const dotsContainer = caseSection.querySelector('.case-dots');
-                            const allSlides = Array.from(track?.querySelectorAll('.case-slide') || []);
-                            allSlides.forEach(slide => {
-                                const img = slide.querySelector('img[data-case-index]');
-                                if (!img || img.dataset.loaded !== '1') {
-                                    slide.remove();
-                                }
-                            });
-
-                            const slides = Array.from(track?.querySelectorAll('.case-slide') || []);
-
-                            if (slides.length === 0) {
-                                caseSection.remove();
-                                return;
-                            }
-
-                            // ドットを再構築
-                            if (dotsContainer) {
-                                dotsContainer.innerHTML = '';
-                                for (let i = 0; i < slides.length; i++) {
-                                    const dot = document.createElement('button');
-                                    dot.className = 'case-dot' + (i === 0 ? ' active' : '');
-                                    dot.setAttribute('data-index', String(i));
-                                    dot.style.width = '8px';
-                                    dot.style.height = '8px';
-                                    dot.style.borderRadius = '50%';
-                                    dot.style.border = 'none';
-                                    dot.style.background = i === 0 ? '#2CC7C5' : '#ccc';
-                                    dot.style.margin = '0 4px';
-                                    dot.style.cursor = 'pointer';
-                                    dotsContainer.appendChild(dot);
-                                }
-                            }
-
-                            // スライダー初期化（画像確定後に設定）
-                            try {
-                                const prevBtn = caseSection.querySelector('.case-nav-prev');
-                                const nextBtn = caseSection.querySelector('.case-nav-next');
-                                let current = 0;
-                                const dots = Array.from(caseSection.querySelectorAll('.case-dot'));
-
-                                const show = (i) => {
-                                    const slideEls = Array.from(caseSection.querySelectorAll('.case-slide'));
-                                    if (!slideEls.length) return;
-                                    if (i < 0) i = slideEls.length - 1;
-                                    if (i >= slideEls.length) i = 0;
-                                    current = i;
-                                    if (track) {
-                                        track.style.display = 'flex';
-                                        track.style.transform = `translateX(-${current * 100}%)`;
-                                        track.style.transition = 'transform .3s ease';
-                                    }
-                                    slideEls.forEach(s => { s.style.minWidth = '100%'; s.style.boxSizing = 'border-box'; });
-                                    dots.forEach((d, idx) => {
-                                        d.classList.toggle('active', idx === current);
-                                        d.style.background = idx === current ? '#2CC7C5' : '#ccc';
-                                    });
-                                };
-
-                                prevBtn && prevBtn.addEventListener('click', () => show(current - 1));
-                                nextBtn && nextBtn.addEventListener('click', () => show(current + 1));
-                                dots.forEach((d, idx) => d.addEventListener('click', () => show(idx)));
-
-                                show(0);
-
-                                // スライドが1枚以下ならナビゲーションを非表示
-                                const navs = caseSection.querySelectorAll('.case-nav');
-                                if (slides.length <= 1) {
-                                    navs.forEach(n => n.style.display = 'none');
-                                }
-
-                                // 最終的に1枚以上あるなら表示に戻す（余白も元に）
-                                caseSection.style.display = caseSection.dataset._origDisplay || '';
-                                caseSection.style.margin = caseSection.dataset._origMargin || '';
-                                caseSection.style.padding = caseSection.dataset._origPadding || '';
-                                caseSection.style.height = caseSection.dataset._origHeight || '';
-                                caseSection.style.overflow = caseSection.dataset._origOverflow || '';
-                            } catch (_) { /* noop */ }
-                        };
-
-                        imgNodes.forEach(img => {
-                            const idx = parseInt(img.getAttribute('data-case-index') || '1', 10);
-                            const list = candidates(idx);
-                            let tried = 0;
-                            const slideEl = img.closest('.case-slide');
-
-                            const finishOne = () => {
-                                completedImages++;
-                                if (completedImages === totalImages) {
-                                    finalizeCaseSection();
-                                }
-                            };
-                            const tryNext = () => {
-                                if (tried >= list.length) {
-                                    // 全拡張子失敗
-                                    if (slideEl) {
-                                        img.dataset.loaded = '0';
-                                    }
-                                    finishOne();
-                                    return;
-                                }
-                                img.src = list[tried++];
-                            };
-                            // 非表示でも読み込むよう lazy をオフ
-                            try { img.loading = 'eager'; } catch(_) {}
-                            try { img.decoding = 'async'; } catch(_) {}
-                            img.onerror = () => { tryNext(); };
-                            img.onload = () => { loadedCount++; img.dataset.loaded = '1'; finishOne(); };
-                            tryNext();
-                        });
-
-                        // 症例テキスト（コース名・説明・副作用）をCSV/JSONから動的に反映
-                        try {
-                            const dm = this.dataManager;
-                            if (dm && typeof dm.getClinicText === 'function') {
-                                const slides = root.querySelectorAll('.case-slider .case-slide');
-                                slides.forEach((slide, sIdx) => {
-                                    const rows = slide.querySelectorAll('table.case-table tbody tr');
-                                    const keyBase = `case${sIdx + 1}`;
-                                    const nameVal = dm.getClinicText(clinicCode, `${keyBase}コース名`, '');
-                                    const descVal = dm.getClinicText(clinicCode, `${keyBase}施術の説明`, '');
-                                    const riskVal = dm.getClinicText(clinicCode, `${keyBase}副作用（リスク）`, '');
-                                    if (rows[0]?.children?.[1] && nameVal) rows[0].children[1].textContent = nameVal;
-                                    if (rows[1]?.children?.[1] && descVal) rows[1].children[1].textContent = descVal;
-                                    if (rows[2]?.children?.[1] && riskVal) rows[2].children[1].textContent = riskVal;
-                                });
-                            }
-                        } catch (e) { /* noop */ }
-
-                        // 非同期ロード完了時にfinalizeCaseSectionでカルーセルを初期化します
+                    // 画像が1枚も無い、もしくは全て読み込み失敗の場合はセクション非表示
+                    if (!imgs || imgs.length === 0) {
+                        if (caseSection) caseSection.style.display = 'none';
+                        return;
                     }
-                } catch (e) { /* noop */ }
+                    let loaded = 0;
+                    let errors = 0;
+                    const total = imgs.length;
+                    const maybeHide = () => {
+                        if (errors >= total && caseSection) {
+                            caseSection.style.display = 'none';
+                        }
+                    };
+                    imgs.forEach(img => {
+                        // 既に読み込み済みか判定
+                        if (img.complete && img.naturalWidth > 0) {
+                            loaded++;
+                        }
+                        img.addEventListener('load', () => { loaded++; });
+                        img.addEventListener('error', () => { errors++; maybeHide(); });
+                    });
+                    // タイムアウトでもう一度判定（キャッシュやイベント取りこぼし対策）
+                    setTimeout(() => {
+                        if (loaded === 0) {
+                            errors = total;
+                            maybeHide();
+                        }
+                    }, 1200);
+                    if (track && slides.length) {
+                        let current = 0;
+                        function show(i){
+                            if (i<0) i = slides.length-1;
+                            if (i>=slides.length) i = 0;
+                            current = i;
+                            track.style.display = 'flex';
+                            track.style.transform = `translateX(-${current*100}%)`;
+                            track.style.transition = 'transform .3s ease';
+                            slides.forEach(s=>{ s.style.minWidth='100%'; s.style.boxSizing='border-box'; });
+                            dots.forEach((d,idx)=>{ d.classList.toggle('active', idx===current); d.style.background = idx===current ? '#2CC7C5' : '#ccc'; });
+                        }
+                        prevBtn && prevBtn.addEventListener('click', ()=>show(current-1));
+                        nextBtn && nextBtn.addEventListener('click', ()=>show(current+1));
+                        dots.forEach((d,idx)=> d.addEventListener('click', ()=>show(idx)));
+                        show(0);
+                    }
+                } catch(e) {}
             }
         });
     }
@@ -3890,9 +3928,9 @@ class RankingApp {
             imgElement.src = `${imagesPath}/clinics/${clinicName}/${clinicName}_clinic/clinic_image_${paddedNumber}.${extensions[nextExtIndex]}`;
         } else {
             // 全て失敗した場合、ロゴ画像にフォールバック
-            imgElement.src = `${imagesPath}/clinics/${clinicName}/${clinicName}-logo.webp`;
+            imgElement.src = `../common_data/images/clinics/${clinicName}/${clinicName}-logo.webp`;
             imgElement.onerror = () => {
-                imgElement.src = `${imagesPath}/clinics/${clinicName}/${clinicName}-logo.jpg`;
+                imgElement.src = `../common_data/images/clinics/${clinicName}/${clinicName}-logo.jpg`;
             };
         }
     }
@@ -4141,27 +4179,6 @@ class RankingApp {
             modalAddress.textContent = address;
             modalAccess.textContent = access;
             
-            // 営業時間を設定（クリニックごとに異なる場合は条件分岐を追加）
-            if (modalHours) {
-                // デフォルトの営業時間を設定
-                let hours = '11:00〜21:00';
-                
-                // クリニック名に基づいて営業時間を調整（必要に応じて）
-                if (clinicName.includes('DIO') || clinicName.includes('ディオ')) {
-                    hours = '11:00〜21:00';
-                } else if (clinicName.includes('エミナル')) {
-                    hours = '11:00〜21:00';
-                } else if (clinicName.includes('湘南')) {
-                    hours = '10:00〜19:00';
-                } else if (clinicName.includes('リエート')) {
-                    hours = '11:00〜20:00';
-                } else if (clinicName.includes('ウララ')) {
-                    hours = '11:00〜20:00';
-                }
-                
-                modalHours.textContent = hours;
-            }
-            
             // Google Maps iframeを生成
             modalMapContainer.innerHTML = this.generateMapIframe(address);
             
@@ -4181,21 +4198,6 @@ class RankingApp {
                 
                 if (clinic) {
                     clinicKey = clinic.code;
-                } else {
-                    // フォールバック：クリニック名から推測
-                    if (clinicName.includes('ディオ')) {
-                        clinicKey = 'dio';
-                    } else if (clinicName.includes('エミナル')) {
-                        clinicKey = 'eminal';
-                    } else if (clinicName.includes('湘南')) {
-                        clinicKey = 'sbc';
-                    } else if (clinicName.includes('リエート')) {
-                        clinicKey = 'lieto';
-                    } else if (clinicName.includes('ウララ')) {
-                        clinicKey = 'urara';
-                    } else if (clinicName.includes('DS')) {
-                        clinicKey = 'dsc';
-                    }
                 }
                 
                 // urlHandlerのインスタンスがある場合は使用、なければ直接URLを生成
@@ -4243,20 +4245,7 @@ class RankingApp {
                     const buttonText = document.getElementById('map-modal-button-text');
                     if (buttonText) {
                         // クリニック名を取得
-                        let clinicBaseName = '';
-                        if (clinicCode.includes('ディオ')) {
-                            clinicBaseName = 'ディオクリニック';
-                        } else if (clinicCode.includes('エミナル')) {
-                            clinicBaseName = 'エミナルクリニック';
-                        } else if (clinicCode.includes('湘南')) {
-                            clinicBaseName = '湘南美容クリニック';
-                        } else if (clinicCode.includes('リエート')) {
-                            clinicBaseName = 'リエートクリニック';
-                        } else if (clinicCode.includes('ウララ')) {
-                            clinicBaseName = 'ウララクリニック';
-                        } else {
-                            clinicBaseName = 'クリニック';
-                        }
+                        let clinicBaseName = clinicName || 'クリニック';
                         buttonText.textContent = clinicBaseName + 'の公式サイト';
                     }
                 } catch (error) {
@@ -4296,53 +4285,6 @@ function toggleStores(button) {
     // ボタンを非表示にする（一度クリックしたら消える）
     button.style.display = 'none';
 }
-
-// アプリケーションの起動（DOM読み込み完了後に実行）
-// 注: この部分は削除して、下の初期化コードに統合します
-/*
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new RankingApp();
-    app.init();
-    
-    // Smooth scrolling for table of contents links
-    // Temporarily disabled for debugging scroll issues
-    
-    document.querySelectorAll('.toc-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            
-            if (targetElement) {
-                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                
-                window.scrollTo({
-                    top: targetPosition - 80,
-                    behavior: 'smooth'
-                });
-            }
-            
-            return false;
-        });
-    });
-    */
-    
-    // Prevent default behavior for all href="#" links
-    // This prevents page jumping to top
-    // Temporarily disabled for debugging - too broad impact with capture phase
-    /*
-    document.addEventListener('click', function(e) {
-        const link = e.target.closest('a[href="#"]');
-        if (link) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    }, true);
-    */
-// });
 
 // アプリケーションの初期化
 // 比較表の注釈を動的に生成する関数
