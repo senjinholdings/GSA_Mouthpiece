@@ -676,9 +676,13 @@
             manualLink.href = finalUrl;
             manualLink.style.display = 'inline-block';
             
-            // ロゴの設定
-            const logoPath = `/images/clinics/${clinicCode}/${clinicCode}-logo.webp`;
-            clinicLogo.src = logoPath;
+            // ロゴの設定（meta13優先 -> 既定パス）
+            try {
+                const metaLogo = window.dataManager && window.dataManager.getClinicText(clinicCode, 'meta13', '');
+                clinicLogo.src = metaLogo || `/images/clinics/${clinicCode}/${clinicCode}-logo.webp`;
+            } catch (_) {
+                clinicLogo.src = `/images/clinics/${clinicCode}/${clinicCode}-logo.webp`;
+            }
             clinicLogo.alt = clinic.name;
             clinicLogo.style.display = 'block';
             
