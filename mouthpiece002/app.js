@@ -543,7 +543,6 @@ class DisplayManager {
         });
     }
 }
-
 // データ管理クラス
 class DataManager {
     constructor() {
@@ -1345,7 +1344,6 @@ class DataManager {
         const rating = this.getClinicText(clinicCode, '総合評価', defaultRating.toString());
         return parseFloat(rating) || defaultRating;
     }
-
     // クリニック名を取得する関数
     getClinicName(clinicCode, defaultName = 'クリニック') {
         return this.getClinicText(clinicCode, 'クリニック名', defaultName);
@@ -1926,7 +1924,6 @@ class DataManager {
         );
     }
 }
-
 // アプリケーションクラス
 class RankingApp {
     constructor() {
@@ -2710,7 +2707,6 @@ class RankingApp {
         // この関数は使用しない
         return;
     }
-
     // 比較表タブ機能のセットアップ
     setupComparisonTabs() {
         // タブボタンのHTMLを動的に生成する処理を削除
@@ -3430,7 +3426,6 @@ class RankingApp {
             });
         });
     }
-    
     // 詳細を見るリンクのイベントリスナーを設定
     setupDetailScrollLinks() {
         
@@ -3770,15 +3765,10 @@ class RankingApp {
                     const dm = this.dataManager;
                     // クリニックごとの症例画像定義
                     const dynamicCaseImages = {
-                        dio: [
-                            { fallbacks: ['images/dio_case01.jpg'], alt: 'CASE 01' },
-                            { fallbacks: ['images/dio_case02.jpg'], alt: 'CASE 02' },
-                            { fallbacks: ['images/dio_case03.jpg'], alt: 'CASE 03' }
-                        ],
-                        tcb: [
-                            { fallbacks: ['images/tcb_case01.jpg'], alt: 'CASE 01' },
-                            { fallbacks: ['images/tcb_case02.jpg'], alt: 'CASE 02' },
-                            { fallbacks: ['images/tcb_case03.jpg'], alt: 'CASE 03' }
+                        omt: [
+                            { fallbacks: ['images/omt_case01.jpg'], alt: 'CASE 01' },
+                            { fallbacks: ['images/omt_case02.jpg'], alt: 'CASE 02' },
+                            { fallbacks: ['images/omt_case03.jpg'], alt: 'CASE 03' }
                         ]
                     };
                     const imagesForClinic = dynamicCaseImages[clinicCode] || [];
@@ -4169,7 +4159,6 @@ class RankingApp {
             </iframe>
         `;
     }
-
     // 地図モーダルのイベントリスナーを設定
     setupMapAccordions() {
         
@@ -4896,7 +4885,6 @@ function initializeBannerSliders() {
         updateNavVisibility();
     });
 }
-
 // バナー拡大モーダル（potenza002から移植）
 function createAndShowModal(imageUrls, startIndex) {
     const existingModal = document.querySelector('.banner-modal');
