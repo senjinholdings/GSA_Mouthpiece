@@ -21,6 +21,12 @@ body {
     min-height: 100vh;
 }
 
+/* 遅延レンダリング（視界外のレイアウト計算を遅延） */
+.cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 1200px; /* 仮想サイズでジャンプ抑制 */
+}
+
 /* メインコンテナ - PC表示でも最大768pxに制限 */
 body > *:not(.sidebar-menu):not(.sidebar-overlay):not(.map-modal):not(.disclaimer-modal):not(.banner-modal):not(.scroll-bottom-modal) {
     width: 100%;
@@ -683,6 +689,140 @@ select {
     font-size: 0.9rem;
 }
 
+/* 施術風景セクション */
+.clinic-procedure-section {
+    margin: 20px 0;
+    padding: 2%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.clinic-procedure-section .section-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    position: relative;
+}
+
+.clinic-procedure-section .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, #ff95ad, #f0a0a5);
+    border-radius: 2px;
+}
+
+.clinic-procedure-section .procedure-video-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.procedure-video-embed {
+    position: relative;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+}
+
+.procedure-video {
+    cursor: pointer;
+}
+
+.procedure-video-embed video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: none;
+    object-fit: contain;
+    background: #000;
+}
+
+.procedure-video-toggle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.2s ease;
+}
+
+.procedure-video-toggle:focus-visible {
+    outline: 2px solid rgba(255, 149, 173, 0.8);
+    outline-offset: 2px;
+}
+
+.procedure-video-toggle-icon {
+    position: relative;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 0 10px 16px;
+    border-color: transparent transparent transparent #7c7c7c;
+    margin-left: 4px;
+}
+
+.procedure-video-embed.is-playing .procedure-video-toggle {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.procedure-video-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    border-radius: 12px;
+    background: #f7f7f7;
+    color: #666;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.procedure-video-caption {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+@media screen and (max-width: 768px) {
+    .clinic-procedure-section {
+        padding: 20px 16px;
+        margin: 16px 0;
+    }
+
+    .clinic-procedure-section .section-title {
+        font-size: 1.4rem;
+    }
+
+    .procedure-video-placeholder {
+        min-height: 180px;
+        font-size: 0.9rem;
+    }
+
+    .procedure-video-caption {
+        font-size: 0.85rem;
+    }
+}
+
 /* POINTセクション - クリニック詳細内 */
 .clinic-points-section {
     margin: 20px 0 !important;
@@ -1061,6 +1201,7 @@ select {
     text-align: center;
     font-size: 13px;
     margin: 10px 0px 0px;
+    position: relative;
 }
 
 .cv_box_img a {
@@ -1077,6 +1218,10 @@ select {
 
 .cv_box_img img {
     vertical-align: middle;
+}
+
+    border-top: 6px solid #ffffff;
+    margin-top: -1px;
 }
 
 /* ボタンスタイル */
@@ -2065,7 +2210,7 @@ section.clinic-rankings .ranking-header-banner {
     border-bottom:solid 2px #cf657d;
     color: white;
     padding: 15px 25px;
-    border-radius: 4px;
+    border-radius: 30px;
     text-decoration: none;
     font-weight: 600;
     font-size: 0.5rem;
@@ -2112,7 +2257,7 @@ section.clinic-rankings .ranking-header-banner {
     color: #ff95ad;
     border: 2px solid #ff95ad;
     border-bottom: solid 2.4px #ec839b;
-    border-radius: 8px;
+    border-radius: 40px;
     padding: 10px 16px;
     margin-top: 5px;
     text-decoration: none;
@@ -2129,6 +2274,24 @@ section.clinic-rankings .ranking-header-banner {
 .btn.btn_outline_pink .bt_s {
     font-size: 1rem;
     white-space: nowrap;
+}
+
+@media (min-width: 769px) {
+    .btn.btn_outline_pink a.ctaBtn-direct {
+        flex-direction: column;
+        padding-top: 14px;
+        padding-bottom: 12px;
+    }
+
+    .btn.btn_outline_pink a.ctaBtn-direct .bt_s,
+    .btn.btn_outline_pink a.ctaBtn-direct .cta-subtext {
+        width: 100%;
+        text-align: center;
+    }
+
+    .btn.btn_outline_pink a.ctaBtn-direct .cta-subtext {
+        margin-top: 6px;
+    }
 }
 
 .btn.btn_outline_pink a:hover {
@@ -2354,7 +2517,6 @@ section.clinic-rankings .ranking-header-banner {
 .comparison-table table td {
     text-align: center !important;
     padding: 15px 8px;
-    border-right: 1px solid #E0E0E0;
     vertical-align: middle;
     font-weight: 500;
     white-space: normal;
@@ -2518,7 +2680,7 @@ section.clinic-rankings .ranking-header-banner {
     color: white;
     text-decoration: none;
     padding: 8px 15px;
-    border-radius: 4px;
+    border-radius: 15px;
     font-size: 0.8rem;
     font-weight: 600;
     margin-bottom: 5px;
@@ -2535,7 +2697,7 @@ section.clinic-rankings .ranking-header-banner {
     text-decoration: none;
     padding: 6px 12px;
     border: 1px solid #E0E0E0;
-    border-radius: 4px;
+    border-radius: 15px;
     font-size: 0.75rem;
     transition: all 0.3s;
 }
@@ -2845,7 +3007,7 @@ section.clinic-rankings .ranking-header-banner {
     text-decoration: none;
     padding: 6px 12px;
     border: 1px solid #E0E0E0;
-    border-radius: 4px;
+    border-radius: 15px;
     font-size: 0.75rem;
     transition: all 0.3s;
 }
@@ -2956,7 +3118,7 @@ section.clinic-rankings .ranking-header-banner {
     overflow: auto; background-color: rgba(0,0,0,0.9);
 }
 .banner-modal.active { display: flex; justify-content: center; align-items: center; }
-.banner-modal-content { position: relative; max-width: 90%; max-height: 90%; }
+.banner-modal-content { position: relative; max-width: 100%; max-height: 100%; margin: 0 auto; }
 .banner-modal-image { width: 100%; height: auto; display: block; }
 
 .banner-modal-close {
@@ -2977,12 +3139,17 @@ section.clinic-rankings .ranking-header-banner {
         0 1px 0 #fff, 1px 1px 0 #fff;
 }
 .banner-modal-nav:hover { opacity: 0.9; }
-.banner-modal-prev { left: 20px; }
-.banner-modal-next { right: 20px; }
+.banner-modal-prev { left: 0px; }
+.banner-modal-next { right: 0px; }
 .banner-modal-counter {
-    position: absolute; top: 15px; left: 15px; color: #fff;
+    position: absolute; top: -30px; left: 15px; color: #fff;
     background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 4px;
     font-size: 12px; z-index: 10002;
+}
+.banner-modal.active { justify-content: center !important; align-items: center !important; }
+@media screen and (min-width: 769px) {
+    /* PC時はビューポート基準で中央配置を担保 */
+    .banner-modal-content { max-width: 90vw; max-height: 90vh; }
 }
 .banner-modal-dots {
     position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -3017,12 +3184,16 @@ section.clinic-rankings .ranking-header-banner {
     border-radius: 12px 12px 0 0;
     box-shadow: 0 -8px 24px rgba(0,0,0,0.15);
     z-index: 10001;
-    transform: translateY(100%);
-    transition: transform .28s ease;
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+    transition: transform .28s ease, opacity .28s ease;
     display: flex;
     flex-direction: column;
 }
-.clinic-detail-modal.active { transform: translateY(0); }
+.clinic-detail-modal.active {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+}
 .clinic-detail-modal header {
     position: sticky; top: 0; background: #fff; z-index: 1;
     display: flex; align-items: center; justify-content: center;
@@ -3045,6 +3216,23 @@ section.clinic-rankings .ranking-header-banner {
     overflow: auto;
 }
 body.no-scroll { overflow: hidden; }
+
+@media (min-width: 1025px) {
+    .clinic-detail-modal {
+        top: 50%;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        width: min(900px, 90vw);
+        max-height: min(90vh, 820px);
+        border-radius: 16px;
+        box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+        transform: translate3d(-50%, -45%, 0);
+    }
+    .clinic-detail-modal.active {
+        transform: translate3d(-50%, -50%, 0);
+    }
+}
 
 /* detail-rank-best要素のレスポンシブスタイル */
 #detail-rank-best {
@@ -5318,7 +5506,7 @@ body.no-scroll { overflow: hidden; }
     
     /* 比較表のさらなる最適化 */
     .comparison-title {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
     }
     
     .comparison-subtitle {
@@ -5712,7 +5900,7 @@ body.no-scroll { overflow: hidden; }
         padding: 5px 0px;
         font-size: 0.7rem;
         gap: 0px;
-        border-radius: 4px;
+        border-radius: 15px;
     }
     
     .clinic-card .btn.btn_second_primary .bt_s {
@@ -6086,7 +6274,7 @@ body.no-scroll { overflow: hidden; }
 .detail-item .brand-section .shop-btn {
     margin-left: auto;
     padding: 6px 8px;
-    border-radius: 4px;
+    border-radius: 20px;
     font-size: 13px;
     background-color: #f39ea7;
     border-bottom:solid 2px #cf657d;
@@ -6258,7 +6446,7 @@ body.no-scroll { overflow: hidden; }
     margin-top: 12px;
     padding: 12px 0;
     border: 1px solid #E0E0E0;
-    border-radius: 4px;
+    border-radius: 30px;
     background-color: #fff;
     color: #9e9e9e;
     font-size: 13px;
@@ -7194,7 +7382,7 @@ body.no-scroll { overflow: hidden; }
 .detail-item .brand-section .shop-btn {
     margin-left: auto;
     padding: 6px 8px;
-    border-radius: 4px;
+    border-radius: 20px;
     font-size: 13px;
     background-color: #f39ea7;
     color: #fff;
@@ -7582,7 +7770,7 @@ img{max-width:100%;height:auto}
     margin-top: 12px;
     padding: 12px 0;
     border: 1px solid #E0E0E0;
-    border-radius: 4px;
+    border-radius: 30px;
     background-color: #fff;
     color: #9e9e9e;
     font-size: 13px;
@@ -8606,4 +8794,13 @@ body .case-slider .slick-slide img {
     .fixed-mail-hankyo-button { height: 44px; }
     .fixed-mail-hankyo-button__tag { width: 38px; font-size: 11px; }
     .fixed-mail-hankyo-button__inner__text__main { font-size: 14px; }
+}
+.ctaBtn-direct .bt_s {
+    display: block;
+    line-height: 1.3;
+}
+
+.ctaBtn-direct .cta-subtext {
+    display: block;
+    margin-top: 4px;
 }

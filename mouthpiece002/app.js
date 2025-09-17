@@ -1934,6 +1934,92 @@ class RankingApp {
         this.textsInitialized = false;
     }
 
+    normalizeRegionId(regionId) {
+        if (regionId === undefined || regionId === null) return '';
+        const raw = String(regionId).trim();
+        if (!raw) return '';
+        if (/^\d+$/.test(raw)) {
+            const num = parseInt(raw, 10);
+            if (Number.isNaN(num)) return '';
+            return num.toString().padStart(3, '0');
+        }
+        return raw;
+    }
+
+    isNationalRegion(regionId, region = null) {
+        const normalized = this.normalizeRegionId(regionId ?? region?.id);
+        if (normalized === '000') return true;
+        const regionName = region && region.name ? String(region.name).trim() : '';
+        return regionName === '全国';
+    }
+
+    applyRegionLabels(region, options = {}) {
+        if (!region && options.regionId === undefined && this.currentRegionId === null) {
+            return;
+        }
+
+        const regionIdRaw = options.regionId !== undefined ? options.regionId : region?.id ?? this.currentRegionId;
+        const normalizedId = this.normalizeRegionId(regionIdRaw);
+        const regionName = region && region.name ? region.name : '';
+        const isNational = this.isNationalRegion(normalizedId, region);
+
+        const mvRegionElement = document.getElementById('mv-region-name');
+        if (mvRegionElement) {
+            mvRegionElement.textContent = isNational ? '最新' : regionName;
+        }
+
+        const detailRegionElement = document.getElementById('detail-region-name');
+        if (detailRegionElement) {
+            if (isNational) {
+                detailRegionElement.textContent = '[最新版] 人気のクリニック';
+                detailRegionElement.style.left = '3%';
+            } else {
+                detailRegionElement.textContent = `${regionName}で人気のクリニック`;
+                const nameLength = regionName.length;
+                let leftPosition = '3%';
+                if (nameLength === 2) {
+                    leftPosition = '4%';
+                } else if (nameLength === 3) {
+                    leftPosition = '1%';
+                }
+                detailRegionElement.style.left = leftPosition;
+            }
+        }
+
+        const comparisonRegionElement = document.getElementById('comparison-region-name');
+        if (comparisonRegionElement) {
+            if (isNational) {
+                comparisonRegionElement.textContent = '';
+                comparisonRegionElement.style.display = 'none';
+            } else {
+                comparisonRegionElement.textContent = regionName;
+                comparisonRegionElement.style.removeProperty('display');
+            }
+        }
+
+        const rankRegionElement = document.getElementById('rank-region-name');
+        if (rankRegionElement) {
+            const baseText = (this.dataManager && typeof this.dataManager.getCommonText === 'function')
+                ? this.dataManager.getCommonText('ランキング地域名テキスト', 'で人気の脂肪溶解注射はココ！')
+                : 'で人気の脂肪溶解注射はココ！';
+            if (isNational) {
+                const suffix = baseText.replace(/^で/, '');
+                rankRegionElement.textContent = `いま${suffix}`;
+                rankRegionElement.style.left = '52%';
+            } else {
+                rankRegionElement.textContent = `${regionName}${baseText}`;
+                const nameLength = regionName.length;
+                let leftPosition = '52%';
+                if (nameLength === 3) {
+                    leftPosition = '51%';
+                } else if (nameLength >= 4) {
+                    leftPosition = '50%';
+                }
+                rankRegionElement.style.left = leftPosition;
+            }
+        }
+    }
+
     async init() {
         try {
             // データマネージャーの初期化
@@ -2253,47 +2339,14 @@ class RankingApp {
             // 地域名の更新
             this.displayManager.updateSelectedRegionName(region.name);
             
-            // 比較表の地域名も更新
-            const comparisonRegionElement = document.getElementById('comparison-region-name');
-            if (comparisonRegionElement) {
-                comparisonRegionElement.textContent = region.name;
-            }
-
-            //MVの地域名も更新
-            const mvRegionElement = document.getElementById('mv-region-name');
-            if (mvRegionElement) {
-                mvRegionElement.textContent = region.name;
-            }
-
             //SVGの地域テキストも更新
             const mvRegionTextElement = document.getElementById('mv-region-text');
             if (mvRegionTextElement) {
                 mvRegionTextElement.textContent = region.name;
             }
 
-            //ランキング部の地域名も更新
-            const rankRegionElement = document.getElementById('rank-region-name');
-            if (rankRegionElement) {
-                rankRegionElement.textContent = region.name;
-            }
-
-            //詳細セクションの地域名も更新
-            const detailRegionElement = document.getElementById('detail-region-name');
-            if (detailRegionElement) {
-                detailRegionElement.textContent = region.name + 'で人気のクリニック';
-                
-                // 地域名の文字数に応じてleftの位置を調整
-                const regionNameLength = region.name.length;
-                let leftPosition = '3%'; // デフォルト値（3文字以上）
-                
-                if (regionNameLength === 2) {
-                    leftPosition = '4%'; // 2文字（例：千葉、東京）
-                } else if (regionNameLength === 3) {
-                    leftPosition = '1%'; // 3文字（例：神奈川、埼玉）
-                }
-                
-                detailRegionElement.style.left = leftPosition;
-            }
+            // 地域表記のバリエーションを適用
+            this.applyRegionLabels(region, { regionId });
 
             // サイト全体のテキストを動的に更新
             // updateAllTextsは比較表などの更新を行うが、地域名は既に設定済み
@@ -2314,28 +2367,8 @@ class RankingApp {
                 }, 50);
             }
 
-            //ランキングの地域名も更新（共通テキストを使用）
-            const rankRegionElement2 = document.getElementById('rank-region-name');
-            if (rankRegionElement2) {
-                // 共通テキストから後半部分を取得
-                const rankingText = this.dataManager.getCommonText('ランキング地域名テキスト', 'で人気の脂肪溶解注射はココ！');
-                const fullText = region.name + rankingText;
-                rankRegionElement2.textContent = fullText;
-                
-                // 地域名の文字数に応じてleftの位置を調整
-                const regionNameLength = region.name.length;
-                let leftPosition = '52%'; // デフォルト値
-                
-                if (regionNameLength === 2) {
-                    leftPosition = '52%'; // 2文字（例：東京）
-                } else if (regionNameLength === 3) {
-                    leftPosition = '51%'; // 3文字（例：神奈川）
-                } else if (regionNameLength === 4) {
-                    leftPosition = '50%'; // 4文字
-                }
-                
-                rankRegionElement2.style.left = leftPosition;
-            }
+            // ランキングヘッダーのテキストも地域仕様に合わせる
+            this.applyRegionLabels(region, { regionId });
             
             // ランキングバナーのalt属性も動的に更新
             const rankingBannerImages = document.querySelectorAll('.ranking-banner-image');
@@ -2403,58 +2436,39 @@ class RankingApp {
 
     // 地域名を復元（updateAllTexts後の上書き防止）
     restoreRegionNames(region) {
-        // MVの地域名を復元
-        const mvRegionElement = document.getElementById('mv-region-name');
-        if (mvRegionElement) {
-            mvRegionElement.textContent = region.name;
-        }
-        
-        // 詳細セクションの地域名を復元
-        const detailRegionElement = document.getElementById('detail-region-name');
-        if (detailRegionElement) {
-            detailRegionElement.textContent = region.name + 'で人気のクリニック';
-        }
-        
-        // 比較表の地域名を復元
-        const comparisonRegionElement = document.getElementById('comparison-region-name');
-        if (comparisonRegionElement) {
-            comparisonRegionElement.textContent = region.name;
-        }
+        this.applyRegionLabels(region, { regionId: region?.id ?? this.currentRegionId });
     }
 
     forceUpdateRegionNames(region) {
-        // MV地域名を強制的に更新
-        const mvRegionElement = document.getElementById('mv-region-name');
-        if (mvRegionElement) {
-            mvRegionElement.textContent = region.name;
-        }
-        
-        // 詳細セクション地域名を強制的に更新
-        const detailRegionElement = document.getElementById('detail-region-name');
-        if (detailRegionElement) {
-            detailRegionElement.textContent = region.name + 'で人気のクリニック';
-        }
-        
-        // 比較表地域名を強制的に更新
-        const comparisonRegionElement = document.getElementById('comparison-region-name');
-        if (comparisonRegionElement) {
-            comparisonRegionElement.textContent = region.name;
-        }
-        
-        // ランキング地域名も強制的に更新
-        const rankRegionElement = document.getElementById('rank-region-name');
-        if (rankRegionElement) {
-            const rankingText = this.dataManager.getCommonText('ランキング地域名テキスト', 'で人気の脂肪溶解注射はココ！');
-            const fullText = region.name + rankingText;
-            rankRegionElement.textContent = fullText;
-        }
-        
+        this.applyRegionLabels(region, { regionId: region?.id ?? this.currentRegionId });
     }
 
     // サイト全体のテキストを動的に更新（クリニック別対応）
     updateAllTexts(regionId) {
         try {
             const currentClinic = this.dataManager.getCurrentClinic();
+
+            const mappedRegionIdRaw = this.dataManager.mapRegionId(regionId);
+            const normalizedMappedRegionId = this.normalizeRegionId(mappedRegionIdRaw ?? regionId);
+            let regionForDisplay = null;
+            if (normalizedMappedRegionId === '000') {
+                regionForDisplay = { id: '000', name: '全国' };
+            } else {
+                const regionCandidate = this.dataManager.getRegionById(String(parseInt(normalizedMappedRegionId || '0', 10)));
+                if (regionCandidate) {
+                    regionForDisplay = {
+                        id: this.normalizeRegionId(regionCandidate.id),
+                        name: regionCandidate.name
+                    };
+                }
+            }
+            if (!regionForDisplay) {
+                regionForDisplay = {
+                    id: normalizedMappedRegionId || '',
+                    name: ''
+                };
+            }
+            const isNational = this.isNationalRegion(regionId, regionForDisplay);
 
             // ページタイトルの更新
             // メタディスクリプションの更新
@@ -2529,19 +2543,11 @@ class RankingApp {
             // 比較表タイトルの更新（共通テキスト）
             const comparisonTitle = document.querySelector('.comparison-title');
             if (comparisonTitle) {
-                const titleText = this.dataManager.getCommonText('比較表タイトル', 'で人気の脂肪溶解注射');
-                // 地域名を動的に挿入（マッピングされた地域を使用、000の場合は全国を使用）
-                const mappedRegionId = this.dataManager.mapRegionId(regionId);
-                let regionName = '';
-                
-                if (mappedRegionId === '000') {
-                    regionName = '全国';
-                } else {
-                    const region = this.dataManager.getRegionById(String(parseInt(mappedRegionId, 10)));
-                    regionName = region ? region.name : '';
-                }
-                
-                comparisonTitle.innerHTML = `<span id="comparison-region-name">${regionName}</span>${titleText}`;
+                const baseTitleText = this.dataManager.getCommonText('比較表タイトル', 'で人気の脂肪溶解注射');
+                const adjustedTitleText = isNational ? baseTitleText.replace(/^で/, '') : baseTitleText;
+                const spanStyle = isNational ? ' style="display:none;"' : '';
+                const spanText = isNational ? '' : (regionForDisplay?.name || '');
+                comparisonTitle.innerHTML = `<span id="comparison-region-name"${spanStyle}>${spanText}</span>${adjustedTitleText}`;
             }
 
             // 比較表サブタイトルの更新（共通テキスト）
@@ -2550,6 +2556,8 @@ class RankingApp {
                 const subtitleHtml = this.dataManager.getCommonText('比較表サブタイトル', 'クリニックを<span class="pink-text">徹底比較</span>');
                 comparisonSubtitle.innerHTML = this.dataManager.processDecoTags(subtitleHtml);
             }
+
+            this.applyRegionLabels(regionForDisplay, { regionId });
             
             // 案件詳細バナーのalt属性を更新（共通テキスト）
             const detailsBannerImg = document.querySelector('.details-banner-image');
@@ -2809,10 +2817,11 @@ class RankingApp {
         
         currentClinics.forEach((clinic, index) => {
             const tr = document.createElement('tr');
-            
-            // 1位のクリニックには特別な背景色
+
             if (index === 0) {
                 tr.style.backgroundColor = '#fffbdc';
+            } else if (index === 2 || index === 4) {
+                tr.style.backgroundColor = 'rgb(249 249 249)';
             }
             
             const rankNum = clinic.rank || index + 1;
@@ -3057,10 +3066,12 @@ class RankingApp {
 
         clinics.forEach((clinic, index) => {
             const tr = document.createElement('tr');
-            
-            // 1位のクリニックには特別な背景色
+
+            // ランクに応じて背景色を調整（1位: 強調、3位/5位: 補助色）
             if (index === 0) {
                 tr.style.backgroundColor = '#fffbdc';
+            } else if (index === 2 || index === 4) {
+                tr.style.backgroundColor = 'rgb(249 249 249)';
             }
             
             const rankNum = clinic.rank || index + 1;
@@ -3614,6 +3625,8 @@ class RankingApp {
             else if (rank === 4) badgeClass = 'ranking4';
             else if (rank === 5) badgeClass = 'ranking5';
 
+            const clinicCode = this.dataManager.getClinicCodeById(clinicId);
+
             // クリニック詳細データを動的に取得
             // DataManagerから動的にクリニック詳細データを取得
             const data = this.dataManager.getClinicDetailData(clinicId);
@@ -3641,6 +3654,28 @@ class RankingApp {
             });
 
             const rankIconPath = `../common_data/images/rank_icon/rank${rank}.webp`;
+            const regionNameForStores = this.dataManager.getRegionName(regionId) || '';
+            const isNationalForStores = this.isNationalRegion(regionId, { id: regionId, name: regionNameForStores });
+            const storeSectionHeading = (isNationalForStores || !regionNameForStores)
+                ? `${clinic.name}の店舗`
+                : `${clinic.name}の【${regionNameForStores}】の店舗`;
+            const informationSubTextRaw = clinicCode ? this.dataManager.getClinicText(clinicCode, 'INFORMATIONサブテキスト', '') : '';
+            const informationSubTextProcessed = informationSubTextRaw ? this.dataManager.processDecoTags(informationSubTextRaw) : '';
+            const ctaHeaderHtml = informationSubTextProcessed
+                ? `<div style="font-size: 12px;">${informationSubTextProcessed}</div>`
+                : '';
+            const ctaMicrocopyHtml = '<span class="cta-subtext" style="display:block;font-size: 11px;color: #ff95ad;font-weight: 400;"><span>いつでも変更/キャンセルは可能です</span></span>';
+            const directCtaHtml = rank === 1
+                ? `<p class="btn btn_outline_pink">
+                        <a class="ctaBtn-direct" href="https://sss.ac01.l-ad.net/cl/p1a64143O61e70f7/?bid=56casdd8820sb67f" target="_blank" rel="noopener">
+                            <span class="bt_s">無料相談の空き状況をチェック</span>${ctaMicrocopyHtml}
+                        </a>
+                    </p>`
+                : `<p class="btn btn_outline_pink">
+                        <a class="ctaBtn-direct" href="${this.urlHandler.getDirectFormUrl(clinic.id, clinic.rank)}" target="_blank" rel="noopener noreferrer">
+                            <span class="bt_s">無料相談の空き状況をチェック</span>${ctaMicrocopyHtml}
+                        </a>
+                    </p>`;
             detailItem.innerHTML = `
                 <div class="ranking_box_in">
                     <div class="detail-rank">
@@ -3657,7 +3692,6 @@ class RankingApp {
                     </div>
                 ${(() => {
                     // DataManagerからバナー画像パス候補を生成（CSV指定 + bnr2以降）
-                    const clinicCode = this.dataManager.getClinicCodeById(clinicId);
                     const bannerFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
                     // ベース（*_detail_bnr.webp）は使用しない。CSV指定と *_detail_bnr2.webp 以降を使用
                     const candidates = [];
@@ -3719,19 +3753,36 @@ class RankingApp {
                 
                 <!-- CTAボタン -->
                 <div class="clinic-cta-button-wrapper">
+                    ${ctaHeaderHtml}
                     <p class="btn btn_second_primary">
                         <a href="${this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank)}" target="_blank" rel="noopener noreferrer">
                             <span class="bt_s">公式サイトで詳細を見る</span>
                             <span class="btn-arrow">▶</span>
                         </a>
                     </p>
-                    <p class="btn btn_outline_pink">
-                        <a class="ctaBtn-direct" href="${this.urlHandler.getDirectFormUrl(clinic.id, clinic.rank)}" target="_blank" rel="noopener noreferrer">
-                            <span class="bt_s">無料相談の空き状況をチェック</span>
-                        </a>
-                    </p>
+                    ${directCtaHtml}
                 </div>
-                
+
+                ${(() => {
+                    const clinicCodeRaw = this.dataManager.getClinicCodeById(clinicId);
+                    const sanitizedClinicCode = clinicCodeRaw ? clinicCodeRaw.toString().trim().toLowerCase().replace(/[^a-z0-9_-]/g, '') : '';
+                    if (!sanitizedClinicCode) {
+                        return '';
+                    }
+                    const baseVideoPath = (window.SITE_CONFIG && window.SITE_CONFIG.imagesPath) ? window.SITE_CONFIG.imagesPath : './images';
+                    const videoSrc = `${baseVideoPath}/${sanitizedClinicCode}_treatment.mp4`;
+                    const videoHtml = `<div class=\"procedure-video-embed\" data-clinic-code=\"${sanitizedClinicCode}\" data-video-src=\"${videoSrc}\">\n                            <video class=\"procedure-video\" controls playsinline preload=\"auto\" tabindex=\"0\" aria-label=\"${clinic.name}の施術風景\">\n                                <source src=\"${videoSrc}\" type=\"video/mp4\">\n                                お使いのブラウザでは動画を再生できません。\n                            </video>\n                            <button type=\"button\" class=\"procedure-video-toggle\" aria-label=\"再生\">\n                                <span class=\"procedure-video-toggle-icon\"></span>\n                            </button>\n                        </div>`;
+
+                    return `
+                <div class="clinic-procedure-section" data-procedure-section style="display:none;">
+                    <h4 class="section-title">施術風景</h4>
+                    <div class="procedure-video-wrapper">
+                        ${videoHtml}
+                    </div>
+                </div>
+                    `;
+                })()}
+
                 <!-- クリニックのポイント -->
                 <div class="clinic-points-section">
                     <h4 class="section-title">POINT</h4>
@@ -3762,16 +3813,16 @@ class RankingApp {
                     // 症例写真（参考サイト同様、1位のみ表示）
                     if (rank !== 1) return '';
                     const clinicCode = this.dataManager.getClinicCodeById(clinicId) || '';
+                    if (!clinicCode) return '';
                     const dm = this.dataManager;
-                    // クリニックごとの症例画像定義
-                    const dynamicCaseImages = {
-                        omt: [
-                            { fallbacks: ['images/omt_case01.jpg'], alt: 'CASE 01' },
-                            { fallbacks: ['images/omt_case02.jpg'], alt: 'CASE 02' },
-                            { fallbacks: ['images/omt_case03.jpg'], alt: 'CASE 03' }
-                        ]
-                    };
-                    const imagesForClinic = dynamicCaseImages[clinicCode] || [];
+
+                    // 1位のクリニックコードを元に動的に症例画像のリストを生成
+                    const imagesForClinic = [
+                        { fallbacks: [`images/${clinicCode}_case01.jpg`], alt: 'CASE 01' },
+                        { fallbacks: [`images/${clinicCode}_case02.jpg`], alt: 'CASE 02' },
+                        { fallbacks: [`images/${clinicCode}_case03.jpg`], alt: 'CASE 03' }
+                    ];
+
                     if (!imagesForClinic.length) return '';
                     const buildRow = (label, val) => `<tr><td style=\"padding: 0 8px !important; background-color: #f8f8f8 !important; font-weight: bold !important; width: 30% !important;\">${label}</td><td style=\"padding: 0 8px !important;\">${val}</td></tr>`;
                     const slidesHtml = imagesForClinic.map((img, idx) => {
@@ -3913,7 +3964,7 @@ class RankingApp {
                 <!-- 店舗情報 -->
                 <div class="brand-section">
                     <h4 class="section-heading">
-                        ${clinic.name}の【${this.dataManager.getRegionName(regionId)}】の店舗
+                        ${storeSectionHeading}
                     </h4>
                     ${this.dataManager.generateStoresDisplay(clinicId, regionId)}
                 </div>
@@ -3954,11 +4005,17 @@ class RankingApp {
                                             <span class="btn-arrow">▶</span>
                                         </a>
                                     </p>
-                                    <p class="btn btn_outline_pink">
-                                        <a class="ctaBtn-direct" href="${this.urlHandler.getDirectFormUrl(clinicId, clinic.rank || 1)}" target="_blank" rel="noopener">
-                                            <span class="bt_s">無料相談の空き状況をチェック</span>
-                                        </a>
-                                    </p>
+                                    ${(rank === 1
+                                        ? `<p class="btn btn_outline_pink">
+                                            <a class="ctaBtn-direct" href="https://sss.ac01.l-ad.net/cl/p1a64143O61e70f7/?bid=56casdd8820sb67f" target="_blank" rel="noopener">
+                                                <span class="bt_s">無料相談の空き状況をチェック</span>${ctaMicrocopyHtml}
+                                            </a>
+                                        </p>`
+                                        : `<p class="btn btn_outline_pink">
+                                            <a class="ctaBtn-direct" href="${this.urlHandler.getDirectFormUrl(clinicId, clinic.rank || 1)}" target="_blank" rel="noopener">
+                                                <span class="bt_s">無料相談の空き状況をチェック</span>${ctaMicrocopyHtml}
+                                            </a>
+                                        </p>`)}
                                 </div>
                             </div>
                             `;
@@ -3992,6 +4049,7 @@ class RankingApp {
             `;
             
             detailsList.appendChild(detailItem);
+            this.initializeProcedureVideos(detailItem);
 
             // 症例スライダーを初期化（1位のみ）
             if (rank === 1) {
@@ -4085,6 +4143,122 @@ class RankingApp {
             }
         });
     }
+    initializeProcedureVideos(rootElement = document) {
+        const scope = rootElement instanceof HTMLElement ? rootElement : document;
+        const embeds = scope.querySelectorAll('.procedure-video-embed');
+        embeds.forEach((embed) => {
+            if (!embed || embed.dataset.videoInitialized === '1') {
+                return;
+            }
+            const video = embed.querySelector('.procedure-video');
+            const toggle = embed.querySelector('.procedure-video-toggle');
+            if (!video || !toggle) {
+                return;
+            }
+            embed.dataset.videoInitialized = '1';
+
+            const section = embed.closest('[data-procedure-section]') || embed.closest('.clinic-procedure-section');
+            const sourceEl = video.querySelector('source');
+            const videoSrc = embed.dataset.videoSrc || (sourceEl ? sourceEl.getAttribute('src') : video.currentSrc);
+            const cache = window.__treatmentVideoCache = window.__treatmentVideoCache || {};
+            const showSection = () => {
+                if (section && !section.dataset.shown) {
+                    section.style.removeProperty('display');
+                    delete section.dataset.procedurePending;
+                    section.dataset.shown = '1';
+                }
+            };
+            const removeSection = () => {
+                if (section && !section.dataset.removed) {
+                    section.dataset.removed = '1';
+                    section.remove();
+                }
+            };
+            if (!videoSrc) {
+                removeSection();
+                return;
+            }
+            if (cache[videoSrc] === false) {
+                removeSection();
+                return;
+            }
+            if (cache[videoSrc] === true) {
+                showSection();
+            }
+
+            const updateState = () => {
+                const playing = !video.paused && !video.ended;
+                embed.classList.toggle('is-playing', playing);
+                toggle.setAttribute('aria-label', playing ? '一時停止' : '再生');
+            };
+
+            const playSafely = () => {
+                const playPromise = video.play();
+                if (playPromise && typeof playPromise.then === 'function') {
+                    playPromise.catch(() => {});
+                }
+            };
+
+            const togglePlayback = () => {
+                if (video.paused || video.ended) {
+                    playSafely();
+                } else {
+                    video.pause();
+                }
+            };
+
+            const handleToggle = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                togglePlayback();
+            };
+
+            const markAvailable = () => {
+                cache[videoSrc] = true;
+                showSection();
+            };
+            const markMissing = () => {
+                cache[videoSrc] = false;
+                removeSection();
+            };
+
+            toggle.addEventListener('click', handleToggle);
+            video.addEventListener('click', handleToggle);
+            video.addEventListener('play', () => {
+                showSection();
+                updateState();
+            });
+            video.addEventListener('pause', updateState);
+            video.addEventListener('ended', updateState);
+            video.addEventListener('error', markMissing, { once: true });
+            const handleLoaded = () => {
+                markAvailable();
+                updateState();
+            };
+            video.addEventListener('loadeddata', handleLoaded, { once: true });
+            video.addEventListener('loadedmetadata', handleLoaded, { once: true });
+            video.addEventListener('keydown', (event) => {
+                if (event.key === ' ' || event.key === 'Enter') {
+                    event.preventDefault();
+                    togglePlayback();
+                }
+            });
+
+            if (video.error) {
+                markMissing();
+                return;
+            }
+            if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
+                markAvailable();
+            }
+            else {
+                try {
+                    video.load();
+                } catch (_) {}
+            }
+            updateState();
+        });
+    }
 
     // 店舗画像のパスを取得するメソッド（複数拡張子対応）
     getStoreImage(clinicName, storeNumber) {
@@ -4159,6 +4333,7 @@ class RankingApp {
             </iframe>
         `;
     }
+
     // 地図モーダルのイベントリスナーを設定
     setupMapAccordions() {
         
@@ -4765,7 +4940,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
 // バナースライダーの初期化関数（potenza002から移植）
 function initializeBannerSliders() {
     const sliders = document.querySelectorAll('.banner-slider');
@@ -4885,6 +5059,7 @@ function initializeBannerSliders() {
         updateNavVisibility();
     });
 }
+
 // バナー拡大モーダル（potenza002から移植）
 function createAndShowModal(imageUrls, startIndex) {
     const existingModal = document.querySelector('.banner-modal');
@@ -5037,6 +5212,34 @@ function closeClinicDetailModal() {
     if (modal) modal.parentNode.removeChild(modal);
     document.body.classList.remove('no-scroll');
 }
+
+// 症例画像クリック時の拡大（グローバル委譲フォールバック）
+// 動的生成されたスライドにも確実に適用する
+document.addEventListener('click', function(e) {
+    try {
+        const clickedSlide = e.target && e.target.closest && e.target.closest('.case-slide');
+        const targetImg = (e.target && e.target.closest && e.target.closest('.case-slide img')) || (clickedSlide && clickedSlide.querySelector && clickedSlide.querySelector('img'));
+        if (!clickedSlide && !targetImg) return;
+        const container = (clickedSlide || targetImg).closest('.case-slider, .case-carousel-container');
+        if (!container) return;
+        const imgs = Array.from(container.querySelectorAll('.case-slide img'));
+        if (!imgs.length) return;
+        const urls = imgs.map(img => img && img.src).filter(Boolean);
+        if (!urls.length) return;
+        let startIndex = 0;
+        if (targetImg) {
+            startIndex = Math.max(0, imgs.indexOf(targetImg));
+        } else if (clickedSlide) {
+            const idx = Array.from(container.querySelectorAll('.case-slide')).indexOf(clickedSlide);
+            startIndex = Math.max(0, idx);
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof createAndShowModal === 'function') {
+            createAndShowModal(urls, startIndex);
+        }
+    } catch (_) {}
+}, true);
 
 // スクロール追従モーダル
 function initializeScrollModal() {

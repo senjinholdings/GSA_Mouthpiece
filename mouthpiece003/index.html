@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <script src="../common_data/js/gtm-loader.js"></script>
+    <script src="../common_data/js/gtm-loader.js" defer></script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,15 +12,104 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <style>
+        * { box-sizing: border-box; }
+        *::before, *::after { box-sizing: inherit; }
+        html { color-scheme: light; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+        }
+        body > *:not(.sidebar-menu):not(.sidebar-overlay):not(.map-modal):not(.disclaimer-modal):not(.banner-modal):not(.scroll-bottom-modal) {
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+            height: auto;
+        }
+        a { color: inherit; text-decoration: none; }
+        .container {
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .site-header {
+            position: sticky;
+            top: 0;
+            background-color: #ffffff;
+            z-index: 1000;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+        }
+        .logo-main {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-icon img {
+            width: 40px;
+            height: 40px;
+        }
+        .site-logo {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        .hero-section {
+            position: relative;
+            margin: 0;
+        }
+        .hero-image-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #f9f9f9;
+            aspect-ratio: 1500 / 928;
+        }
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 0 12px; }
+            .header-content { padding: 12px; }
+            .site-logo { font-size: 1rem; }
+        }
+    </style>
     <!-- 重要なリソースのpreload -->
-    <link rel="preload" as="image" href="" fetchpriority="high" type="image/webp">
+    <link rel="preload" as="image" href="images/mv.webp" fetchpriority="high" type="image/webp">
     <link rel="preload" as="style" href="styles.css?v=2025080101">
-    <link rel="preload" as="script" href="app.js?v=2025081417">
+    
     <!-- Google Fontsはプリロードせず、通常のロードのみにする -->
     <!-- スタイルシート -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="styles.css?v=2025081417" media="all">
+    <link rel="stylesheet" href="styles.css?v=2025081417" media="print" onload="this.media='all'" fetchpriority="high">
+    <noscript><link rel="stylesheet" href="styles.css?v=2025081417"></noscript>
     <link rel="icon" type="image/png" href="../common_data/images/favicon.png" id="favicon">
     <!-- Critical CSS -->
     <!-- Font loading detection -->
@@ -55,19 +144,18 @@
         <section class="hero-section">
             <div class="hero-image-wrapper">
                 <picture>
-                    <source srcset="" type="image/webp">
                     <img src="images/mv.webp" alt="おすすめ比較ランキング - 2025年最新版" class="hero-image" loading="eager" fetchpriority="high" decoding="async" width="1500" height="928">
                 </picture>
-                <div id="mv-region-name" style="position:absolute;top: 8%;left: 1%;width: clamp(60px, 15vw, 115px);text-align: center;color: #808080;font-size: clamp(14px, 3.5vw, 27px);font-weight: 600;z-index:10;pointer-events:none;padding: clamp(4px, 1vw, 8px);border-radius: 8px;">東京</div>
-                <div id="mv-left-appeal-text" style="position:absolute;top: 25%;left: 14%;text-align: center;color: #808080;font-size: clamp(14px, 3.2vw, 25px);font-weight: 700;z-index:10;pointer-events:none;padding: clamp(6px, 1.5vw, 12px);">通院不要</div>
+                <div id="mv-region-name" style="position:absolute;top: 8%;left: 1%;width: clamp(60px, 15vw, 115px);text-align: center;color: #808080;font-size: clamp(14px, 3.5vw, 27px);font-weight: 600;z-index:10;pointer-events:none;padding: clamp(4px, 1vw, 8px);border-radius: 8px;"></div>
+                <div id="mv-left-appeal-text" style="position:absolute;top: 25%;left: 14%;text-align: center;color: #808080;font-size: clamp(14px, 3.2vw, 25px);font-weight: 700;z-index:10;pointer-events:none;padding: clamp(6px, 1.5vw, 12px);"></div>
                 <svg id="mv-main-svg-text" style="position:absolute;top: 35%;left:39%;transform:translateX(-50%);z-index:10;pointer-events:none;overflow: visible;width: 60vw;height: 10vh;">
-                    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#ff94ae" stroke="white" stroke-width="6px" paint-order="stroke" style="font-size: clamp(14px, 8vw, 62px);font-weight: 700;">
-                        <tspan id="mv-region-text">東京</tspan>
+                    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#ff94ae" stroke="white" stroke-width="6px" paint-order="stroke" style="font-size: clamp(14px, 8vw, 56px);font-weight: 700;">
+                        <tspan id="mv-region-text"></tspan>
                     </text>
                 </svg>
                 <svg id="mv-appeal1-text" style="position:absolute;top: 52%;left:39%;transform:translateX(-50%);z-index:10;pointer-events:none;overflow: visible;width: 60vw;height: 10vh;">
                     <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#ff94ae" stroke="white" stroke-width="6px" paint-order="stroke" style="font-size: clamp(14px, 8vw, 62px); font-weight: 700;">
-                        クリニックを徹底比較
+                        
                     </text>
                 </svg>
             </div>
@@ -79,9 +167,9 @@
             <!-- ランキング表示セクション -->
             <section class="clinic-rankings ranking-section">
                 <div class="ranking-header-banner">
-                    <img src="images/ranking_header_banner.webp" alt="" class="ranking-banner-image">                    
+                    <img src="images/ranking_header_banner.webp" alt="" class="ranking-banner-image" loading="lazy" decoding="async">
                 </div>
-                <div id="rank-region-name" style="position:absolute;top: 6%;left: 52%;white-space: nowrap;transform: translateX(-50%);text-align: center;color: rgb(255, 255, 255);font-size: clamp(14px, 4.8vw, 33px);font-weight: 600;z-index:10;pointer-events:none;">東京</div>
+                <div id="rank-region-name" style="position:absolute;top: 6%;left: 52%;white-space: nowrap;transform: translateX(-50%);text-align: center;color: rgb(255, 255, 255);font-size: clamp(14px, 5.2vw, 37px);font-weight: 600;z-index:10;pointer-events:none;"></div>
                 <div id="ranking-list" class="ranking-container">
                     <!-- ランキングはJavaScriptで動的に生成 -->
                 </div>
@@ -128,7 +216,7 @@
                             <!-- タブ1: 効果 -->
                             <div class="tab-content active" data-tab="0" style="display: block;">
                                 <div style="width: 100%; margin-bottom: 15px;">
-                                    <img src="images/Tips1.webp" alt="効果" style="width: 100%; height: auto; border-radius: 4px;" loading="lazy">
+                                    <img src="images/Tips1.webp" alt="効果" style="width: 100%; height: auto; border-radius: 4px;" loading="lazy" decoding="async">
                                 </div>
                                 <p style="font-size: 14px; line-height: 1.8; color: #4C4C4C; margin-bottom: 15px;">
                                     
@@ -138,7 +226,7 @@
                             <!-- タブ2: クリニック選び -->
                             <div class="tab-content" data-tab="1" style="display: none;">
                                 <div style="width: 100%; margin-bottom: 15px;">
-                                    <img src="images/Tips2.webp" alt="クリニック選びのポイント" style="width: 100%; height: auto; border-radius: 4px;" loading="lazy">
+                                    <img src="images/Tips2.webp" alt="クリニック選びのポイント" style="width: 100%; height: auto; border-radius: 4px;" loading="lazy" decoding="async">
                                 </div>
                                 <p style="font-size: 14px; line-height: 1.8; color: #4C4C4C; margin-bottom: 15px;">
                                     
@@ -148,7 +236,7 @@
                             <!-- タブ3: 今がおすすめ -->
                             <div class="tab-content" data-tab="2" style="display: none;">
                                 <div style="width: 100%; margin-bottom: 15px;">
-                                    <img src="images/Tips3.webp" alt="今がおすすめの理由" style="width: 100%; height: auto; border-radius: 4px;" loading="lazy">
+                                    <img src="images/Tips3.webp" alt="今がおすすめの理由" style="width: 100%; height: auto; border-radius: 4px;" loading="lazy" decoding="async">
                                 </div>
                                 <p style="font-size: 14px; line-height: 1.8; color: #4C4C4C; margin-bottom: 15px;">
                                     
@@ -236,7 +324,7 @@
             <!-- 比較表セクション -->
             <section class="comparison-section">
                 <div class="comparison-header">
-                    <h2 class="comparison-title"><span id="comparison-region-name">東京</span></h2>
+                    <h2 class="comparison-title"><span id="comparison-region-name">地域</span></h2>
                     <h3 class="comparison-subtitle">クリニックを<span class="accent-text">徹底比較</span></h3>
                 </div>
                 
@@ -255,12 +343,12 @@
                                 <th class="" style="">費用</th>
                                 <th class="" style="">特徴</th>
                                 <th>公式サイト</th>
-                                <th class="th-none" style="display: none;">矯正範囲</th>
-                                <th class="th-none" style="display: none;">目安期間</th>
-                                <th class="th-none" style="display: none;">通院頻度</th>
-                                <th class="th-none" style="display: none;">実績/症例数</th>
-                                <th class="th-none" style="display: none;">ワイヤー矯正の紹介</th>
-                                <th class="th-none" style="display: none;">サポート</th>
+                                <th class="th-none" style="display: none;"></th>
+                                <th class="th-none" style="display: none;"></th>
+                                <th class="th-none" style="display: none;"></th>
+                                <th class="th-none" style="display: none;"></th>
+                                <th class="th-none" style="display: none;"></th>
+                                <th class="th-none" style="display: none;"></th>
                                 <th class="th-none" style="display: none;">詳細</th>
                             </tr>
                         </thead>
@@ -287,8 +375,8 @@
             <!-- 案件詳細セクション -->
             <section class="clinic-details-section">
                 <div class="details-header-banner">
-                    <img src="images/details_header_bannar3.webp" alt="コスパ×効果×通いやすさで選ぶ医療痩身クリニックBEST3" class="details-banner-image">
-                    <div id="detail-region-name">東京で人気のクリニック</div>
+                    <img src="images/details_header_bannar3.webp" alt="コスパ×効果×通いやすさで選ぶ医療痩身クリニックBEST3" class="details-banner-image" loading="lazy" decoding="async">
+                    <div id="detail-region-name">地域で人気のクリニック</div>
                     <div id="detail-rank-best">3<span style="font-size: 0.6em;"> 選！</span></div>
                 </div>
                 
@@ -299,7 +387,7 @@
 
             <!-- 医療情報コラムセクション（外部JSで挿入） -->
             <div id="medical-columns-root"></div>
-            <script src="columns/columns.js?v=20250904"></script>
+            <script src="columns/columns.js?v=2025091701" defer></script>
 
             <!-- 医療情報コラムセクション（旧：非表示） -->
             <!-- 医療情報コラムセクション -->
@@ -310,7 +398,7 @@
    <!-- 迷ったら1位クリニックセクション -->
             <div id="first-choice-recommendation-section">
                 <div style="position: relative; display: inline-block; width: 100%;">
-                    <img src="images/ranking_header_banner.webp" alt="" class="ranking-banner-image">
+                    <img src="images/ranking_header_banner.webp" alt="" class="ranking-banner-image" loading="lazy" decoding="async">
                     <div id="first-choice-region-text" style="position: absolute;bottom: 44%;left: 6%;text-align: center;color: rgb(255, 255, 255);font-size: clamp(16px, 5vw, 38px);font-weight: 600;z-index: 10;pointer-events: none;">迷ったら<span id="first-choice-clinic-name"></span>がおすすめ</div>
                 </div><section class="first-choice-recommendation-section" style="border: 5px solid rgb(253 208 124);border-radius: -5px;padding: 5px 5px 10px 5px;margin: 0px 20px;background-color: #fffef8;">
                                 
@@ -373,6 +461,7 @@ text-align: center;
                     </div>
                     
                     <div class="cv_box_img">
+                        <div class="cta-microcopy" aria-hidden="true"><span class="cta-microcopy-label">タイムセール</span></div>
                         <span id="first-choice-achievement-text"></span>
                         <p class="btn btn_second_primary" style="margin-top: 10px;">
                             <a id="first-choice-cta-link" href="https://www.xn--ecki4eoz3204ct89aepry34c.com/draft/go/dio/?max_scroll=100&amp;region_id=013" target="_blank" rel="noopener">
@@ -393,11 +482,7 @@ text-align: center;
                 </button>
                 <div id="dio-campaign-first-choice-content" class="disclaimer-content" style="display: none; padding: 8px 12px; background-color: rgb(252, 252, 252); border-right: 1px solid rgb(240, 240, 240); border-bottom: 1px solid rgb(240, 240, 240); border-left: 1px solid rgb(240, 240, 240); border-image: initial; border-top: none; border-radius: 0px 0px 3px 3px; margin-top: -1px;">
                     <div style="font-size: 9px; color: #777; line-height: 1.4;">
-                        <p>「通院者の99%が体重減少効果あり」※最終体重測定2023/2/1～2023/7/31で薬なし、食事指導なしを除く、3ヶ月コース（ビューティー/リピート除く）の契約終了者が対象。効果には個人差があります。初回体重50kg以上or初回BMI25以上の方限定。</p>
-                        <p>「平均13.7kg減量」※2023/2/1~7/31の3ヶ月コース（楽やせ食事指導なし、ビューティーリピートを除く）全卒業者が対象</p>
-                        <p>「12ヶ月分 0円」※支払総額193,992円を64回、月々3,000円に分割し、12ヶ月分（12回分）の分割金が減額されます。※他キャンペーンとの併用不可※当社指定の信販会社で契約をした方限定※コースのみ契約者適用※契約時の申し出のみ有効。</p>
-                        <p>「モニター75%OFF」※1～3：他キャンペーンと併用不可／契約時の申し出のみ有効コースご契約者様限定、但し一部コースを除く※3：医師の判断で適用できない場合がございます。</p>
-                        <p>「痩せなかったら<br>全額返金保証」※他のキャンペーンの併用不可※初回ご来院時測定体重を元に目標体重を設定し、減量率が50%未満の場合、契約終了を条件に全額返金の適用を受けられます※契約時に同意書契約を結んだ場合のみ適用※落ち幅3.0%での計算に限る※中途解約手数料なし。</p>
+                        
                     </div>
                 </div>
             </div>
@@ -428,9 +513,9 @@ text-align: center;
                 
                 <ul>
                     <h5>人気クリニック</h5>
-                    <li><a href="#clinic1">Oh my teeth</a></li>
-                    <li><a href="#clinic2">インビザライン</a></li>
-                    <li><a href="#clinic3">キレイライン矯正</a></li>
+                    <li><a href="#clinic1"></a></li>
+                    <li><a href="#clinic2"></a></li>
+                    <li><a href="#clinic3"></a></li>
                 </ul>
                                 
                 <ul>
@@ -444,7 +529,7 @@ text-align: center;
             </div>
             
             <div class="footer-bottom">
-                <p class="copyright">© 2025 医療ダイエット比較.com</div></p>
+                <p class="copyright"></div></p>
                 <p class="disclaimer">※本サイトの情報は参考程度に留め、必ず各クリニックにご相談ください。</p>
             </div>
         </div>
@@ -540,10 +625,8 @@ text-align: center;
         </div>
     </div>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Slick Carousel JS -->
-    <!-- Slick.js削除済み -->
+    <!-- Slick.js削除済み／jQueryは未使用のため読み込み削除 -->
     <script src="app.js?v=2025081417" defer></script>
     
 
@@ -1884,7 +1967,7 @@ text-align: center;
                 console.error('Error loading common site data:', error);
             });
     </script>
-    <script src="/tracking-params.js"></script>
+    <script src="/tracking-params.js" defer></script>
     
     <!-- トップに戻るボタン -->
     <button id="back-to-top" class="back-to-top" aria-label="トップに戻る">
