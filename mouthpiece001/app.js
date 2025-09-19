@@ -568,82 +568,34 @@ class DataManager {
 
     async init() {
         try {
-            // CSV群から各データを読み込み
-            await this.loadRegions();
-            await this.loadClinics();
-            await this.loadRankings();
-            await this.loadStoreViews();
-            await this.loadStores();
-            // キャンペーンは任意。存在しなければスキップ
-            // キャンペーンCSVは任意。存在しないので読み込みをスキップ
-            // try { await this.loadCampaigns(); } catch (_) {}
-            
-            // 共通テキストデータの読み込み
-            this.commonTexts = {};
-            
-            // 共通テキスト（appeal_text）をJSON優先で読み込み
-            await this.loadCommonTexts();
-            
-            // 画像パスを動的に設定（DOMの構築を待つ）
-            setTimeout(() => {
-                // MV画像
-                if (this.commonTexts['MV画像パス']) {
-                    const heroImage = document.querySelector('.hero-image');
-                    const heroSource = document.querySelector('.hero-image-wrapper source');
-                    if (heroImage) {
-                        heroImage.src = this.commonTexts['MV画像パス'];
-                    }
-                    if (heroSource) {
-                        heroSource.srcset = this.commonTexts['MV画像パス'];
-                    }
-                }
-                
-                // ランキングバナー画像
-                if (this.commonTexts['ランキングバナー画像パス']) {
-                    const rankingBanners = document.querySelectorAll('.ranking-banner-image');
-                    rankingBanners.forEach(img => {
-                        img.src = this.commonTexts['ランキングバナー画像パス'];
-                    });
-                }
-                
-                // Tips1画像
-                if (this.commonTexts['Tips1画像パス']) {
-                    const tips1Img = document.querySelector('.tab-content[data-tab="0"] img');
-                    if (tips1Img) {
-                        tips1Img.src = this.commonTexts['Tips1画像パス'];
-                    }
-                }
-                
-                // Tips2画像
-                if (this.commonTexts['Tips2画像パス']) {
-                    const tips2Img = document.querySelector('.tab-content[data-tab="1"] img');
-                    if (tips2Img) {
-                        tips2Img.src = this.commonTexts['Tips2画像パス'];
-                    }
-                }
-                
-                // Tips3画像
-                if (this.commonTexts['Tips3画像パス']) {
-                    const tips3Img = document.querySelector('.tab-content[data-tab="2"] img');
-                    if (tips3Img) {
-                        tips3Img.src = this.commonTexts['Tips3画像パス'];
-                    }
-                }
-                
-                // 詳細バナー画像
-                if (this.commonTexts['詳細バナー画像パス']) {
-                    const detailsBanner = document.querySelector('.details-banner-image');
-                    if (detailsBanner) {
-                        detailsBanner.src = this.commonTexts['詳細バナー画像パス'];
-                    }
-                }
-            }, 100);
-            
-            // クリニック別テキストデータの読み込み（JSON優先、必要に応じてCSVを変換）
-            await this.loadClinicTexts();
-            
-            // 旧: compiled-data.jsonの clinic.stores から抽出していた処理
-            // 新: stores.csvから読み込むため、未設定の場合のみ抽出を試みる
+            const loadedFromBundle = await this.loadFromBundle();
+
+            if (!loadedFromBundle) {
+                await Promise.all([
+                    this.loadRegions(),
+                    this.loadClinics(),
+                    this.loadRankings(),
+                    this.loadStoreViews(),
+                    this.loadStores(),
+                    this.loadCampaigns().catch(() => null)
+                ]);
+            }
+
+            if (!this.commonTexts || Object.keys(this.commonTexts).length === 0) {
+                this.commonTexts = {};
+                await this.loadCommonTexts();
+            }
+
+            this.applyCommonTextAssets();
+
+            if (!this.clinicTexts || Object.keys(this.clinicTexts).length === 0) {
+                await this.loadClinicTexts();
+            }
+
+            if (!this.campaigns || this.campaigns.length === 0) {
+                try { await this.loadCampaigns(); } catch (_) {}
+            }
+
             if (!this.stores || this.stores.length === 0) {
                 try {
                     this.stores = [];
@@ -664,10 +616,241 @@ class DataManager {
                     });
                 } catch (_) {}
             }
-            
+
         } catch (error) {
             throw error;
         }
+    }
+
+    async loadFromBundle() {
+        try {
+            const bundle = await this.fetchJsonWithFallback([
+                this.dataPath + 'compiled-data.json',
+                this.dataPath + 'data-bundle.json'
+            ]);
+            if (!bundle || Array.isArray(bundle)) {
+                return false;
+            }
+            const {
+                regions = [],
+                clinics = [],
+                rankings = [],
+                storeViews = [],
+                stores = [],
+                campaigns = [],
+                commonTexts = {},
+                clinicTexts = {}
+            } = bundle;
+
+            this.regions = this.normalizeRegions(regions);
+            this.clinics = this.normalizeClinics(clinics);
+            this.rankings = this.normalizeRankings(rankings);
+            this.storeViews = this.normalizeStoreViews(storeViews);
+            this.stores = this.normalizeStores(stores);
+            this.campaigns = this.normalizeCampaigns(campaigns);
+            this.commonTexts = commonTexts;
+            this.clinicTexts = clinicTexts;
+
+            return true;
+        } catch (error) {
+            console.warn('⚠️ compiled-data.json 読込エラー:', error);
+            return false;
+        }
+    }
+
+    applyCommonTextAssets() {
+        if (!this.commonTexts || Object.keys(this.commonTexts).length === 0) {
+            return;
+        }
+
+        setTimeout(() => {
+            if (!this.commonTexts) return;
+
+            if (this.commonTexts['MV画像パス']) {
+                const heroImage = document.querySelector('.hero-image');
+                const heroSource = document.querySelector('.hero-image-wrapper source');
+                if (heroImage) {
+                    heroImage.src = this.commonTexts['MV画像パス'];
+                }
+                if (heroSource) {
+                    heroSource.srcset = this.commonTexts['MV画像パス'];
+                }
+            }
+
+            if (this.commonTexts['ランキングバナー画像パス']) {
+                const rankingBanners = document.querySelectorAll('.ranking-banner-image');
+                rankingBanners.forEach(img => {
+                    img.src = this.commonTexts['ランキングバナー画像パス'];
+                });
+            }
+
+            if (this.commonTexts['Tips1画像パス']) {
+                const tips1Img = document.querySelector('.tab-content[data-tab="0"] img');
+                if (tips1Img) {
+                    tips1Img.src = this.commonTexts['Tips1画像パス'];
+                }
+            }
+
+            if (this.commonTexts['Tips2画像パス']) {
+                const tips2Img = document.querySelector('.tab-content[data-tab="1"] img');
+                if (tips2Img) {
+                    tips2Img.src = this.commonTexts['Tips2画像パス'];
+                }
+            }
+
+            if (this.commonTexts['Tips3画像パス']) {
+                const tips3Img = document.querySelector('.tab-content[data-tab="2"] img');
+                if (tips3Img) {
+                    tips3Img.src = this.commonTexts['Tips3画像パス'];
+                }
+            }
+
+            if (this.commonTexts['詳細バナー画像パス']) {
+                const detailsBanner = document.querySelector('.details-banner-image');
+                if (detailsBanner) {
+                    detailsBanner.src = this.commonTexts['詳細バナー画像パス'];
+                }
+            }
+        }, 100);
+    }
+
+    normalizeRegions(data = []) {
+        return (Array.isArray(data) ? data : []).map(row => {
+            if (!row) return null;
+            const rawId = row.id ?? row.regionId ?? row.parameter_no ?? row.parameterNo ?? '';
+            const name = row.name ?? row.region ?? '';
+            const id = String(rawId || '').padStart(3, '0');
+            if (!id || !name) return null;
+            return { id, name };
+        }).filter(Boolean);
+    }
+
+    normalizeClinics(data = []) {
+        return (Array.isArray(data) ? data : []).map(row => {
+            if (!row) return null;
+            const rawId = row.id ?? row.clinic_id ?? row.clinicId ?? '';
+            const name = row.name ?? row.clinic_name ?? row.clinicName ?? '';
+            const code = row.code ?? row.clinic_code ?? row.clinicCode ?? '';
+            if (!rawId || !name) return null;
+            return {
+                id: String(rawId),
+                name,
+                code: code || ''
+            };
+        }).filter(Boolean);
+    }
+
+    normalizeStores(data = []) {
+        return (Array.isArray(data) ? data : []).map(row => {
+            if (!row) return null;
+            const rawId = row.id ?? row.store_id ?? row.storeId ?? '';
+            const clinicName = row.clinicName ?? row.clinic_name ?? '';
+            const storeName = row.storeName ?? row.store_name ?? row.name ?? '';
+            const address = row.address ?? row.adress ?? '';
+            const zipcode = row.zipcode ?? row.Zipcode ?? '';
+            const access = row.access ?? '';
+            const regionRaw = row.regionId ?? row.region_id ?? null;
+            const regionId = regionRaw != null && regionRaw !== '' ? String(regionRaw).padStart(3, '0') : null;
+            if (!rawId || !clinicName) return null;
+            return {
+                id: String(rawId),
+                clinicName,
+                storeName,
+                name: storeName,
+                zipcode,
+                address,
+                access,
+                regionId
+            };
+        }).filter(Boolean);
+    }
+
+    normalizeRankings(data = []) {
+        if (!Array.isArray(data)) return [];
+        if (data.every(row => row && row.ranks)) {
+            return data.map(row => ({
+                regionId: String(row.regionId ?? '').padStart(3, '0'),
+                ranks: row.ranks || {}
+            })).filter(entry => entry.regionId);
+        }
+
+        const rankingMap = {};
+        data.forEach(row => {
+            if (!row) return;
+            const regionId = String(row.parameter_no || row.region_id || row.parameterNo || '').padStart(3, '0');
+            if (!regionId || regionId === 'NaN') return;
+            if (!rankingMap[regionId]) {
+                rankingMap[regionId] = { regionId, ranks: {} };
+            }
+            Object.keys(row).forEach(key => {
+                if (!key || !key.startsWith('no')) return;
+                const value = row[key];
+                if (!value || value === '-') return;
+                rankingMap[regionId].ranks[key] = value;
+            });
+        });
+        return Object.values(rankingMap);
+    }
+
+    normalizeStoreViews(data = []) {
+        return (Array.isArray(data) ? data : []).map(row => {
+            if (!row) return null;
+            const regionId = String(row.regionId ?? row.region_id ?? row.parameter_no ?? row.parameterNo ?? '').padStart(3, '0');
+            const clinicStores = {};
+
+            if (row.clinicStores && typeof row.clinicStores === 'object') {
+                Object.keys(row.clinicStores).forEach(key => {
+                    const val = row.clinicStores[key];
+                    if (!val) return;
+                    clinicStores[key] = Array.isArray(val)
+                        ? val
+                        : String(val).split(/[\\/|]/).map(v => v.trim()).filter(Boolean);
+                });
+            } else {
+                Object.keys(row).forEach(key => {
+                    if (!key || key === 'parameter_no' || key === 'parameterNo' || key === 'regionId' || key === 'region_id') return;
+                    if (!/_stores$/.test(key)) return;
+                    const val = row[key];
+                    if (!val || val === '-') return;
+                    clinicStores[key] = String(val).split(/[\\/|]/).map(v => v.trim()).filter(Boolean);
+                });
+            }
+
+            return { regionId, clinicStores };
+        }).filter(entry => entry && entry.regionId);
+    }
+
+    normalizeCampaigns(data = []) {
+        return (Array.isArray(data) ? data : []).map(row => {
+            if (!row) return null;
+            const id = row.id ?? row.campaign_id ?? '';
+            const regionId = row.regionId ?? row.region_id ?? '';
+            const clinicId = row.clinicId ?? row.clinic_id ?? '';
+            const title = row.title ?? '';
+            const headerText = row.headerText ?? row.header_text ?? '';
+            const logoSrc = row.logoSrc ?? row.logo_src ?? '';
+            const logoAlt = row.logoAlt ?? row.logo_alt ?? '';
+            const description = row.description ?? '';
+            const ctaText = row.ctaText ?? row.cta_text ?? '';
+            const ctaUrl = row.ctaUrl ?? row.cta_url ?? '';
+            const footerText = row.footerText ?? row.footer_text ?? '';
+            if (!id && !clinicId && !title) {
+                return null;
+            }
+            return {
+                id,
+                regionId,
+                clinicId,
+                title,
+                headerText,
+                logoSrc,
+                logoAlt,
+                description,
+                ctaText,
+                ctaUrl,
+                footerText
+            };
+        }).filter(Boolean);
     }
 
     // site-common-texts.json を優先的に読み込み（必要ならCSVをフォールバック）
@@ -1150,10 +1333,7 @@ class DataManager {
         if (!data.length) {
             data = await this.loadCsvFile('出しわけSS - region.csv');
         }
-        this.regions = (data || []).map(row => ({
-            id: String(row.parameter_no || row.parameterNo || row.id || '').padStart(3, '0'),
-            name: row.region || row.name || ''
-        })).filter(region => region.id && region.name);
+        this.regions = this.normalizeRegions(data);
     }
 
     // クリニックデータの読み込み
@@ -1173,11 +1353,7 @@ class DataManager {
         if (!data.length) {
             data = await this.loadCsvFile('出しわけSS - items.csv');
         }
-        this.clinics = (data || []).map(row => ({
-            id: String(row.clinic_id || row.id || ''),
-            name: row.clinic_name || row.name || '',
-            code: row.code || row.clinic_code || ''
-        })).filter(clinic => clinic.id && clinic.name);
+        this.clinics = this.normalizeClinics(data);
     }
 
     // 店舗データの読み込み
@@ -1197,21 +1373,7 @@ class DataManager {
         if (!data.length) {
             data = await this.loadCsvFile('出しわけSS - stores.csv');
         }
-        this.stores = (data || []).map(row => {
-            const storeName = row.store_name || row.storeName || '';
-            const address = row.adress || row.address || '';
-            const zipcode = row.Zipcode || row.zipcode || '';
-            return {
-                id: String(row.store_id || row.id || ''),
-                clinicName: row.clinic_name || row.clinicName || '',
-                storeName,
-                name: storeName,
-                zipcode,
-                address,
-                access: row.access || '',
-                regionId: row.region_id ? String(row.region_id).padStart(3, '0') : null
-            };
-        }).filter(store => store.id && store.clinicName);
+        this.stores = this.normalizeStores(data);
     }
 
     // ランキングデータの読み込み
@@ -1232,26 +1394,7 @@ class DataManager {
             data = await this.loadCsvFile('出しわけSS - ranking.csv');
         }
 
-        const rankingMap = {};
-        (data || []).forEach(row => {
-            const regionId = String(row.parameter_no || row.region_id || row.parameterNo || '').padStart(3, '0');
-            if (!regionId || regionId === 'NaN') return;
-            if (!rankingMap[regionId]) {
-                rankingMap[regionId] = {
-                    regionId: regionId,
-                    ranks: {}
-                };
-            }
-            
-            // 各順位のクリニックIDを設定（"-"は除外）
-            Object.keys(row).forEach(key => {
-                if (key.startsWith('no') && row[key] && row[key] !== '-') {
-                    rankingMap[regionId].ranks[key] = row[key];
-                }
-            });
-        });
-
-        this.rankings = Object.values(rankingMap);
+        this.rankings = this.normalizeRankings(data);
     }
 
     // 店舗ビューデータの読み込み
@@ -1272,19 +1415,7 @@ class DataManager {
             data = await this.loadCsvFile('出しわけSS - store_view.csv');
         }
 
-        this.storeViews = (data || []).map(row => {
-            const view = { regionId: String(row.parameter_no || row.parameterNo || '').padStart(3, '0'), clinicStores: {} };
-            // 行の全キーから *_stores を動的に拾う
-            Object.keys(row).forEach(key => {
-                if (!key || key === 'parameter_no' || key === 'parameterNo') return;
-                if (!/_stores$/.test(key)) return;
-                const val = row[key];
-                if (!val || val === '-') return;
-                const normalized = String(val).replace(/\|/g, '/');
-                view.clinicStores[key] = normalized.split(/[\/|]/).map(v => v.trim()).filter(Boolean);
-            });
-            return view;
-        });
+        this.storeViews = this.normalizeStoreViews(data);
         
     }
 
@@ -1305,19 +1436,7 @@ class DataManager {
         if (!data.length) {
             data = await this.loadCsvFile('出しわけSS - campaigns.csv');
         }
-        this.campaigns = (data || []).map(row => ({
-            id: row.campaign_id,
-            regionId: row.region_id,
-            clinicId: row.clinic_id,
-            title: row.title,
-            headerText: row.header_text,
-            logoSrc: row.logo_src,
-            logoAlt: row.logo_alt,
-            description: row.description,
-            ctaText: row.cta_text,
-            ctaUrl: row.cta_url,
-            footerText: row.footer_text
-        }));
+        this.campaigns = this.normalizeCampaigns(data);
     }
 
     // 店舗と地域の関連付け
