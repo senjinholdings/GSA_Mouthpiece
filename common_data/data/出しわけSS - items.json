@@ -1,0 +1,27 @@
+[
+  {
+    "clinic_id": "1",
+    "clinic_name": "Oh my teeth",
+    "code": "omt"
+  },
+  {
+    "clinic_id": "2",
+    "clinic_name": "インビザライン",
+    "code": "invisalign"
+  },
+  {
+    "clinic_id": "3",
+    "clinic_name": "キレイライン矯正",
+    "code": "kireiline"
+  },
+  {
+    "clinic_id": "4",
+    "clinic_name": "ウィスマイル",
+    "code": "ws"
+  },
+  {
+    "clinic_id": "5",
+    "clinic_name": "ゼニュム",
+    "code": "zenyum"
+  }
+]
