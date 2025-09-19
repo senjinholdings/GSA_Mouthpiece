@@ -117,10 +117,24 @@
                         this.clinics = [];
                     }
                     
-                    // CSVを直接読み込んで clinicTexts 構造を生成
+                    // clinic-texts.json を優先し、必要に応じてCSVへフォールバック
                     async loadClinicTexts() {
                         try {
-                            // 新配置（data直下）を優先し、旧フォルダにもフォールバック
+                            const jsonData = await this.fetchJsonWithFallback([
+                                './data/clinic-texts.json',
+                                './data/clinic_text/clinic-texts.json'
+                            ]);
+                            if (jsonData && typeof jsonData === 'object' && !Array.isArray(jsonData)) {
+                                this.clinicTexts = jsonData;
+                                console.log('✅ clinic-texts.json 読み込み完了');
+                                return;
+                            }
+                        } catch (error) {
+                            console.warn('⚠️ clinic-texts.json の読み込みに失敗しました:', error);
+                        }
+
+                        // JSONが取得できなかった場合は従来のCSVを読み込む
+                        try {
                             let resp = await fetch('./data/clinic-texts.csv');
                             if (!resp.ok) resp = await fetch('./data/clinic_text/clinic-texts.csv');
                             if (!resp.ok) throw new Error(`Failed to load clinic-texts.csv: ${resp.status}`);
@@ -241,15 +255,51 @@
                     }
                     
                     async loadCompiledData() {
-                        console.log('📊 クリニック一覧をCSVから読み込み中...');
+                        console.log('📊 クリニック一覧データを読み込み中...');
+                        try {
+                            const jsonClinics = await this.fetchJsonWithFallback([
+                                '../common_data/data/出しわけSS - items.json',
+                                './data/出しわけSS - items.json'
+                            ]);
+                            if (Array.isArray(jsonClinics) && jsonClinics.length > 0) {
+                                this.clinics = jsonClinics.map(row => ({
+                                    id: String(row.clinic_id || row.id || ''),
+                                    name: row.clinic_name || row.name || '',
+                                    code: row.code || row.clinic_code || ''
+                                })).filter(clinic => clinic.id && clinic.name);
+                                console.log('📊 クリニックJSON数:', this.clinics.length);
+                                return;
+                            }
+                        } catch (error) {
+                            console.warn('⚠️ クリニックJSON読み込みエラー:', error);
+                        }
+
                         try {
                             const clinics = await this.loadCsv('../common_data/data/出しわけSS - items.csv');
                             this.clinics = clinics.map(row => ({ id: row.clinic_id, name: row.clinic_name, code: row.code }));
-                            console.log('📊 クリニック数:', this.clinics.length);
+                            console.log('📊 クリニックCSV数:', this.clinics.length);
                         } catch (error) {
                             console.error('❌ クリニック一覧CSV読み込みエラー:', error);
                             this.clinics = [];
                         }
+                    }
+
+                    async fetchJsonWithFallback(candidates = []) {
+                        for (const url of candidates) {
+                            if (!url) continue;
+                            try {
+                                const res = await fetch(url);
+                                if (!res || !res.ok) continue;
+                                const raw = await res.text();
+                                if (!raw) continue;
+                                const text = raw.replace(/^\uFEFF/, '').trim();
+                                if (!text) continue;
+                                return JSON.parse(text);
+                            } catch (_) {
+                                // 次の候補を試す
+                            }
+                        }
+                        return null;
                     }
 
                     async loadCsv(path) {

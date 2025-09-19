@@ -581,8 +581,8 @@ class DataManager {
             // 共通テキストデータの読み込み
             this.commonTexts = {};
             
-            // 共通テキスト（appeal_text）をCSVから読み込み
-            await this.loadCommonTextsFromCsv();
+            // 共通テキスト（appeal_text）をJSON優先で読み込み
+            await this.loadCommonTexts();
             
             // 画像パスを動的に設定（DOMの構築を待つ）
             setTimeout(() => {
@@ -639,8 +639,8 @@ class DataManager {
                 }
             }, 100);
             
-            // クリニック別テキストデータの読み込み（CSVを直接読み込んで構築）
-            await this.loadClinicTextsFromCsv();
+            // クリニック別テキストデータの読み込み（JSON優先、必要に応じてCSVを変換）
+            await this.loadClinicTexts();
             
             // 旧: compiled-data.jsonの clinic.stores から抽出していた処理
             // 新: stores.csvから読み込むため、未設定の場合のみ抽出を試みる
@@ -670,9 +670,55 @@ class DataManager {
         }
     }
 
-    // site-common-texts.csv を読み込んで key->value のオブジェクトに変換
-    async loadCommonTextsFromCsv() {
+    // site-common-texts.json を優先的に読み込み（必要ならCSVをフォールバック）
+    async loadCommonTexts() {
         this.commonTexts = {};
+        let hasJson = false;
+        try {
+            const jsonData = await this.fetchJsonWithFallback([
+                this.dataPath + 'site-common-texts.json',
+                this.dataPath + 'appeal_text/site-common-texts.json'
+            ]);
+            if (jsonData && !Array.isArray(jsonData)) {
+                this.commonTexts = { ...this.commonTexts, ...jsonData };
+                hasJson = true;
+            }
+        } catch (e) {
+            console.warn('⚠️ site-common-texts.json 読込エラー:', e);
+        }
+
+        if (!hasJson) {
+            await this.loadCommonTextsFromCsvLegacy();
+        }
+
+        // 共通上書き設定（common_data）
+        try {
+            const override = await this.fetchJsonWithFallback([
+                this.commonDataPath + 'site-common-texts.json',
+                '../../../common_data/data/site-common-texts.json'
+            ]);
+            if (override && !Array.isArray(override)) {
+                this.commonTexts = { ...this.commonTexts, ...override };
+            }
+        } catch (err) {
+            console.warn('⚠️ common_dataのsite-common-texts.json読み込みエラー:', err);
+        }
+
+        // ファビコンとヘッダーロゴを反映
+        if (this.commonTexts['ファビコン画像パス']) {
+            const faviconElement = document.getElementById('favicon');
+            if (faviconElement) {
+                faviconElement.href = this.commonTexts['ファビコン画像パス'];
+            }
+            const headerLogoIcon = document.getElementById('header-logo-icon');
+            if (headerLogoIcon) {
+                headerLogoIcon.src = this.commonTexts['ファビコン画像パス'];
+            }
+        }
+    }
+
+    // 旧CSV構造にフォールバックするためのヘルパー
+    async loadCommonTextsFromCsvLegacy() {
         try {
             const primary = this.dataPath + 'site-common-texts.csv';
             const legacy = this.dataPath + 'appeal_text/site-common-texts.csv';
@@ -687,33 +733,24 @@ class DataManager {
         } catch (e) {
             console.warn('⚠️ ローカル site-common-texts.csv 読込エラー:', e);
         }
-        // 次に common_data/data のJSONがあれば上書き（従来の上書き仕様維持）
-        try {
-            const respCommon = await fetch('../../../common_data/data/site-common-texts.json');
-            if (respCommon.ok) {
-                const jsonText = await respCommon.text();
-                try {
-                    const override = JSON.parse(jsonText);
-                    this.commonTexts = { ...this.commonTexts, ...override };
-                } catch (err) {
-                    console.warn('⚠️ common_dataのsite-common-texts.jsonパースエラー:', err);
-                }
-            }
-        } catch (e) {
-            // 共通の上書きがない場合は無視
-        }
+    }
 
-        // ファビコンとヘッダーロゴを反映
-        if (this.commonTexts['ファビコン画像パス']) {
-            const faviconElement = document.getElementById('favicon');
-            if (faviconElement) {
-                faviconElement.href = this.commonTexts['ファビコン画像パス'];
-            }
-            const headerLogoIcon = document.getElementById('header-logo-icon');
-            if (headerLogoIcon) {
-                headerLogoIcon.src = this.commonTexts['ファビコン画像パス'];
+    async fetchJsonWithFallback(candidates = []) {
+        for (const url of candidates) {
+            if (!url) continue;
+            try {
+                const res = await fetch(url);
+                if (!res || !res.ok) continue;
+                const raw = await res.text();
+                if (!raw) continue;
+                const text = raw.replace(/^\uFEFF/, '').trim();
+                if (!text) continue;
+                return JSON.parse(text);
+            } catch (_) {
+                // 次の候補を試す
             }
         }
+        return null;
     }
 
     async readSiteCommonCsvFromResponse(response) {
@@ -767,8 +804,25 @@ class DataManager {
         return row;
     }
 
-    // clinic-texts.csv を直接読み込んで clinicTexts 構造を生成
-    async loadClinicTextsFromCsv() {
+    // clinic-texts.json を優先的に読み込み、必要に応じてCSVから変換
+    async loadClinicTexts() {
+        try {
+            const jsonData = await this.fetchJsonWithFallback([
+                this.dataPath + 'clinic-texts.json',
+                this.dataPath + 'clinic_text/clinic-texts.json'
+            ]);
+            if (jsonData && typeof jsonData === 'object' && !Array.isArray(jsonData)) {
+                this.clinicTexts = jsonData;
+                return;
+            }
+        } catch (err) {
+            console.warn('⚠️ clinic-texts.json の読み込みに失敗しました:', err);
+        }
+        await this.loadClinicTextsFromCsvLegacy();
+    }
+
+    // clinic-texts.csv を直接読み込んで clinicTexts 構造を生成（フォールバック）
+    async loadClinicTextsFromCsvLegacy() {
         try {
             const primary = this.dataPath + 'clinic-texts.csv';
             const legacy = this.dataPath + 'clinic_text/clinic-texts.csv';
@@ -1081,46 +1135,107 @@ class DataManager {
 
     // 地域データの読み込み
     async loadRegions() {
-        const data = await this.loadCsvFile('出しわけSS - region.csv');
-        this.regions = data.map(row => ({
-            id: String(row.parameter_no).padStart(3, '0'),
-            name: row.region
-        }));
+        let data = [];
+        try {
+            const json = await this.fetchJsonWithFallback([
+                this.commonDataPath + '出しわけSS - region.json',
+                this.dataPath + '出しわけSS - region.json'
+            ]);
+            if (Array.isArray(json) && json.length > 0) {
+                data = json;
+            }
+        } catch (err) {
+            console.warn('⚠️ 出しわけSS - region.json 読込エラー:', err);
+        }
+        if (!data.length) {
+            data = await this.loadCsvFile('出しわけSS - region.csv');
+        }
+        this.regions = (data || []).map(row => ({
+            id: String(row.parameter_no || row.parameterNo || row.id || '').padStart(3, '0'),
+            name: row.region || row.name || ''
+        })).filter(region => region.id && region.name);
     }
 
     // クリニックデータの読み込み
     async loadClinics() {
-        const data = await this.loadCsvFile('出しわけSS - items.csv');
-        this.clinics = data.map(row => ({
-            id: row.clinic_id,
-            name: row.clinic_name,
-            code: row.code
-        }));
+        let data = [];
+        try {
+            const json = await this.fetchJsonWithFallback([
+                this.commonDataPath + '出しわけSS - items.json',
+                this.dataPath + '出しわけSS - items.json'
+            ]);
+            if (Array.isArray(json) && json.length > 0) {
+                data = json;
+            }
+        } catch (err) {
+            console.warn('⚠️ 出しわけSS - items.json 読込エラー:', err);
+        }
+        if (!data.length) {
+            data = await this.loadCsvFile('出しわけSS - items.csv');
+        }
+        this.clinics = (data || []).map(row => ({
+            id: String(row.clinic_id || row.id || ''),
+            name: row.clinic_name || row.name || '',
+            code: row.code || row.clinic_code || ''
+        })).filter(clinic => clinic.id && clinic.name);
     }
 
     // 店舗データの読み込み
     async loadStores() {
-        const data = await this.loadCsvFile('出しわけSS - stores.csv');
-        this.stores = data.map(row => ({
-            id: row.store_id,
-            clinicName: row.clinic_name,
-            storeName: row.store_name,
-            name: row.store_name,  // 両方のフィールドで互換性を保つ
-            zipcode: row.Zipcode,
-            address: row.adress,
-            access: row.access,
-            regionId: null // 後で関連付け
-        }));
+        let data = [];
+        try {
+            const json = await this.fetchJsonWithFallback([
+                this.commonDataPath + '出しわけSS - stores.json',
+                this.dataPath + '出しわけSS - stores.json'
+            ]);
+            if (Array.isArray(json) && json.length > 0) {
+                data = json;
+            }
+        } catch (err) {
+            console.warn('⚠️ 出しわけSS - stores.json 読込エラー:', err);
+        }
+        if (!data.length) {
+            data = await this.loadCsvFile('出しわけSS - stores.csv');
+        }
+        this.stores = (data || []).map(row => {
+            const storeName = row.store_name || row.storeName || '';
+            const address = row.adress || row.address || '';
+            const zipcode = row.Zipcode || row.zipcode || '';
+            return {
+                id: String(row.store_id || row.id || ''),
+                clinicName: row.clinic_name || row.clinicName || '',
+                storeName,
+                name: storeName,
+                zipcode,
+                address,
+                access: row.access || '',
+                regionId: row.region_id ? String(row.region_id).padStart(3, '0') : null
+            };
+        }).filter(store => store.id && store.clinicName);
     }
 
     // ランキングデータの読み込み
     async loadRankings() {
-        const data = await this.loadCsvFile('出しわけSS - ranking.csv');
-        
-        // 地域ごとにランキングをグループ化
+        let data = [];
+        try {
+            const json = await this.fetchJsonWithFallback([
+                this.dataPath + '出しわけSS - ranking.json',
+                this.regionDataPath + '出しわけSS - ranking.json'
+            ]);
+            if (Array.isArray(json) && json.length > 0) {
+                data = json;
+            }
+        } catch (err) {
+            console.warn('⚠️ 出しわけSS - ranking.json 読込エラー:', err);
+        }
+        if (!data.length) {
+            data = await this.loadCsvFile('出しわけSS - ranking.csv');
+        }
+
         const rankingMap = {};
-        data.forEach(row => {
-            const regionId = String(row.parameter_no).padStart(3, '0');
+        (data || []).forEach(row => {
+            const regionId = String(row.parameter_no || row.region_id || row.parameterNo || '').padStart(3, '0');
+            if (!regionId || regionId === 'NaN') return;
             if (!rankingMap[regionId]) {
                 rankingMap[regionId] = {
                     regionId: regionId,
@@ -1141,16 +1256,32 @@ class DataManager {
 
     // 店舗ビューデータの読み込み
     async loadStoreViews() {
-        const data = await this.loadCsvFile('出しわけSS - store_view.csv');
-        
-        this.storeViews = data.map(row => {
-            const view = { regionId: String(row.parameter_no).padStart(3, '0'), clinicStores: {} };
+        let data = [];
+        try {
+            const json = await this.fetchJsonWithFallback([
+                this.commonDataPath + '出しわけSS - store_view.json',
+                this.dataPath + '出しわけSS - store_view.json'
+            ]);
+            if (Array.isArray(json) && json.length > 0) {
+                data = json;
+            }
+        } catch (err) {
+            console.warn('⚠️ 出しわけSS - store_view.json 読込エラー:', err);
+        }
+        if (!data.length) {
+            data = await this.loadCsvFile('出しわけSS - store_view.csv');
+        }
+
+        this.storeViews = (data || []).map(row => {
+            const view = { regionId: String(row.parameter_no || row.parameterNo || '').padStart(3, '0'), clinicStores: {} };
             // 行の全キーから *_stores を動的に拾う
             Object.keys(row).forEach(key => {
-                if (!key || !/_stores$/.test(key)) return;
+                if (!key || key === 'parameter_no' || key === 'parameterNo') return;
+                if (!/_stores$/.test(key)) return;
                 const val = row[key];
                 if (!val || val === '-') return;
-                view.clinicStores[key] = String(val).split('/');
+                const normalized = String(val).replace(/\|/g, '/');
+                view.clinicStores[key] = normalized.split(/[\/|]/).map(v => v.trim()).filter(Boolean);
             });
             return view;
         });
@@ -1159,8 +1290,22 @@ class DataManager {
 
     // キャンペーンデータの読み込み
     async loadCampaigns() {
-        const data = await this.loadCsvFile('出しわけSS - campaigns.csv');
-        this.campaigns = data.map(row => ({
+        let data = [];
+        try {
+            const json = await this.fetchJsonWithFallback([
+                this.dataPath + '出しわけSS - campaigns.json',
+                this.commonDataPath + '出しわけSS - campaigns.json'
+            ]);
+            if (Array.isArray(json) && json.length > 0) {
+                data = json;
+            }
+        } catch (err) {
+            console.warn('⚠️ 出しわけSS - campaigns.json 読込エラー:', err);
+        }
+        if (!data.length) {
+            data = await this.loadCsvFile('出しわけSS - campaigns.csv');
+        }
+        this.campaigns = (data || []).map(row => ({
             id: row.campaign_id,
             regionId: row.region_id,
             clinicId: row.clinic_id,
@@ -3612,6 +3757,9 @@ class RankingApp {
             }
 
             const rank = parseInt(position.replace('no', ''));
+            const clinicRank = Number(clinic.rank) || rank;
+            const officialSiteUrl = this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinicRank);
+            const directFormUrl = this.urlHandler.getDirectFormUrl(clinic.id, clinicRank);
             const detailItem = document.createElement('div');
             detailItem.className = `detail-item ranking_box_inner ranking_box_${rank}`;
             detailItem.setAttribute('data-rank', rank);
@@ -3665,14 +3813,8 @@ class RankingApp {
                 ? `<div style="font-size: 12px;">${informationSubTextProcessed}</div>`
                 : '';
             const ctaMicrocopyHtml = '<span class="cta-subtext" style="display:block;font-size: 11px;color: #ff95ad;font-weight: 400;"><span>いつでも変更/キャンセルは可能です</span></span>';
-            const directCtaHtml = rank === 1
-                ? `<p class="btn btn_outline_pink">
-                        <a class="ctaBtn-direct" href="https://sss.ac01.l-ad.net/cl/p1a64143O61e70f7/?bid=56casdd8820sb67f" target="_blank" rel="noopener">
-                            <span class="bt_s">無料相談の空き状況をチェック</span>${ctaMicrocopyHtml}
-                        </a>
-                    </p>`
-                : `<p class="btn btn_outline_pink">
-                        <a class="ctaBtn-direct" href="${this.urlHandler.getDirectFormUrl(clinic.id, clinic.rank)}" target="_blank" rel="noopener noreferrer">
+            const directCtaHtml = `<p class="btn btn_outline_pink">
+                        <a class="ctaBtn-direct" href="${directFormUrl}" target="_blank" rel="noopener noreferrer">
                             <span class="bt_s">無料相談の空き状況をチェック</span>${ctaMicrocopyHtml}
                         </a>
                     </p>`;
@@ -3687,7 +3829,7 @@ class RankingApp {
                             </div>
                         </div>
                         <div class="ranking__name">
-                            <a href="${this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank)}" target="_blank" rel="noopener nofollow">${clinic.name === 'Oh my teeth' ? 'Oh my teeth（オーマイティース）' : clinic.name} ＞</a>
+                            <a href="${officialSiteUrl}" target="_blank" rel="noopener nofollow">${clinic.name === 'Oh my teeth' ? 'Oh my teeth（オーマイティース）' : clinic.name} ＞</a>
                         </div>
                     </div>
                 ${(() => {
@@ -3755,7 +3897,7 @@ class RankingApp {
                 <div class="clinic-cta-button-wrapper">
                     ${ctaHeaderHtml}
                     <p class="btn btn_second_primary">
-                        <a href="${this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank)}" target="_blank" rel="noopener noreferrer">
+                        <a href="${officialSiteUrl}" target="_blank" rel="noopener noreferrer">
                             <span class="bt_s">公式サイトで詳細を見る</span>
                             <span class="btn-arrow">▶</span>
                         </a>
@@ -3804,7 +3946,7 @@ class RankingApp {
                             `;
                         }).join('')}
                         <div class="ribbon_point_link">
-                            【公式】<a href="${this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank)}" target="_blank" rel="noopener"><strong>${data.priceDetail['公式サイト'] || '#'}</strong></a>
+                            【公式】<a href="${officialSiteUrl}" target="_blank" rel="noopener"><strong>${data.priceDetail['公式サイト'] || '#'}</strong></a>
                         </div>
                     </div>
                 </div>
@@ -4000,22 +4142,16 @@ class RankingApp {
                                 <div class="cv_box_img">
                                     ${campaignMicrocopy}
                                     <p class="btn btn_second_primary" style="margin-top: 10px;">
-                                        <a href="${this.urlHandler.getClinicUrlWithRegionId(clinicId, clinic.rank || 1)}" target="_blank" rel="noopener">
+                                        <a href="${officialSiteUrl}" target="_blank" rel="noopener">
                                             <span class="bt_s">${ctaText}</span>
                                             <span class="btn-arrow">▶</span>
                                         </a>
                                     </p>
-                                    ${(rank === 1
-                                        ? `<p class="btn btn_outline_pink">
-                                            <a class="ctaBtn-direct" href="https://sss.ac01.l-ad.net/cl/p1a64143O61e70f7/?bid=56casdd8820sb67f" target="_blank" rel="noopener">
-                                                <span class="bt_s">無料相談の空き状況をチェック</span>${ctaMicrocopyHtml}
-                                            </a>
-                                        </p>`
-                                        : `<p class="btn btn_outline_pink">
-                                            <a class="ctaBtn-direct" href="${this.urlHandler.getDirectFormUrl(clinicId, clinic.rank || 1)}" target="_blank" rel="noopener">
-                                                <span class="bt_s">無料相談の空き状況をチェック</span>${ctaMicrocopyHtml}
-                                            </a>
-                                        </p>`)}
+                                    <p class="btn btn_outline_pink">
+                                        <a class="ctaBtn-direct" href="${directFormUrl}" target="_blank" rel="noopener noreferrer">
+                                            <span class="bt_s">無料相談の空き状況をチェック</span>${ctaMicrocopyHtml}
+                                        </a>
+                                    </p>
                                 </div>
                             </div>
                             `;
