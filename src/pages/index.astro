@@ -1943,10 +1943,10 @@ const asset = (resource: string) => {
       <script src={asset("url-tracking.js?v=2025072201")} defer></script>
 
       <!-- Service Worker登録 -->
-      <script is:inline>
+      <script define:vars={{ swPath: asset('sw.js') }}>
           if ('serviceWorker' in navigator) {
               window.addEventListener('load', () => {
-                  navigator.serviceWorker.register({JSON.stringify(asset('sw.js'))})
+                  navigator.serviceWorker.register(swPath)
                       .then(registration => {})
                       .catch(err => {});
               });
@@ -1954,9 +1954,9 @@ const asset = (resource: string) => {
       </script>
 
       <!-- Load common site data -->
-      <script is:inline>
+      <script define:vars={{ commonDataPath: asset('common_data/data/site-common-texts.json') }}>
           // Load common site data
-          fetch({JSON.stringify(asset('common_data/data/site-common-texts.json'))})
+          fetch(commonDataPath)
               .then(response => response.json())
               .then(data => {
                   // Update site logo
