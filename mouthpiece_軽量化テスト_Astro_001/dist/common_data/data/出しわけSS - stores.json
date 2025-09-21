@@ -1,0 +1,2250 @@
+[
+  {
+    "store_id": "zenyum_001",
+    "clinic_name": "ゼニュム",
+    "store_name": "赤坂さくら歯科クリニック（赤坂）",
+    "Zipcode": "〒107-0052",
+    "adress": "東京都港区赤坂5丁目4-6 赤坂三辻ビル5F",
+    "access": "東京メトロ千代田線「赤坂駅」7番出口より徒歩1分"
+  },
+  {
+    "store_id": "zenyum_002",
+    "clinic_name": "ゼニュム",
+    "store_name": "おおじま駅前歯科・大島駅前矯正歯科（大島）",
+    "Zipcode": "〒136-0072",
+    "adress": "東京都江東区大島6丁目26-7 太田ビル1F",
+    "access": "都営新宿線「大島駅」A6出口より徒歩1分"
+  },
+  {
+    "store_id": "zenyum_003",
+    "clinic_name": "ゼニュム",
+    "store_name": "サファイアデンタルクリニック（新宿）",
+    "Zipcode": "〒160-0022",
+    "adress": "東京都新宿区新宿5-11-1 ホーメスト新宿ビル5F",
+    "access": "東京メトロ丸ノ内線・副都心線・都営新宿線「新宿三丁目駅」C7出口より徒歩2分"
+  },
+  {
+    "store_id": "zenyum_004",
+    "clinic_name": "ゼニュム",
+    "store_name": "Aクリニックデンタル(銀座)",
+    "Zipcode": "〒104-0061",
+    "adress": "東京都中央区銀座5丁目13-19 デュープレックス銀座タワー5/13 12階",
+    "access": "東京メトロ日比谷線・都営浅草線「東銀座駅」4番出口より徒歩1分"
+  },
+  {
+    "store_id": "zenyum_005",
+    "clinic_name": "ゼニュム",
+    "store_name": "緑のテラス歯科クリニック（流山おおたかの森）",
+    "Zipcode": "〒270-0139",
+    "adress": "千葉県流山市おおたかの森南1-5-1 おおたかの森SC本館3F",
+    "access": "つくばエクスプレス・東武アーバンパークライン「流山おおたかの森駅」南口直結"
+  },
+  {
+    "store_id": "zenyum_006",
+    "clinic_name": "ゼニュム",
+    "store_name": "新福島ホワイトノア歯科・矯正歯科（大阪）",
+    "Zipcode": "〒553-0003",
+    "adress": "大阪府大阪市福島区福島4-5-47",
+    "access": "JR東西線「新福島駅」2番出口より徒歩3分／阪神本線「福島駅」より徒歩5分"
+  },
+  {
+    "store_id": "zenyum_007",
+    "clinic_name": "ゼニュム",
+    "store_name": "宝塚あさひ歯科クリニック（宝塚市）",
+    "Zipcode": "〒665-0835",
+    "adress": "兵庫県宝塚市旭町3丁目22-9 ランドマーク宝塚2F",
+    "access": "阪急今津線「小林駅」徒歩13分／阪急バス「旭町3丁目」下車すぐ"
+  },
+  {
+    "store_id": "zenyum_008",
+    "clinic_name": "ゼニュム",
+    "store_name": "デュランタデンタルクリニック栄歯科・矯正歯科",
+    "Zipcode": "〒460-0003",
+    "adress": "愛知県名古屋市中区錦3丁目15-33 アルティメイト錦大津通7F",
+    "access": "地下鉄東山線・名城線「栄駅」1番出口より徒歩2分"
+  },
+  {
+    "store_id": "zenyum_009",
+    "clinic_name": "ゼニュム",
+    "store_name": "仙台駅前歯科・矯正歯科(仙台)",
+    "Zipcode": "〒980-0021",
+    "adress": "宮城県仙台市青葉区中央1丁目8-40 井門仙台駅前ビル5F",
+    "access": "JR「仙台駅」西口より徒歩2分"
+  },
+  {
+    "store_id": "zenyum_010",
+    "clinic_name": "ゼニュム",
+    "store_name": "スコーネデンタルオフィス（伊勢崎市）",
+    "Zipcode": "〒372-0006",
+    "adress": "群馬県伊勢崎市西久保町1丁目383-1",
+    "access": "JR両毛線「国定駅」より車で約7分／伊勢崎市民病院近く"
+  },
+  {
+    "store_id": "zenyum_011",
+    "clinic_name": "ゼニュム",
+    "store_name": "TOCHIGI DENTAL CLINIC（栃木市）",
+    "Zipcode": "〒328-0042",
+    "adress": "栃木県栃木市神田町40-1",
+    "access": "東武日光線「新栃木駅」より徒歩15分／栃木市役所近く"
+  },
+  {
+    "store_id": "zenyum_012",
+    "clinic_name": "ゼニュム",
+    "store_name": "天神オーラルケアクリニック（福岡）",
+    "Zipcode": "〒810-0041",
+    "adress": "福岡県福岡市中央区大名2丁目1-4 ステージ1西通り5F A号室",
+    "access": "福岡市地下鉄空港線「天神駅」2番出口より徒歩3分"
+  },
+  {
+    "store_id": "zenyum_013",
+    "clinic_name": "ゼニュム",
+    "store_name": "横田矯正歯科クリニック（福岡）",
+    "Zipcode": "〒810-0041",
+    "adress": "福岡県福岡市中央区大名1丁目14-45 Qiz TENJIN 6F",
+    "access": "福岡市地下鉄空港線「天神駅」より徒歩5分"
+  },
+  {
+    "store_id": "zenyum_014",
+    "clinic_name": "ゼニュム",
+    "store_name": "わかまつ歯科医院（札幌）",
+    "Zipcode": "〒062-0034",
+    "adress": "北海道札幌市豊平区西岡4条10丁目3-20",
+    "access": "北海道中央バス「西岡3条9丁目」停留所より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_001",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "アルディバラン渋谷デンタルクリニック",
+    "Zipcode": "〒150-0002",
+    "adress": "東京都渋谷区渋谷3-18-8 大野ビル5F",
+    "access": "JR「渋谷駅」新南口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_002",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "新宿駅前矯正歯科クリニック",
+    "Zipcode": "〒160-0022",
+    "adress": "東京都新宿区新宿3-36-6 大安ビル8F",
+    "access": "JR「新宿駅」中央東口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_003",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "池袋DDデンタルクリニック",
+    "Zipcode": "〒171-0022",
+    "adress": "東京都豊島区南池袋1-21-5 第7野萩ビル3F",
+    "access": "JR「池袋駅」東口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_004",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "新橋DDデンタルクリニック",
+    "Zipcode": "〒105-0004",
+    "adress": "東京都港区新橋2-19-2 リプロ新橋4F",
+    "access": "JR「新橋駅」銀座口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_005",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "コレクトデンタルクリニック 八王子",
+    "Zipcode": "〒192-0083",
+    "adress": "東京都八王子市旭町12-18 ひのき八王子ビル3F",
+    "access": "JR「八王子駅」北口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_006",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "コレクトデンタルクリニック 吉祥寺",
+    "Zipcode": "〒180-0004",
+    "adress": "東京都武蔵野市吉祥寺本町1-13-6 古谷ビル3F",
+    "access": "JR「吉祥寺駅」北口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_007",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "空港口24時間歯科・小児歯科医院 江戸川",
+    "Zipcode": "〒134-0084",
+    "adress": "東京都江戸川区東葛西6-1-17 第6カネ長ビル1F",
+    "access": "東京メトロ東西線「葛西駅」中央口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_008",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "哲学堂デンタルクリニック",
+    "Zipcode": "〒165-0024",
+    "adress": "東京都中野区松が丘2-2-15",
+    "access": "西武新宿線「新井薬師前駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_009",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "さくら歯科クリニック",
+    "Zipcode": "〒166-0001",
+    "adress": "東京都杉並区阿佐谷北1-3-8 グリーンパークビル2F",
+    "access": "JR「阿佐ヶ谷駅」北口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_010",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "デンタルサロン麹町",
+    "Zipcode": "〒102-0083",
+    "adress": "東京都千代田区麹町4-5-20 KSビル2F",
+    "access": "東京メトロ有楽町線「麹町駅」2番出口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_011",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "伊藤歯科医院",
+    "Zipcode": "〒166-0004",
+    "adress": "東京都杉並区阿佐谷南1-9-5",
+    "access": "JR「阿佐ヶ谷駅」南口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_012",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "うぐいす谷駅前歯科",
+    "Zipcode": "〒110-0003",
+    "adress": "東京都台東区根岸1-8-18 高松ビル1F",
+    "access": "JR「鶯谷駅」南口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_013",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "赤坂さくら歯科クリニック",
+    "Zipcode": "〒107-0052",
+    "adress": "東京都港区赤坂5丁目4-6 赤坂三辻ビル5F",
+    "access": "東京メトロ千代田線「赤坂駅」7番出口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_014",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "吉祥寺まさむねデンタルクリニック",
+    "Zipcode": "〒180-0004",
+    "adress": "東京都武蔵野市吉祥寺本町2-2-7 プラザオギノ2F",
+    "access": "JR「吉祥寺駅」北口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_015",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "おおじま駅前歯科・大島駅前矯正歯科",
+    "Zipcode": "〒136-0072",
+    "adress": "東京都江東区大島6丁目26-7 太田ビル1F",
+    "access": "都営新宿線「大島駅」A6出口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_016",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "デンタルサロン ナチュール銀座",
+    "Zipcode": "〒104-0061",
+    "adress": "東京都中央区銀座1-8-21 清光堂ビル2F",
+    "access": "東京メトロ有楽町線「銀座一丁目駅」9番出口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_017",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "下北沢デンタルケアオフィス",
+    "Zipcode": "〒155-0031",
+    "adress": "東京都世田谷区北沢2-26-25 アーロム下北沢2F",
+    "access": "小田急線・京王井の頭線「下北沢駅」東口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_018",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "あずさ歯科クリニック麴町",
+    "Zipcode": "〒102-0083",
+    "adress": "東京都千代田区麹町4-5-20 KSビル1F",
+    "access": "東京メトロ有楽町線「麹町駅」2番出口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_019",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "原宿ファースト歯科",
+    "Zipcode": "〒150-0001",
+    "adress": "東京都渋谷区神宮前1-10-34 原宿コーポ別館1F",
+    "access": "JR「原宿駅」竹下口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_020",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "アヤデンタルオフィス",
+    "Zipcode": "〒150-0001",
+    "adress": "東京都渋谷区神宮前6-19-16 U-naturaビル2F",
+    "access": "東京メトロ千代田線・副都心線「明治神宮前駅」7番出口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_021",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "初台 はまだ歯科・矯正歯科",
+    "Zipcode": "〒151-0061",
+    "adress": "東京都渋谷区初台1-51-1 初台センタービル1F",
+    "access": "京王新線「初台駅」北口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_022",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "コレクトデンタルクリニック 札幌",
+    "Zipcode": "〒060-0001",
+    "adress": "北海道札幌市中央区北1条西3丁目3-11 桂和北1条ビル7F",
+    "access": "地下鉄南北線「さっぽろ駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_023",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "関歯科・口腔医療クリニック",
+    "Zipcode": "〒501-3932",
+    "adress": "岐阜県関市稲口845-1",
+    "access": "長良川鉄道「関口駅」より車で約5分"
+  },
+  {
+    "store_id": "kireiline_024",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "仙台青葉矯正歯科クリニック",
+    "Zipcode": "〒980-0021",
+    "adress": "宮城県仙台市青葉区中央2-2-10 仙都会館ビル5F",
+    "access": "JR「仙台駅」西口より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_025",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "奥州仙臺Premium デンタルクリニック卸町",
+    "Zipcode": "〒984-0042",
+    "adress": "宮城県仙台市若林区大和町5-30-25",
+    "access": "仙台市営地下鉄東西線「卸町駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_026",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "奥州PremiumMT歯科・矯正歯科 仙台駅西口",
+    "Zipcode": "〒980-0021",
+    "adress": "宮城県仙台市青葉区中央3-6-8 JTB仙台ビル2F",
+    "access": "JR「仙台駅」西口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_027",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "くるみ歯科医院",
+    "Zipcode": "〒981-3133",
+    "adress": "宮城県仙台市泉区泉中央1-23-4 ノースファンシービル2F",
+    "access": "仙台市営地下鉄南北線「泉中央駅」より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_028",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "医療法人 西原歯科医院",
+    "Zipcode": "〒963-8025",
+    "adress": "福島県郡山市桑野2-34-13",
+    "access": "JR「郡山駅」より車で約10分"
+  },
+  {
+    "store_id": "kireiline_029",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "郡山ラポール歯科",
+    "Zipcode": "〒963-8025",
+    "adress": "福島県郡山市桑野2-34-13",
+    "access": "JR「郡山駅」より車で約10分"
+  },
+  {
+    "store_id": "kireiline_030",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "奥州福島Premiumデンタルクリニック",
+    "Zipcode": "〒960-8031",
+    "adress": "福島県福島市栄町6-6 NBFユニックスビル2F",
+    "access": "JR「福島駅」東口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_031",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "ファミリーとシニアの歯科医院 イオン福島診療所",
+    "Zipcode": "〒960-0112",
+    "adress": "福島県福島市南矢野目字西荒田50-17 イオン福島店1F",
+    "access": "JR「福島駅」より車で約15分"
+  },
+  {
+    "store_id": "kireiline_032",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "水戸常北歯科",
+    "Zipcode": "〒311-4303",
+    "adress": "茨城県東茨城郡城里町石塚1428-1",
+    "access": "JR「水戸駅」より車で約30分"
+  },
+  {
+    "store_id": "kireiline_033",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "原田歯科医院",
+    "Zipcode": "〒310-0852",
+    "adress": "茨城県水戸市笠原町978-39",
+    "access": "JR「水戸駅」南口より車で約10分"
+  },
+  {
+    "store_id": "kireiline_034",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "大宮駅前矯正歯科クリニック",
+    "Zipcode": "〒330-0846",
+    "adress": "埼玉県さいたま市大宮区大門町2-22-1 TAiGAビル3F",
+    "access": "JR「大宮駅」東口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_035",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "柳崎歯科矯正クリニック (旧：すみれ歯科)",
+    "Zipcode": "〒333-0861",
+    "adress": "埼玉県川口市柳崎5-1-1 ツカサビル1F",
+    "access": "JR武蔵野線「東浦和駅」より徒歩13分"
+  },
+  {
+    "store_id": "kireiline_036",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "医療法人社団彩明会 熊谷デンタルクリニック",
+    "Zipcode": "〒360-0037",
+    "adress": "埼玉県熊谷市筑波2-56-3 渡辺総合ビル2F",
+    "access": "JR「熊谷駅」北口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_037",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "コレクトデンタルクリニック 船橋",
+    "Zipcode": "〒273-0005",
+    "adress": "千葉県船橋市本町6-4-28 竹内ビル2F",
+    "access": "JR「船橋駅」北口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_038",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "コレクトデンタルクリニック 柏",
+    "Zipcode": "〒277-0005",
+    "adress": "千葉県柏市柏1-5-15 一二三堂ビル3F",
+    "access": "JR「柏駅」東口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_039",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "緑のテラス歯科クリニック",
+    "Zipcode": "〒270-0139",
+    "adress": "千葉県流山市おおたかの森南1-5-1 おおたかの森SC本館3F",
+    "access": "つくばエクスプレス・東武アーバンパークライン「流山おおたかの森駅」南口直結"
+  },
+  {
+    "store_id": "kireiline_040",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "千葉ニュータウン河合歯科矯正歯科",
+    "Zipcode": "〒270-1337",
+    "adress": "千葉県印西市草深字原2031-2",
+    "access": "北総線「千葉ニュータウン中央駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_041",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "栗山公園Dental Office(旧：はなさき歯科)",
+    "Zipcode": "〒183-0056",
+    "adress": "東京都府中市寿町2-4-42",
+    "access": "京王線「府中駅」北口より徒歩7分"
+  },
+  {
+    "store_id": "kireiline_042",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "横浜DDデンタルクリニック",
+    "Zipcode": "〒220-0004",
+    "adress": "神奈川県横浜市西区北幸1-1-8 エキニア横浜7F",
+    "access": "JR「横浜駅」西口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_043",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "コレクトデンタルクリニック 茅ヶ崎",
+    "Zipcode": "〒253-0043",
+    "adress": "神奈川県茅ヶ崎市元町4-3",
+    "access": "JR「茅ヶ崎駅」北口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_044",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "湘南メディケア歯科・矯正歯科",
+    "Zipcode": "〒251-0047",
+    "adress": "神奈川県藤沢市辻堂2-7-1 湘南パールビル2F",
+    "access": "JR「辻堂駅」南口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_045",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "医療法人社団 追浜歯科医院",
+    "Zipcode": "〒237-0064",
+    "adress": "神奈川県横須賀市追浜町3-1",
+    "access": "京急本線「追浜駅」より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_046",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "川崎フロンティア歯科",
+    "Zipcode": "〒210-0007",
+    "adress": "神奈川県川崎市川崎区駅前本町26-1 アトレ川崎7F",
+    "access": "JR「川崎駅」中央東口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_047",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "新丸子デンタルクリニック",
+    "Zipcode": "〒211-0005",
+    "adress": "神奈川県川崎市中原区新丸子町738",
+    "access": "東急東横線「新丸子駅」西口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_048",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "新潟矯正歯科クリニック",
+    "Zipcode": "〒950-0088",
+    "adress": "新潟県新潟市中央区万代1-1-32 プリオール万代2F",
+    "access": "JR「新潟駅」万代口より徒歩7分"
+  },
+  {
+    "store_id": "kireiline_049",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "ブレス・デザイン デンタルオフィス",
+    "Zipcode": "〒950-0916",
+    "adress": "新潟県新潟市中央区米山2-7-20",
+    "access": "JR「新潟駅」南口より徒歩8分"
+  },
+  {
+    "store_id": "kireiline_050",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "コレクトデンタルクリニック 金沢",
+    "Zipcode": "〒920-0981",
+    "adress": "石川県金沢市片町1-1-29 香林坊ファーストビル2F",
+    "access": "北陸鉄道石川線「野町駅」より徒歩15分"
+  },
+  {
+    "store_id": "kireiline_051",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "ひかる歯科医院",
+    "Zipcode": "〒921-8801",
+    "adress": "石川県野々市市御経塚2-91",
+    "access": "JR北陸本線「野々市駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_052",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "うちだ歯科クリニック",
+    "Zipcode": "〒920-0348",
+    "adress": "石川県金沢市松村1-365",
+    "access": "北陸鉄道バス「松村町」停留所より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_053",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "ケンデンタルクリニック岐阜",
+    "Zipcode": "〒500-8381",
+    "adress": "岐阜県岐阜市市橋2-5-3",
+    "access": "JR「西岐阜駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_054",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "ケンデンタルクリニック モレラ岐阜院",
+    "Zipcode": "〒501-0497",
+    "adress": "岐阜県本巣市三橋1100 モレラ岐阜2F",
+    "access": "樽見鉄道「モレラ岐阜駅」直結"
+  },
+  {
+    "store_id": "kireiline_055",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "静岡呉服町デンタル矯正歯科",
+    "Zipcode": "〒420-0031",
+    "adress": "静岡県静岡市葵区呉服町2-1-1 札の辻クロス2F",
+    "access": "JR「静岡駅」北口より徒歩8分"
+  },
+  {
+    "store_id": "kireiline_056",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "名古屋DDデンタルクリニック",
+    "Zipcode": "〒450-0002",
+    "adress": "愛知県名古屋市中村区名駅3-13-31 名駅モリシタビル7F",
+    "access": "JR「名古屋駅」桜通口より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_057",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "名古屋ウィズ歯科・矯正歯科",
+    "Zipcode": "〒450-0002",
+    "adress": "愛知県名古屋市中村区名駅3-28-12 大名古屋ビルヂング10F",
+    "access": "JR「名古屋駅」桜通口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_058",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "名駅アール歯科・矯正歯科",
+    "Zipcode": "〒450-0002",
+    "adress": "愛知県名古屋市中村区名駅3-13-28 名駅セブンスタービル2F",
+    "access": "JR「名古屋駅」桜通口より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_059",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "エスカ歯科・矯正歯科",
+    "Zipcode": "〒453-0015",
+    "adress": "愛知県名古屋市中村区椿町6-9 エスカ地下街",
+    "access": "JR「名古屋駅」太閤通口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_060",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "名古屋ルミナス歯科・矯正歯科",
+    "Zipcode": "〒450-0002",
+    "adress": "愛知県名古屋市中村区名駅3-13-28 名駅セブンスタービル3F",
+    "access": "JR「名古屋駅」桜通口より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_061",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "名古屋茶屋歯科・矯正歯科",
+    "Zipcode": "〒455-0858",
+    "adress": "愛知県名古屋市港区西茶屋2-11 イオンモール名古屋茶屋1F",
+    "access": "あおなみ線「荒子川公園駅」よりバスで約20分"
+  },
+  {
+    "store_id": "kireiline_062",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "岡崎エルエル歯科・矯正歯科",
+    "Zipcode": "〒444-0840",
+    "adress": "愛知県岡崎市戸崎町字外山38-5 イオンモール岡崎1F",
+    "access": "JR「岡崎駅」よりバスで約10分"
+  },
+  {
+    "store_id": "kireiline_063",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "名古屋あおい歯科・矯正歯科【旧：葵デンタルデザインオフィス】",
+    "Zipcode": "〒461-0004",
+    "adress": "愛知県名古屋市東区葵1-17-14 エルブ葵1F",
+    "access": "地下鉄東山線「新栄町駅」1番出口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_064",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "名古屋みなみ歯科・矯正歯科",
+    "Zipcode": "〒457-0841",
+    "adress": "愛知県名古屋市南区豊田4-9-47",
+    "access": "名鉄常滑線「道徳駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_065",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "ケンデンタルクリニック小牧医院",
+    "Zipcode": "〒485-0029",
+    "adress": "愛知県小牧市中央1-260",
+    "access": "名鉄小牧線「小牧駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_066",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "アピタ知立ファミリー歯科・矯正歯科",
+    "Zipcode": "〒472-0045",
+    "adress": "愛知県知立市長篠町大山18-1 アピタ知立店2F",
+    "access": "名鉄名古屋本線「牛田駅」より徒歩15分"
+  },
+  {
+    "store_id": "kireiline_067",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "ワイズ歯科矯正歯科＋KIDS イオン小牧店",
+    "Zipcode": "〒485-0026",
+    "adress": "愛知県小牧市東1-126 イオン小牧店2F",
+    "access": "名鉄小牧線「小牧駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_068",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "安城さくらい歯科・矯正歯科",
+    "Zipcode": "〒446-0072",
+    "adress": "愛知県安城市住吉町3-5-28",
+    "access": "名鉄名古屋本線「新安城駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_069",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "桑名はらだ歯科クリニック",
+    "Zipcode": "〒511-0912",
+    "adress": "三重県桑名市星川785",
+    "access": "三岐鉄道北勢線「星川駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_070",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "京都四条矯正歯科クリニック",
+    "Zipcode": "〒600-8492",
+    "adress": "京都府京都市下京区四条通新町東入月鉾町47-3",
+    "access": "阪急京都線「烏丸駅」24番出口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_071",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "梅田駅前矯正歯科クリニック",
+    "Zipcode": "〒530-0012",
+    "adress": "大阪府大阪市北区芝田2-1-18 西阪急ビル7F",
+    "access": "阪急「大阪梅田駅」茶屋町口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_072",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "心斎橋DDデンタルクリニック",
+    "Zipcode": "〒542-0081",
+    "adress": "大阪府大阪市中央区南船場3-6-18 ケーズビル心斎橋5F",
+    "access": "大阪メトロ御堂筋線「心斎橋駅」1番出口より徒歩2分"
+  },
+  {
+    "store_id": "kireiline_073",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "新福島 ホワイトノア歯科 矯正歯科",
+    "Zipcode": "〒553-0003",
+    "adress": "大阪府大阪市福島区福島4-5-47",
+    "access": "JR東西線「新福島駅」2番出口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_074",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "堺MK歯科クリニック",
+    "Zipcode": "〒590-0028",
+    "adress": "大阪府堺市堺区三国ヶ丘御幸通59 南海堺東駅ビル3F",
+    "access": "南海高野線「堺東駅」直結"
+  },
+  {
+    "store_id": "kireiline_075",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "ひらおかデンタルクリニック",
+    "Zipcode": "〒579-8036",
+    "adress": "大阪府東大阪市鷹殿町1-1",
+    "access": "近鉄奈良線「瓢箪山駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_076",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "神戸三ノ宮駅前デンタル矯正歯科",
+    "Zipcode": "〒651-0094",
+    "adress": "兵庫県神戸市中央区琴ノ緒町5-3-5 グリーンシャポービル2F",
+    "access": "JR「三ノ宮駅」東口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_077",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "神戸北野Nデンタルクリニック",
+    "Zipcode": "〒650-0001",
+    "adress": "兵庫県神戸市中央区加納町3-2-1 ICOビル1F",
+    "access": "JR「三ノ宮駅」より徒歩7分"
+  },
+  {
+    "store_id": "kireiline_078",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "ウインデンタルオフィス WIN Dental Office",
+    "Zipcode": "〒650-0021",
+    "adress": "兵庫県神戸市中央区三宮町1-4-9 ワコーレ神戸三宮ビル2F",
+    "access": "JR「三ノ宮駅」西口より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_079",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "エミ内科歯科クリニック",
+    "Zipcode": "〒651-0094",
+    "adress": "兵庫県神戸市中央区琴ノ緒町5-3-5 グリーンシャポービル3F",
+    "access": "JR「三ノ宮駅」東口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_080",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "岡本矯正歯科",
+    "Zipcode": "〒658-0072",
+    "adress": "兵庫県神戸市東灘区岡本1-13-7 デコール岡本2F",
+    "access": "阪急神戸線「岡本駅」南口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_081",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "かのう歯科医院",
+    "Zipcode": "〒670-0802",
+    "adress": "兵庫県姫路市砥堀字中道ノ上222-1",
+    "access": "JR播但線「砥堀駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_082",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "けしごやまビーンズ歯科クリニック",
+    "Zipcode": "〒651-2273",
+    "adress": "兵庫県神戸市西区糀台5-2-3",
+    "access": "神戸市営地下鉄西神・山手線「西神中央駅」より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_083",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "岡山みなみ歯科クリニック",
+    "Zipcode": "〒700-0945",
+    "adress": "岡山県岡山市南区新保1615-1",
+    "access": "JR「備前西市駅」より車で約5分"
+  },
+  {
+    "store_id": "kireiline_084",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "くれいし歯科クリニック 西川原院",
+    "Zipcode": "〒703-8258",
+    "adress": "岡山県岡山市中区西川原1-15-20",
+    "access": "JR「西川原駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_085",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "茶屋町みやけ歯科医院",
+    "Zipcode": "〒701-0114",
+    "adress": "岡山県倉敷市茶屋町233-2",
+    "access": "JR「茶屋町駅」より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_086",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "まつしま歯科",
+    "Zipcode": "〒700-0975",
+    "adress": "岡山県岡山市北区今7-23-18",
+    "access": "JR「北長瀬駅」より車で約7分"
+  },
+  {
+    "store_id": "kireiline_087",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "しんご歯科",
+    "Zipcode": "〒700-0975",
+    "adress": "岡山県岡山市北区今7-23-18",
+    "access": "JR「北長瀬駅」より車で約7分"
+  },
+  {
+    "store_id": "kireiline_088",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "のぞみデンタルクリニック",
+    "Zipcode": "〒700-0975",
+    "adress": "岡山県岡山市北区今7-23-18",
+    "access": "JR「北長瀬駅」より車で約7分"
+  },
+  {
+    "store_id": "kireiline_089",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "おさふねフレンド歯科",
+    "Zipcode": "〒701-0303",
+    "adress": "岡山県都窪郡早島町前潟616-1",
+    "access": "JR「早島駅」より車で約5分"
+  },
+  {
+    "store_id": "kireiline_090",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "さかい歯科クリニック",
+    "Zipcode": "〒700-0975",
+    "adress": "岡山県岡山市北区今7-23-18",
+    "access": "JR「北長瀬駅」より車で約7分"
+  },
+  {
+    "store_id": "kireiline_091",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "つつみ歯科クリニック",
+    "Zipcode": "〒700-0975",
+    "adress": "岡山県岡山市北区今7-23-18",
+    "access": "JR「北長瀬駅」より車で約7分"
+  },
+  {
+    "store_id": "kireiline_092",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "厚南ハピネス歯科",
+    "Zipcode": "〒757-0001",
+    "adress": "山口県山陽小野田市厚狭1-1-1",
+    "access": "JR「厚狭駅」より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_093",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "スガタ歯科医院",
+    "Zipcode": "〒753-0211",
+    "adress": "山口県山口市大内長野611-1",
+    "access": "JR「山口駅」より車で約10分"
+  },
+  {
+    "store_id": "kireiline_094",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "天神駅前矯正歯科クリニック",
+    "Zipcode": "〒810-0001",
+    "adress": "福岡県福岡市中央区天神2-8-38 協和ビル6F",
+    "access": "福岡市地下鉄空港線「天神駅」4番出口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_095",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "天神西通りデンタルクリニック",
+    "Zipcode": "〒810-0041",
+    "adress": "福岡県福岡市中央区大名2-1-53 天神吉田ビル2F",
+    "access": "福岡市地下鉄空港線「天神駅」2番出口より徒歩3分"
+  },
+  {
+    "store_id": "kireiline_096",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "さとう歯科医院",
+    "Zipcode": "〒810-0001",
+    "adress": "福岡県福岡市中央区天神2-8-38 協和ビル6F",
+    "access": "福岡市地下鉄空港線「天神駅」4番出口より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_097",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "スマイル髙城歯科【旧：スマイル歯科】",
+    "Zipcode": "〒870-0154",
+    "adress": "大分県大分市高城西町32-15",
+    "access": "JR日豊本線「高城駅」より徒歩10分"
+  },
+  {
+    "store_id": "kireiline_098",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "椿原松尾歯科",
+    "Zipcode": "〒870-0035",
+    "adress": "大分県大分市中央町2-6-4",
+    "access": "JR「大分駅」より徒歩7分"
+  },
+  {
+    "store_id": "kireiline_099",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "うれしの・山口歯科医院",
+    "Zipcode": "〒843-0301",
+    "adress": "佐賀県嬉野市嬉野町大字下宿乙2199-1",
+    "access": "JR「武雄温泉駅」より車で約20分"
+  },
+  {
+    "store_id": "kireiline_100",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "田口歯科医院",
+    "Zipcode": "〒860-0845",
+    "adress": "熊本県熊本市中央区上通町1-1 NK第1ビル2F",
+    "access": "熊本市電「通町筋駅」より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_101",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "熊本上通矯正歯科クリニック",
+    "Zipcode": "〒860-0845",
+    "adress": "熊本県熊本市中央区上通町1-1 NK第1ビル2F",
+    "access": "熊本市電「通町筋駅」より徒歩1分"
+  },
+  {
+    "store_id": "kireiline_102",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "医療法人ひじい歯科医院",
+    "Zipcode": "〒862-0950",
+    "adress": "熊本県熊本市中央区水前寺1-18-1",
+    "access": "JR「水前寺駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_103",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "小野歯科医院",
+    "Zipcode": "〒862-0950",
+    "adress": "熊本県熊本市中央区水前寺1-18-1",
+    "access": "JR「水前寺駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_104",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "医療法人 松永歯科クリニック",
+    "Zipcode": "〒862-0950",
+    "adress": "熊本県熊本市中央区水前寺1-18-1",
+    "access": "JR「水前寺駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_105",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "青山歯科医院",
+    "Zipcode": "〒862-0950",
+    "adress": "熊本県熊本市中央区水前寺1-18-1",
+    "access": "JR「水前寺駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_106",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "これえだ歯科医院",
+    "Zipcode": "〒862-0950",
+    "adress": "熊本県熊本市中央区水前寺1-18-1",
+    "access": "JR「水前寺駅」より徒歩5分"
+  },
+  {
+    "store_id": "kireiline_107",
+    "clinic_name": "キレイライン矯正",
+    "store_name": "うえだ歯科",
+    "Zipcode": "〒862-0950",
+    "adress": "熊本県熊本市中央区水前寺1-18-1",
+    "access": "JR「水前寺駅」より徒歩5分"
+  },
+  {
+    "store_id": "ws_001",
+    "clinic_name": "ウィスマイル",
+    "store_name": "A CLINIC デンタル",
+    "Zipcode": "〒104-0061",
+    "adress": "東京都中央区銀座5丁目13-19デュ-プレックス銀座タワ-5/13 12階",
+    "access": "東銀座駅0分／銀座駅3分"
+  },
+  {
+    "store_id": "ws_002",
+    "clinic_name": "ウィスマイル",
+    "store_name": "恵比寿ガーデンデンタルクリニック",
+    "Zipcode": "〒150-0013",
+    "adress": "東京都渋谷区恵比寿3-9-20恵比寿ガ-デンイ-ストビル1F",
+    "access": "恵比寿駅3分"
+  },
+  {
+    "store_id": "ws_003",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ルーチェマウスピース矯正歯科",
+    "Zipcode": "〒107-0062",
+    "adress": "東京都港区南青山5丁目5番4号ル-チェ南青山 A棟B1F",
+    "access": "表参道駅3分"
+  },
+  {
+    "store_id": "ws_004",
+    "clinic_name": "ウィスマイル",
+    "store_name": "You矯正歯科 新宿医院",
+    "Zipcode": "〒160-0023",
+    "adress": "東京都新宿区西新宿3-2-27オ-チュ-ビル第7ビル7階",
+    "access": "新宿駅8分"
+  },
+  {
+    "store_id": "ws_005",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ピュアリオ歯科・矯正歯科 銀座有楽町院",
+    "Zipcode": "〒104-0061",
+    "adress": "東京都中央区銀座一丁目4-8銀座ビックウエストビル5号館5F",
+    "access": "銀座一丁目駅1分/有楽町駅3分"
+  },
+  {
+    "store_id": "ws_006",
+    "clinic_name": "ウィスマイル",
+    "store_name": "銀座さいとう矯正歯科",
+    "Zipcode": "〒104-0061",
+    "adress": "東京都中央区銀座5-4-7銀座サワモトビル3階",
+    "access": "銀座駅1分"
+  },
+  {
+    "store_id": "ws_007",
+    "clinic_name": "ウィスマイル",
+    "store_name": "目黒リリー歯科・矯正歯科",
+    "Zipcode": "〒153-0063",
+    "adress": "東京都目黒区目黒2-8-10K-TREE目黒1Ｆ",
+    "access": "目黒駅7分"
+  },
+  {
+    "store_id": "ws_008",
+    "clinic_name": "ウィスマイル",
+    "store_name": "赤羽歯科 池袋診療所 サンシャイン60-8Ｆ",
+    "Zipcode": "〒170-6008",
+    "adress": "東京都豊島区東池袋3-1-1サンシャイン60-8F",
+    "access": "池袋駅8分"
+  },
+  {
+    "store_id": "ws_009",
+    "clinic_name": "ウィスマイル",
+    "store_name": "大森駅ファミリー歯科・矯正歯科",
+    "Zipcode": "〒143-0023",
+    "adress": "東京都大田区山王1-7-4ミュ-ジションプラス大森山王1階",
+    "access": "大森駅5分"
+  },
+  {
+    "store_id": "ws_010",
+    "clinic_name": "ウィスマイル",
+    "store_name": "岸上歯科クリニック",
+    "Zipcode": "〒107-0061",
+    "adress": "東京都港区北青山3-13-1北青山関根ビル1F",
+    "access": "表参道駅3分"
+  },
+  {
+    "store_id": "ws_011",
+    "clinic_name": "ウィスマイル",
+    "store_name": "You矯正歯科 池袋西口院",
+    "Zipcode": "〒171-0021",
+    "adress": "東京都豊島区西池袋1-3-6アウルコ-ト 5階",
+    "access": "池袋駅1分"
+  },
+  {
+    "store_id": "ws_012",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ココロデンタル西麻布",
+    "Zipcode": "〒106-0031",
+    "adress": "東京都港区西麻布4-1-5同栄ビル6階",
+    "access": "六本木駅10分"
+  },
+  {
+    "store_id": "ws_013",
+    "clinic_name": "ウィスマイル",
+    "store_name": "You矯正歯科　渋谷医院",
+    "Zipcode": "〒150-0002",
+    "adress": "東京都渋谷区渋谷1-8-8新栄宮益ビル4階",
+    "access": "渋谷駅5分"
+  },
+  {
+    "store_id": "ws_014",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ビーンズ歯科",
+    "Zipcode": "〒175-0083",
+    "adress": "東京都板橋区徳丸3-17-5手塚ビル1階",
+    "access": "東武練馬駅2分"
+  },
+  {
+    "store_id": "ws_015",
+    "clinic_name": "ウィスマイル",
+    "store_name": "南砂町リタ・デンタルクリニック",
+    "Zipcode": "〒136-0076",
+    "adress": "東京都江東区南砂2-33-3リビオメゾン南砂町1階",
+    "access": "南砂町駅10分"
+  },
+  {
+    "store_id": "ws_016",
+    "clinic_name": "ウィスマイル",
+    "store_name": "池袋はならび矯正歯科",
+    "Zipcode": "〒171-0014",
+    "adress": "東京都豊島区池袋2-7-5ソラ-レ3階",
+    "access": "池袋駅1分"
+  },
+  {
+    "store_id": "ws_017",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ホワイトエッセンス成城クリニック",
+    "Zipcode": "〒157-0066",
+    "adress": "東京都世田谷区成城6-8-6サラブライト成城ビル5F",
+    "access": "成城学園前駅1分"
+  },
+  {
+    "store_id": "ws_018",
+    "clinic_name": "ウィスマイル",
+    "store_name": "赤羽歯科 信濃町診療所",
+    "Zipcode": "〒160-0016",
+    "adress": "東京都新宿区信濃町8外苑北SRCビル3F",
+    "access": "信濃町駅3分"
+  },
+  {
+    "store_id": "ws_019",
+    "clinic_name": "ウィスマイル",
+    "store_name": "かんぱち歯科",
+    "Zipcode": "〒158-0098",
+    "adress": "東京都世田谷区上用賀3-20-4",
+    "access": "用賀駅10分"
+  },
+  {
+    "store_id": "ws_020",
+    "clinic_name": "ウィスマイル",
+    "store_name": "新宿さいとう矯正歯科",
+    "Zipcode": "〒160-0023",
+    "adress": "東京都新宿区西新宿1-19-6山手新宿ビル9階",
+    "access": "新宿駅1分"
+  },
+  {
+    "store_id": "ws_021",
+    "clinic_name": "ウィスマイル",
+    "store_name": "シールズデンタルクリニック　東池袋院",
+    "Zipcode": "〒171-0022",
+    "adress": "東京都豊島区南池袋 2-47-6パレス南池袋 1F",
+    "access": "池袋駅7分"
+  },
+  {
+    "store_id": "ws_022",
+    "clinic_name": "ウィスマイル",
+    "store_name": "シールズデンタルクリニック　西池袋院",
+    "Zipcode": "〒171-0021",
+    "adress": "東京都豊島区西池袋2-34-80",
+    "access": "池袋駅5分"
+  },
+  {
+    "store_id": "ws_023",
+    "clinic_name": "ウィスマイル",
+    "store_name": "新宿デンタルオフィス",
+    "Zipcode": "〒169-0074",
+    "adress": "東京都新宿区北新宿1-1-17ウインド北新宿4F",
+    "access": "大久保駅2分"
+  },
+  {
+    "store_id": "ws_024",
+    "clinic_name": "ウィスマイル",
+    "store_name": "You矯正歯科　銀座医院",
+    "Zipcode": "〒104-0061",
+    "adress": "東京都中央区銀座5-5-18銀座藤小西ビル5F",
+    "access": "銀座駅1分"
+  },
+  {
+    "store_id": "ws_025",
+    "clinic_name": "ウィスマイル",
+    "store_name": "うえの矯正デンタルクリニック",
+    "Zipcode": "〒110-0015",
+    "adress": "東京都台東区東上野3丁目35-10クレイシア上野101",
+    "access": "稲荷町駅1分"
+  },
+  {
+    "store_id": "ws_026",
+    "clinic_name": "ウィスマイル",
+    "store_name": "外苑前TAメディカルデンタルクリニック",
+    "Zipcode": "〒107-0062",
+    "adress": "東京都港区南青山2丁目14-21",
+    "access": "外苑前駅4分"
+  },
+  {
+    "store_id": "ws_027",
+    "clinic_name": "ウィスマイル",
+    "store_name": "アンデルト歯科・矯正歯科",
+    "Zipcode": "〒150-0043",
+    "adress": "東京都渋谷区道玄坂2丁目25-12道玄坂通2F",
+    "access": "渋谷駅2分"
+  },
+  {
+    "store_id": "ws_028",
+    "clinic_name": "ウィスマイル",
+    "store_name": "You矯正歯科 青山医院",
+    "Zipcode": "〒107-0062",
+    "adress": "東京都港区南青山2-12-15ユニマット外苑ビル6F",
+    "access": "外苑前駅2分"
+  },
+  {
+    "store_id": "ws_029",
+    "clinic_name": "ウィスマイル",
+    "store_name": "新宿セントラルパーク歯科",
+    "Zipcode": "〒160-0023",
+    "adress": "東京都新宿区西新宿４丁目１４−３ライフコ-ポ土屋 2F",
+    "access": "西新宿五丁目駅3分"
+  },
+  {
+    "store_id": "ws_030",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ハイライフ日本橋歯科医院",
+    "Zipcode": "〒103-0027",
+    "adress": "東京都中央区日本橋3-8-14日本橋ビル4F",
+    "access": "日本橋駅2分"
+  },
+  {
+    "store_id": "ws_031",
+    "clinic_name": "ウィスマイル",
+    "store_name": "おおじま駅前歯科・大島駅前矯正歯科",
+    "Zipcode": "〒136-0072",
+    "adress": "東京都江東区大島６丁目２６−７太田ビル1F",
+    "access": "大島駅3分"
+  },
+  {
+    "store_id": "ws_032",
+    "clinic_name": "ウィスマイル",
+    "store_name": "サニタス歯科・矯正歯科クリニック 東長崎",
+    "Zipcode": "〒171-0052",
+    "adress": "東京都豊島区南長崎5-25-15",
+    "access": "東長崎駅1分"
+  },
+  {
+    "store_id": "ws_033",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ワハハ総合デンタル 東京銀座モンブランビルクリニック",
+    "Zipcode": "〒104-0061",
+    "adress": "東京都中央区銀座7-9-11モンブランGINZABldg 10F",
+    "access": "銀座駅5分"
+  },
+  {
+    "store_id": "ws_034",
+    "clinic_name": "ウィスマイル",
+    "store_name": "中延昭和通り歯科",
+    "Zipcode": "〒142-0053",
+    "adress": "東京都品川区中延3-1-4",
+    "access": "荏原中延駅1分"
+  },
+  {
+    "store_id": "ws_035",
+    "clinic_name": "ウィスマイル",
+    "store_name": "豊洲海の見える歯科・矯正歯科",
+    "Zipcode": "〒135-0061",
+    "adress": "東京都江東区豊洲5-1-13ブランズタワ-豊洲1階",
+    "access": "豊洲駅3分"
+  },
+  {
+    "store_id": "ws_036",
+    "clinic_name": "ウィスマイル",
+    "store_name": "You矯正歯科　横浜医院",
+    "Zipcode": "〒221-0835",
+    "adress": "神奈川県横浜市神奈川区鶴屋町2-10-5YT10ビル7階",
+    "access": "横浜駅5分"
+  },
+  {
+    "store_id": "ws_037",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ソラーレ歯科・矯正歯科 そよら横浜高田院",
+    "Zipcode": "〒223-0066",
+    "adress": "神奈川県横浜市港北区高田西1-1-47そよら横浜高田２F",
+    "access": "高田駅1分"
+  },
+  {
+    "store_id": "ws_038",
+    "clinic_name": "ウィスマイル",
+    "store_name": "横浜関内矯正歯科ブランシュ",
+    "Zipcode": "〒231-0047",
+    "adress": "神奈川県横浜市中区羽衣町2-5-3ウエルカ-サ横浜関内1F",
+    "access": "関内駅4分"
+  },
+  {
+    "store_id": "ws_039",
+    "clinic_name": "ウィスマイル",
+    "store_name": "あきもと歯科",
+    "Zipcode": "〒221-0866",
+    "adress": "神奈川県横浜市神奈川区羽沢南2-44-7HAZAAR 4F",
+    "access": "羽沢横浜国大駅1分"
+  },
+  {
+    "store_id": "ws_040",
+    "clinic_name": "ウィスマイル",
+    "store_name": "アス港北歯科クリニック",
+    "Zipcode": "〒224-0032",
+    "adress": "神奈川県横浜市都筑区茅ヶ崎中央5-1　港北 TOKYU S.C. 4階",
+    "access": "センター南駅1分"
+  },
+  {
+    "store_id": "ws_041",
+    "clinic_name": "ウィスマイル",
+    "store_name": "アス横浜歯科クリニック",
+    "Zipcode": "〒232-0053",
+    "adress": "神奈川県横浜市南区井土ヶ谷下町215-1　マルエツ井土ヶ谷 別棟",
+    "access": "井土ヶ谷駅30秒"
+  },
+  {
+    "store_id": "ws_042",
+    "clinic_name": "ウィスマイル",
+    "store_name": "横浜さいとう矯正歯科",
+    "Zipcode": "〒220-0004",
+    "adress": "神奈川県横浜市西区北幸1-6-1横浜ファ-ストビル15階",
+    "access": "横浜駅直結"
+  },
+  {
+    "store_id": "ws_043",
+    "clinic_name": "ウィスマイル",
+    "store_name": "吉見医科歯科クリニック",
+    "Zipcode": "〒330-0063",
+    "adress": "埼玉県さいたま市浦和区高砂1-13-12MiRiスクエア4階",
+    "access": "浦和駅1分"
+  },
+  {
+    "store_id": "ws_044",
+    "clinic_name": "ウィスマイル",
+    "store_name": "新所沢ぎぼ歯科・矯正歯科クリニック",
+    "Zipcode": "〒359-0044",
+    "adress": "埼玉県所沢市松葉町2-22矢島ビル2階",
+    "access": "新所沢駅1分"
+  },
+  {
+    "store_id": "ws_045",
+    "clinic_name": "ウィスマイル",
+    "store_name": "指扇駅前いしはま歯科クリニック",
+    "Zipcode": "〒331-0062",
+    "adress": "埼玉県さいたま市西区土屋594-1鈴木第2ビル2F",
+    "access": "指扇駅1分"
+  },
+  {
+    "store_id": "ws_046",
+    "clinic_name": "ウィスマイル",
+    "store_name": "柳崎歯科矯正クリニック",
+    "Zipcode": "〒333-0861",
+    "adress": "埼玉県川口市柳崎5-1-1ツカサビル1F",
+    "access": "東浦和駅13分"
+  },
+  {
+    "store_id": "ws_047",
+    "clinic_name": "ウィスマイル",
+    "store_name": "田中歯科医院",
+    "Zipcode": "〒277-0025",
+    "adress": "千葉県柏市千代田3-15-1クセレントビル2階",
+    "access": "柏駅15分"
+  },
+  {
+    "store_id": "ws_048",
+    "clinic_name": "ウィスマイル",
+    "store_name": "千葉総合歯科稲毛 矯正歯科",
+    "Zipcode": "〒263-0043",
+    "adress": "千葉県千葉市稲毛区小仲台2-5-3稲栄ビル1F・6F・7F",
+    "access": "稲毛駅30秒"
+  },
+  {
+    "store_id": "ws_049",
+    "clinic_name": "ウィスマイル",
+    "store_name": "丹野歯科医院",
+    "Zipcode": "〒323-0024",
+    "adress": "栃木県小山市宮本町3-8-29",
+    "access": "小山駅5分"
+  },
+  {
+    "store_id": "ws_050",
+    "clinic_name": "ウィスマイル",
+    "store_name": "名古屋ウィズ歯科・矯正歯科",
+    "Zipcode": "〒450-0002",
+    "adress": "愛知県名古屋市中村区名駅２丁目４４番２号オ-キッドＧビル２階",
+    "access": "名古屋駅1分"
+  },
+  {
+    "store_id": "ws_051",
+    "clinic_name": "ウィスマイル",
+    "store_name": "アピタ知立ファミリー歯科・矯正歯科",
+    "Zipcode": "〒472-0045",
+    "adress": "愛知県知立市長篠町大山18-1ギャラリエアピタ知立店2階",
+    "access": "牛田駅13分"
+  },
+  {
+    "store_id": "ws_052",
+    "clinic_name": "ウィスマイル",
+    "store_name": "名駅ファイン歯科・矯正歯科",
+    "Zipcode": "〒450-0002",
+    "adress": "愛知県名古屋市中村区名駅4-8エニシオ名駅6階",
+    "access": "名古屋駅1分"
+  },
+  {
+    "store_id": "ws_053",
+    "clinic_name": "ウィスマイル",
+    "store_name": "名古屋さいとう矯正歯科",
+    "Zipcode": "〒450-0002",
+    "adress": "愛知県名古屋市中村区名駅4-8エニシオ名駅7階",
+    "access": "名古屋駅1分"
+  },
+  {
+    "store_id": "ws_054",
+    "clinic_name": "ウィスマイル",
+    "store_name": "名駅アール歯科・矯正歯科",
+    "Zipcode": "〒450-0002",
+    "adress": "愛知県名古屋市中村区名駅四丁目１０番２５号名駅ＩＭＡＩビル１１階",
+    "access": "名古屋駅1分"
+  },
+  {
+    "store_id": "ws_055",
+    "clinic_name": "ウィスマイル",
+    "store_name": "名古屋イースト歯科・矯正歯科",
+    "Zipcode": "〒465-0033",
+    "adress": "愛知県名古屋市名東区明が丘124-1amiamiビル1階",
+    "access": "藤が丘駅1分"
+  },
+  {
+    "store_id": "ws_056",
+    "clinic_name": "ウィスマイル",
+    "store_name": "アルティメイト栄歯科・矯正歯科",
+    "Zipcode": "〒460-0003",
+    "adress": "愛知県名古屋市中区錦3-15-33アルティメイト錦大津通3F",
+    "access": "栄駅1分"
+  },
+  {
+    "store_id": "ws_057",
+    "clinic_name": "ウィスマイル",
+    "store_name": "名古屋やごと歯科・矯正歯科",
+    "Zipcode": "〒466-0834",
+    "adress": "愛知県名古屋市昭和区広路町石坂2-1イオン八事店4階",
+    "access": "八事駅2分"
+  },
+  {
+    "store_id": "ws_058",
+    "clinic_name": "ウィスマイル",
+    "store_name": "エスカ歯科・矯正歯科",
+    "Zipcode": "〒453-0015",
+    "adress": "愛知県名古屋市中村区椿町６番９号先エスカ地下街",
+    "access": "名古屋駅1分"
+  },
+  {
+    "store_id": "ws_059",
+    "clinic_name": "ウィスマイル",
+    "store_name": "名古屋茶屋歯科・矯正歯科",
+    "Zipcode": "〒455-0858",
+    "adress": "愛知県名古屋市港区西茶屋2丁目11イオンモ-ル名古屋茶屋1階",
+    "access": "イオンモール名古屋茶屋前"
+  },
+  {
+    "store_id": "ws_060",
+    "clinic_name": "ウィスマイル",
+    "store_name": "名古屋ルミナス歯科・矯正歯科",
+    "Zipcode": "〒454-0812",
+    "adress": "愛知県名古屋市中川区五月通２丁目３７番黄金ステ-ションビル２階",
+    "access": "市名古屋市営バス「五月通」1分"
+  },
+  {
+    "store_id": "ws_061",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ケンデンタルクリニック 小牧医院",
+    "Zipcode": "〒485-0041",
+    "adress": "愛知県小牧市小牧3-555ラピオ4階 （アルプラザ小牧）",
+    "access": "名鉄小牧駅5分"
+  },
+  {
+    "store_id": "ws_062",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ケンデンタルクリニック 江南医院",
+    "Zipcode": "〒483-8342",
+    "adress": "愛知県江南市松竹町上野２０５ヴィアモ-ルアピタ 2F",
+    "access": "江南駅25分"
+  },
+  {
+    "store_id": "ws_063",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ワイズ歯科矯正歯科＋KIDS イオン小牧店",
+    "Zipcode": "〒485-0831",
+    "adress": "愛知県小牧市東1-126イオン小牧1階",
+    "access": "小牧駅17分"
+  },
+  {
+    "store_id": "ws_064",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ケンデンタルクリニック 犬山医院",
+    "Zipcode": "〒484-0065",
+    "adress": "愛知県犬山市五郎丸東3-34",
+    "access": "岐阜バス「総合犬山中央病院東」2分"
+  },
+  {
+    "store_id": "ws_065",
+    "clinic_name": "ウィスマイル",
+    "store_name": "金山ファイン歯科・矯正歯科",
+    "Zipcode": "〒460-0022",
+    "adress": "愛知県名古屋市中区金山1-15-10メイフィス金山駅前ビル6階",
+    "access": "金山駅2分"
+  },
+  {
+    "store_id": "ws_066",
+    "clinic_name": "ウィスマイル",
+    "store_name": "静間歯科医院",
+    "Zipcode": "〒475-0921",
+    "adress": "愛知県半田市天神町51-10",
+    "access": "成岩駅8分"
+  },
+  {
+    "store_id": "ws_067",
+    "clinic_name": "ウィスマイル",
+    "store_name": "小木曽歯科医院",
+    "Zipcode": "〒399-4113",
+    "adress": "長野県駒ヶ根市赤須町9-15",
+    "access": "駒ヶ根駅10分"
+  },
+  {
+    "store_id": "ws_068",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ケンデンタルクリニック 岐阜医院",
+    "Zipcode": "〒501-6115",
+    "adress": "岐阜県岐阜市柳津町丸野３丁目３−６カラフルタウン 岐阜 2F",
+    "access": "柳津駅15分"
+  },
+  {
+    "store_id": "ws_069",
+    "clinic_name": "ウィスマイル",
+    "store_name": "歯科天陽堂柴田医院",
+    "Zipcode": "〒431-0302",
+    "adress": "静岡県湖西市新居町新居3354-1",
+    "access": "新居町8分"
+  },
+  {
+    "store_id": "ws_070",
+    "clinic_name": "ウィスマイル",
+    "store_name": "You矯正歯科 大阪梅田医院",
+    "Zipcode": "〒530-0001",
+    "adress": "大阪府大阪市北区梅田2-4-9ブリ-ゼブリ-ゼ 5F",
+    "access": "大阪駅／北新地駅5分"
+  },
+  {
+    "store_id": "ws_071",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ルセラ歯科・矯正歯科 堺",
+    "Zipcode": "〒587-8577",
+    "adress": "大阪府堺市美原区黒山22-1ららぽ-と堺2F",
+    "access": "南海バス「美原区役所前」5分"
+  },
+  {
+    "store_id": "ws_072",
+    "clinic_name": "ウィスマイル",
+    "store_name": "増田歯科医院 京橋院",
+    "Zipcode": "〒534-0024",
+    "adress": "大阪府大阪市都島区東野田町1-6-16ワタヤコスモスビル3階",
+    "access": "京橋駅1分"
+  },
+  {
+    "store_id": "ws_073",
+    "clinic_name": "ウィスマイル",
+    "store_name": "新福島 ホワイトノア歯科 矯正歯科",
+    "Zipcode": "〒553-0003",
+    "adress": "大阪府大阪市福島区福島4-5-47",
+    "access": "新福島駅1分"
+  },
+  {
+    "store_id": "ws_074",
+    "clinic_name": "ウィスマイル",
+    "store_name": "かわさと歯科・矯正歯科",
+    "Zipcode": "〒530-0002",
+    "adress": "大阪府大阪市北区曽根崎新地1-4-20桜橋IMビル4階",
+    "access": "北新地駅1分"
+  },
+  {
+    "store_id": "ws_075",
+    "clinic_name": "ウィスマイル",
+    "store_name": "いちき歯科",
+    "Zipcode": "〒530-0044",
+    "adress": "大阪府堺市北区東天満1-10-10サンファ-スト南森町2F",
+    "access": "南森町駅1分"
+  },
+  {
+    "store_id": "ws_076",
+    "clinic_name": "ウィスマイル",
+    "store_name": "増田歯科医院 守口院",
+    "Zipcode": "〒570-0015",
+    "adress": "大阪府守口市梶町4-63-7",
+    "access": "古川橋駅20分"
+  },
+  {
+    "store_id": "ws_077",
+    "clinic_name": "ウィスマイル",
+    "store_name": "AKIデンタルクリニック",
+    "Zipcode": "〒545-6021",
+    "adress": "大阪府大阪市阿倍野区阿倍野筋1-1-43あべのハルカスタワ-館21階",
+    "access": "天王寺駅5分"
+  },
+  {
+    "store_id": "ws_078",
+    "clinic_name": "ウィスマイル",
+    "store_name": "RYOデンタルクリニック",
+    "Zipcode": "〒542-0085",
+    "adress": "大阪府大阪市中央区心斎橋筋2-7-18プライムスクエア心斎橋ビル5F",
+    "access": "心斎橋駅5分/なんば駅5分"
+  },
+  {
+    "store_id": "ws_079",
+    "clinic_name": "ウィスマイル",
+    "store_name": "クマシロ歯科診療所",
+    "Zipcode": "〒571-0067",
+    "adress": "大阪府門真市石原町5-24日光ハイツ1F",
+    "access": "古川橋駅5分"
+  },
+  {
+    "store_id": "ws_080",
+    "clinic_name": "ウィスマイル",
+    "store_name": "うえだ歯科クリニック",
+    "Zipcode": "〒562-0023",
+    "adress": "大阪府箕面市粟生間谷西１丁目１−６",
+    "access": "阪急バス「尼谷」1分"
+  },
+  {
+    "store_id": "ws_081",
+    "clinic_name": "ウィスマイル",
+    "store_name": "&DENTAL谷町4丁目歯科・矯正歯科",
+    "Zipcode": "〒540-0028",
+    "adress": "大阪府大阪市中央区常盤町2-1-13アドバンスビル本町1階",
+    "access": "谷町四丁目駅4分"
+  },
+  {
+    "store_id": "ws_082",
+    "clinic_name": "ウィスマイル",
+    "store_name": "京都下鴨ライフ歯科・矯正歯科・小児歯科",
+    "Zipcode": "〒606-0826",
+    "adress": "京都府京都市左京区下鴨西本町39",
+    "access": "北山駅13分"
+  },
+  {
+    "store_id": "ws_083",
+    "clinic_name": "ウィスマイル",
+    "store_name": "クラッセ歯科・矯正歯科",
+    "Zipcode": "〒658-0054",
+    "adress": "兵庫県神戸市東灘区御影中町3-2-1御影クラッセ4F",
+    "access": "御影駅直通"
+  },
+  {
+    "store_id": "ws_084",
+    "clinic_name": "ウィスマイル",
+    "store_name": "神戸三宮ヨシダファミリー歯科・矯正歯科クリニック",
+    "Zipcode": "〒651-0087",
+    "adress": "兵庫県神戸市中央区御幸通4-2-9アベニュ-御幸ビル101",
+    "access": "三宮駅5分"
+  },
+  {
+    "store_id": "ws_085",
+    "clinic_name": "ウィスマイル",
+    "store_name": "宝塚ライフ歯科・矯正歯科",
+    "Zipcode": "〒665-0845",
+    "adress": "兵庫県宝塚市栄町1-9-51",
+    "access": "宝塚駅8分"
+  },
+  {
+    "store_id": "ws_086",
+    "clinic_name": "ウィスマイル",
+    "store_name": "神戸セントレース歯科・矯正歯科",
+    "Zipcode": "〒650-0021",
+    "adress": "兵庫県神戸市中央区三宮町1丁目4−3クレフィ三宮8階",
+    "access": "神戸三宮駅3分"
+  },
+  {
+    "store_id": "ws_087",
+    "clinic_name": "ウィスマイル",
+    "store_name": "西宮北口ライフ歯科・矯正歯科・小児歯科",
+    "Zipcode": "〒663-8204",
+    "adress": "兵庫県西宮市高松町3-361階",
+    "access": "西宮北口1分"
+  },
+  {
+    "store_id": "ws_088",
+    "clinic_name": "ウィスマイル",
+    "store_name": "なかたに歯科クリニック",
+    "Zipcode": "〒652-0898",
+    "adress": "兵庫県神戸市兵庫区駅前通1-2-1アルバビル3・4F",
+    "access": "兵庫駅1分"
+  },
+  {
+    "store_id": "ws_089",
+    "clinic_name": "ウィスマイル",
+    "store_name": "宝塚歯科H&L",
+    "Zipcode": "〒665-0004",
+    "adress": "兵庫県宝塚市梅野町1-48宝南ショップス2階",
+    "access": "宝塚南口駅1分"
+  },
+  {
+    "store_id": "ws_090",
+    "clinic_name": "ウィスマイル",
+    "store_name": "西宮北口駅前歯科",
+    "Zipcode": "〒662-0833",
+    "adress": "兵庫県西宮市北昭和町2-19",
+    "access": "西宮北口駅4分"
+  },
+  {
+    "store_id": "ws_091",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ブランチ大津京デンタルクリニック",
+    "Zipcode": "〒520-0021",
+    "adress": "滋賀県大津市二本松1-1ブランチ大津京A棟2F",
+    "access": "江若交通「競輪場前」1分"
+  },
+  {
+    "store_id": "ws_092",
+    "clinic_name": "ウィスマイル",
+    "store_name": "You矯正歯科 広島駅前医院",
+    "Zipcode": "〒732-0822",
+    "adress": "広島県広島市南区松原町5-1ビッグフロント広島４階",
+    "access": "広島駅3分"
+  },
+  {
+    "store_id": "ws_093",
+    "clinic_name": "ウィスマイル",
+    "store_name": "木村歯科・矯正歯科",
+    "Zipcode": "〒734-0014",
+    "adress": "広島県広島市南区宇品西5-11-1-104",
+    "access": "広島バス「宇品西三丁目」1分"
+  },
+  {
+    "store_id": "ws_094",
+    "clinic_name": "ウィスマイル",
+    "store_name": "木村歯科医院 黒瀬院",
+    "Zipcode": "〒739-2612",
+    "adress": "広島県東広島市黒瀬町丸山1420-1",
+    "access": "JRバス中国「黒瀬支所前」1分"
+  },
+  {
+    "store_id": "ws_095",
+    "clinic_name": "ウィスマイル",
+    "store_name": "パセーラデンタルクリニック",
+    "Zipcode": "〒730-0011",
+    "adress": "広島県広島市中区基町6-78クレドパセ-ラ9F",
+    "access": "県庁前直結"
+  },
+  {
+    "store_id": "ws_096",
+    "clinic_name": "ウィスマイル",
+    "store_name": "安芸津歯科医院",
+    "Zipcode": "〒739-2403",
+    "adress": "広島県東広島市安芸津町風早3206",
+    "access": "東広島市"
+  },
+  {
+    "store_id": "ws_097",
+    "clinic_name": "ウィスマイル",
+    "store_name": "You矯正歯科 紙屋町医院",
+    "Zipcode": "〒730-0031",
+    "adress": "広島県広島市中区紙屋町1-2-22広島トランヴェ-ルビル地下1F",
+    "access": "紙屋町東電停１分"
+  },
+  {
+    "store_id": "ws_098",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ワハハ総合デンタル広島袋町クリニック",
+    "Zipcode": "〒730-0036",
+    "adress": "広島県広島市中区袋町6-42深井ビル1階・5階",
+    "access": "本通駅2分"
+  },
+  {
+    "store_id": "ws_099",
+    "clinic_name": "ウィスマイル",
+    "store_name": "高田歯科口腔外科医院",
+    "Zipcode": "〒761-8042",
+    "adress": "香川県高松市御厩町476高田整形外科医院３階",
+    "access": "高松市"
+  },
+  {
+    "store_id": "ws_100",
+    "clinic_name": "ウィスマイル",
+    "store_name": "中矢歯科医院",
+    "Zipcode": "〒791-3152",
+    "adress": "愛媛県伊予郡松前町大字永田298−13",
+    "access": "古泉駅15分"
+  },
+  {
+    "store_id": "ws_101",
+    "clinic_name": "ウィスマイル",
+    "store_name": "田岡歯科・矯正歯科クリニック",
+    "Zipcode": "〒780-8052",
+    "adress": "高知県高知市鴨部1-10-33",
+    "access": "とさでん交通「旭町三丁目 」7分"
+  },
+  {
+    "store_id": "ws_102",
+    "clinic_name": "ウィスマイル",
+    "store_name": "友枝歯科・矯正歯科クリニック福岡天神",
+    "Zipcode": "〒810-0041",
+    "adress": "福岡県福岡市中央区大名2-6-50福岡大名ガ-デンシティ2F",
+    "access": "天神駅3分"
+  },
+  {
+    "store_id": "ws_103",
+    "clinic_name": "ウィスマイル",
+    "store_name": "福岡天神さいとう矯正歯科",
+    "Zipcode": "〒810-0021",
+    "adress": "福岡県福岡市中央区今泉1-11-5ロクラス今泉 1F",
+    "access": "福岡天神駅2分"
+  },
+  {
+    "store_id": "ws_104",
+    "clinic_name": "ウィスマイル",
+    "store_name": "天神西通りデンタルクリニック",
+    "Zipcode": "〒810-0041",
+    "adress": "福岡県福岡市中央区大名2-1-10ビ-ムス福岡ビル4階",
+    "access": "福岡天神駅5分"
+  },
+  {
+    "store_id": "ws_105",
+    "clinic_name": "ウィスマイル",
+    "store_name": "まりん歯科・小児歯科医院",
+    "Zipcode": "〒800-0207",
+    "adress": "福岡県北九州市小倉南区沼緑町4-3-32",
+    "access": "西鉄バス「沼団地」3分"
+  },
+  {
+    "store_id": "ws_106",
+    "clinic_name": "ウィスマイル",
+    "store_name": "むらつ歯科クリニック",
+    "Zipcode": "〒812-0011",
+    "adress": "福岡県福岡市博多区博多駅前3-26-29九勧博多ビル1階",
+    "access": "博多駅5分"
+  },
+  {
+    "store_id": "ws_107",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ケイズ歯科・矯正歯科クリニック",
+    "Zipcode": "〒803-0845",
+    "adress": "福岡県北九州市小倉北区上到津3-3-3アクロスプラザ到津2F",
+    "access": "南小倉駅20分"
+  },
+  {
+    "store_id": "ws_108",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ドリーム歯科クリニック",
+    "Zipcode": "〒810-0014",
+    "adress": "福岡県福岡市中央区平尾2-5-8西鉄平尾駅ビル3F",
+    "access": "平尾駅直結"
+  },
+  {
+    "store_id": "ws_109",
+    "clinic_name": "ウィスマイル",
+    "store_name": "周船寺ハローパークペガサス歯科クリニック",
+    "Zipcode": "〒819-0374",
+    "adress": "福岡県福岡市西区千里701-14",
+    "access": "周船寺駅12分"
+  },
+  {
+    "store_id": "ws_110",
+    "clinic_name": "ウィスマイル",
+    "store_name": "愛デンタルクリニック",
+    "Zipcode": "〒806-0023",
+    "adress": "福岡県北九州市八幡西区八千代町4-26",
+    "access": "黒崎駅5分"
+  },
+  {
+    "store_id": "ws_111",
+    "clinic_name": "ウィスマイル",
+    "store_name": "本城駅前ペガサス歯科クリニック",
+    "Zipcode": "〒807-0803",
+    "adress": "福岡県北九州市八幡西区千代ケ崎1-15-5",
+    "access": "本城駅2分"
+  },
+  {
+    "store_id": "ws_112",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ワハハ鹿児島中央駅歯科・マウスピース矯正",
+    "Zipcode": "〒890-0045",
+    "adress": "鹿児島県鹿児島市武1-2-10JR鹿児島中央ビル AMUWE 3F",
+    "access": "鹿児島中央駅1分"
+  },
+  {
+    "store_id": "ws_113",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ワハハキッズデンタルランド＆おとな歯科",
+    "Zipcode": "〒899-5431",
+    "adress": "鹿児島県姶良市西餅田264-1イオンタウン姶良3F",
+    "access": "帖佐駅10分"
+  },
+  {
+    "store_id": "ws_114",
+    "clinic_name": "ウィスマイル",
+    "store_name": "よしどめデンタルクリニック マルヤガーデンズ",
+    "Zipcode": "〒892-0826",
+    "adress": "鹿児島県鹿児島市呉服町6-5マルヤガ-デンズ4F",
+    "access": "いづろ通駅4分"
+  },
+  {
+    "store_id": "ws_115",
+    "clinic_name": "ウィスマイル",
+    "store_name": "上熊本駅わが輩通り歯科クリニック",
+    "Zipcode": "〒860-0079",
+    "adress": "熊本県熊本市西区上熊本3-7-1メガセンタ-トライアル隣",
+    "access": "上熊本駅4分"
+  },
+  {
+    "store_id": "ws_116",
+    "clinic_name": "ウィスマイル",
+    "store_name": "郡山ラポール歯科",
+    "Zipcode": "〒963-0209",
+    "adress": "福島県郡山市御前南5-74",
+    "access": "郡山市"
+  },
+  {
+    "store_id": "ws_117",
+    "clinic_name": "ウィスマイル",
+    "store_name": "仙台駅前歯科・矯正歯科",
+    "Zipcode": "〒980-0021",
+    "adress": "宮城県仙台市青葉区中央1-8-40井門仙台駅前ビル5F",
+    "access": "仙台駅1分"
+  },
+  {
+    "store_id": "ws_118",
+    "clinic_name": "ウィスマイル",
+    "store_name": "かつき歯科クリニック",
+    "Zipcode": "〒990-0810",
+    "adress": "山形県山形市馬見ヶ崎2-10-14",
+    "access": "山交バス「北部市民プール前」8分"
+  },
+  {
+    "store_id": "ws_119",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ピュアリオ歯科・矯正歯科 札幌大通すすきの院",
+    "Zipcode": "〒064-0805",
+    "adress": "北海道札幌市中央区南5条西3-8Ｎ・グランデビル 4階",
+    "access": "すすきの駅1分／大通駅9分"
+  },
+  {
+    "store_id": "ws_120",
+    "clinic_name": "ウィスマイル",
+    "store_name": "さいとう矯正歯科 大通院",
+    "Zipcode": "〒060-0042",
+    "adress": "北海道札幌市中央区大通西3-8桂和大通ビル51 2F",
+    "access": "大通駅1分"
+  },
+  {
+    "store_id": "ws_121",
+    "clinic_name": "ウィスマイル",
+    "store_name": "さいとう矯正歯科 札幌宮の沢",
+    "Zipcode": "〒063-0052",
+    "adress": "北海道札幌市西区宮の沢２条2‐4‐7",
+    "access": "宮の沢駅8分"
+  },
+  {
+    "store_id": "ws_122",
+    "clinic_name": "ウィスマイル",
+    "store_name": "ピュアリオ歯科・矯正歯科 田町三田院",
+    "Zipcode": "〒108-0014",
+    "adress": "東京都港区芝5-14-14ビジデンス三慶3F",
+    "access": "田町駅4分/三田駅3分"
+  },
+  {
+    "store_id": "ws_123",
+    "clinic_name": "ウィスマイル",
+    "store_name": "渋谷F＆B矯正歯科・東京",
+    "Zipcode": "〒150-0046",
+    "adress": "東京都渋谷区松濤1-29-1渋谷クロスロ-ドビル5階",
+    "access": "渋谷駅5分"
+  },
+  {
+    "store_id": "omt_001",
+    "clinic_name": "Oh my teeth",
+    "store_name": "東京表参道矯正歯科",
+    "Zipcode": "〒107-0061",
+    "adress": "東京都港区北青山3-15-5 ポルトフィーノ1F",
+    "access": "表参道駅徒歩3分"
+  },
+  {
+    "store_id": "omt_002",
+    "clinic_name": "Oh my teeth",
+    "store_name": "東京銀座有楽町矯正歯科",
+    "Zipcode": "〒100-0006",
+    "adress": "東京都千代田区有楽町2-10-1 東京交通会館2F",
+    "access": "有楽町駅直結"
+  },
+  {
+    "store_id": "omt_003",
+    "clinic_name": "Oh my teeth",
+    "store_name": "東京池袋矯正歯科",
+    "Zipcode": "〒171-0021",
+    "adress": "東京都豊島区西池袋1-1-30 東武ホープセンター北地区B1F",
+    "access": "池袋駅直結"
+  },
+  {
+    "store_id": "omt_004",
+    "clinic_name": "Oh my teeth",
+    "store_name": "東京新宿矯正歯科",
+    "Zipcode": "〒160-0021",
+    "adress": "東京都新宿区歌舞町1 新宿サブナードB1F",
+    "access": "新宿駅直結"
+  },
+  {
+    "store_id": "omt_005",
+    "clinic_name": "Oh my teeth",
+    "store_name": "大阪心斎橋矯正歯科",
+    "Zipcode": "〒550-0015",
+    "adress": "大阪府大阪市西区南堀江1-15-9 南堀江コレット1F",
+    "access": "四ツ橋駅徒歩5分/西大橋駅徒歩7分/心斎橋駅徒歩9分"
+  },
+  {
+    "store_id": "omt_006",
+    "clinic_name": "Oh my teeth",
+    "store_name": "大阪梅田矯正歯科",
+    "Zipcode": "〒530-0014",
+    "adress": "大阪府大阪市北区鶴野町1-9 M.VOLANTE UMEDA 7階",
+    "access": "大阪駅徒歩6分/梅田駅徒歩4分"
+  },
+  {
+    "store_id": "omt_007",
+    "clinic_name": "Oh my teeth",
+    "store_name": "名古屋名駅矯正歯科",
+    "Zipcode": "〒450-0002",
+    "adress": "愛知県名古屋市中村区名駅4-2-28 THE EDGE名古屋 3階",
+    "access": "名古屋駅徒歩5分"
+  },
+  {
+    "store_id": "omt_008",
+    "clinic_name": "Oh my teeth",
+    "store_name": "福岡博多矯正歯科",
+    "Zipcode": "〒812-0012",
+    "adress": "福岡県福岡市博多区博多駅中央街7-2 トヨタレンタリース博多駅前ビル 4階",
+    "access": "博多駅筑紫口徒歩3分"
+  },
+  {
+    "store_id": "invisalign_001",
+    "clinic_name": "インビザライン",
+    "store_name": "（医社）愛育会　大通り矯正歯科",
+    "Zipcode": "〒060-0001",
+    "adress": "北海道札幌市中央区北一条西３丁目",
+    "access": "大通駅周辺・地下鉄各線大通駅より徒歩圏内"
+  },
+  {
+    "store_id": "invisalign_002",
+    "clinic_name": "インビザライン",
+    "store_name": "おかもと矯正歯科クリニック",
+    "Zipcode": "〒060-0001",
+    "adress": "北海道札幌市中央区北１条西３丁目３ー２５ 荒巻時計台前ビル9階",
+    "access": "地下鉄各線大通駅より徒歩3分・時計台前"
+  },
+  {
+    "store_id": "invisalign_003",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 仙台青葉矯正歯科クリニック",
+    "Zipcode": "〒980-0811",
+    "adress": "宮城県仙台市青葉区一番町3-1-18 しまぬきビル 2F",
+    "access": "地下鉄南北線広瀬通駅より徒歩3分・一番町商店街内"
+  },
+  {
+    "store_id": "invisalign_004",
+    "clinic_name": "インビザライン",
+    "store_name": "仙台キュア矯正歯科",
+    "Zipcode": "〒980-0021",
+    "adress": "宮城県仙台市青葉区中央 2丁目11-28番地 りんくすビル 6階",
+    "access": "JR仙台駅西口より徒歩5分・仙台駅前中央通り"
+  },
+  {
+    "store_id": "invisalign_005",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 大宮駅前矯正歯科クリニック",
+    "Zipcode": "〒330-0854",
+    "adress": "埼玉県さいたま市大宮区桜木町2-1-1 大宮アルシェ B1F",
+    "access": "JR大宮駅西口直結・大宮アルシェ地下1階"
+  },
+  {
+    "store_id": "invisalign_006",
+    "clinic_name": "インビザライン",
+    "store_name": "ホワイトエッセンス浦和パルコデンタルクリニック",
+    "Zipcode": "〒330-0055",
+    "adress": "埼玉県さいたま市浦和区東高砂町11-1 浦和パルコ地下1階",
+    "access": "JR浦和駅東口直結・浦和パルコ地下1階"
+  },
+  {
+    "store_id": "invisalign_007",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 千葉駅前矯正歯科クリニック",
+    "Zipcode": "〒260-0028",
+    "adress": "千葉県千葉市中央区新町1-20 江澤ビル7F",
+    "access": "JR千葉駅東口より徒歩3分・千葉駅前大通り"
+  },
+  {
+    "store_id": "invisalign_008",
+    "clinic_name": "インビザライン",
+    "store_name": "アイデンタルクリニック千葉院",
+    "Zipcode": "〒260-0028",
+    "adress": "千葉県千葉市中央区新町1-17 JPR千葉ビル5F",
+    "access": "JR千葉駅東口より徒歩2分・千葉駅前"
+  },
+  {
+    "store_id": "invisalign_009",
+    "clinic_name": "インビザライン",
+    "store_name": "ANBI新宿歯科・矯正歯科",
+    "Zipcode": "〒160-0022",
+    "adress": "東京都新宿区新宿6-29-11 新宿イーストクロスタワー5F",
+    "access": "都営大江戸線・副都心線 東新宿駅 A2・A3出口 徒歩1分"
+  },
+  {
+    "store_id": "invisalign_010",
+    "clinic_name": "インビザライン",
+    "store_name": "KU歯科クリニック新宿院",
+    "Zipcode": "〒160-0022",
+    "adress": "東京都新宿区新宿3-32-5 日原ビル4Ｆ",
+    "access": "新宿三丁目駅 A1出口より徒歩1分・新宿駅 東南口より徒歩4分"
+  },
+  {
+    "store_id": "invisalign_011",
+    "clinic_name": "インビザライン",
+    "store_name": "ハリウッド・スマイル矯正歯科",
+    "Zipcode": "〒160-0022",
+    "adress": "東京都新宿区新宿3－23－1 都里一ビル4階",
+    "access": "新宿駅東口より徒歩5分・新宿三丁目駅より徒歩3分"
+  },
+  {
+    "store_id": "invisalign_012",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 横浜駅前矯正歯科クリニック",
+    "Zipcode": "〒220-0005",
+    "adress": "神奈川県横浜市西区南幸2-17-2 ヴェルディ横浜3F",
+    "access": "JR横浜駅西口より徒歩5分・相鉄線横浜駅より徒歩3分"
+  },
+  {
+    "store_id": "invisalign_013",
+    "clinic_name": "インビザライン",
+    "store_name": "アイ矯正歯科クリニック",
+    "Zipcode": "〒220-0011",
+    "adress": "神奈川県横浜市西区高島2-19-12 スカイビル17F",
+    "access": "JR横浜駅東口より徒歩3分・スカイビル17階"
+  },
+  {
+    "store_id": "invisalign_014",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 静岡駅前矯正歯科クリニック",
+    "Zipcode": "〒420-0857",
+    "adress": "静岡県静岡市葵区御幸町6-10 静岡モディ7F",
+    "access": "JR静岡駅北口直結・静岡モディ7階"
+  },
+  {
+    "store_id": "invisalign_015",
+    "clinic_name": "インビザライン",
+    "store_name": "アイデンタルクリニック浜松院",
+    "Zipcode": "〒430-0926",
+    "adress": "静岡県浜松市中区砂山町6-1 JR浜松駅構内",
+    "access": "JR浜松駅構内・改札内"
+  },
+  {
+    "store_id": "invisalign_016",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 名古屋DDデンタルクリニック",
+    "Zipcode": "〒460-0008",
+    "adress": "愛知県名古屋市中区栄3-11-16SOK 住吉ビル 3階",
+    "access": "地下鉄名城線・東山線栄駅16番出口より徒歩3分"
+  },
+  {
+    "store_id": "invisalign_017",
+    "clinic_name": "インビザライン",
+    "store_name": "アラインクチュールデンタルオフィス 名古屋院",
+    "Zipcode": "〒461-0005",
+    "adress": "愛知県名古屋市東区東桜1-9-19　成田栄ビル3F",
+    "access": "地下鉄東山線・名城線栄駅12番出口より徒歩5分"
+  },
+  {
+    "store_id": "invisalign_018",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 大阪駅前矯正歯科クリニック",
+    "Zipcode": "〒530-0001",
+    "adress": "大阪府大阪市北区梅田1-1-3 大阪駅前第3ビル18F",
+    "access": "JR大阪駅・地下鉄梅田駅より徒歩5分・大阪駅前第3ビル18階"
+  },
+  {
+    "store_id": "invisalign_019",
+    "clinic_name": "インビザライン",
+    "store_name": "アイデンタルクリニック",
+    "Zipcode": "〒530-0001",
+    "adress": "大阪府大阪市北区梅田2-5-25 ハービスPLAZA 3F",
+    "access": "JR大阪駅・阪神梅田駅直結・ハービスPLAZA 3階"
+  },
+  {
+    "store_id": "invisalign_020",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 神戸三宮矯正歯科クリニック",
+    "Zipcode": "〒650-0021",
+    "adress": "兵庫県神戸市中央区三宮町1-5-1 銀泉三宮ビル5F",
+    "access": "JR三ノ宮駅・阪急神戸三宮駅より徒歩3分"
+  },
+  {
+    "store_id": "invisalign_021",
+    "clinic_name": "インビザライン",
+    "store_name": "アイデンタルクリニック神戸院",
+    "Zipcode": "〒650-0021",
+    "adress": "兵庫県神戸市中央区三宮町2-11-1 センタープラザ西館7F",
+    "access": "JR三ノ宮駅・阪急神戸三宮駅より徒歩2分・センタープラザ西館7階"
+  },
+  {
+    "store_id": "invisalign_022",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 京都四条矯正歯科クリニック",
+    "Zipcode": "〒600-8008",
+    "adress": "京都府京都市下京区四条通小橋西入真町90番 吉寿屋四条ビル5F",
+    "access": "阪急京都線烏丸駅・地下鉄烏丸線四条駅より徒歩3分"
+  },
+  {
+    "store_id": "invisalign_023",
+    "clinic_name": "インビザライン",
+    "store_name": "ホワイトエッセンス京都四条通り矯正歯科",
+    "Zipcode": "〒600-8008",
+    "adress": "京都府京都市下京区四条通柳馬場西入ル立売中之町106 ヤサカ四条ビル 5F",
+    "access": "阪急京都線烏丸駅・地下鉄烏丸線四条駅より徒歩5分"
+  },
+  {
+    "store_id": "invisalign_024",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 広島駅前矯正歯科クリニック",
+    "Zipcode": "〒732-0822",
+    "adress": "広島県広島市南区松原町9-1 福屋広島駅前店9F",
+    "access": "JR広島駅南口直結・福屋広島駅前店9階"
+  },
+  {
+    "store_id": "invisalign_025",
+    "clinic_name": "インビザライン",
+    "store_name": "アイデンタルクリニック広島院",
+    "Zipcode": "〒730-0031",
+    "adress": "広島県広島市中区紙屋町2-2-2 紙屋町ビル5F",
+    "access": "広島電鉄紙屋町東・紙屋町西電停より徒歩2分"
+  },
+  {
+    "store_id": "invisalign_026",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 天神駅前矯正歯科クリニック",
+    "Zipcode": "〒810-0041",
+    "adress": "福岡県福岡市中央区大名2丁目1番7号 FPG links DAIMYO5F",
+    "access": "地下鉄天神駅・西鉄福岡天神駅より徒歩5分"
+  },
+  {
+    "store_id": "invisalign_027",
+    "clinic_name": "インビザライン",
+    "store_name": "スマイルライン歯科・矯正歯科天神",
+    "Zipcode": "〒810-0073",
+    "adress": "福岡県福岡市中央区舞鶴1-1-3 リクルート天神ビル1F",
+    "access": "地下鉄天神駅1番出口より徒歩3分・天神中央公園前"
+  },
+  {
+    "store_id": "invisalign_028",
+    "clinic_name": "インビザライン",
+    "store_name": "DDデンタルクリニック 那覇新都心矯正歯科クリニック",
+    "Zipcode": "〒900-0006",
+    "adress": "沖縄県那覇市おもろまち4-17-15 AIビル3F",
+    "access": "ゆいレールおもろまち駅より徒歩5分・新都心エリア"
+  },
+  {
+    "store_id": "invisalign_029",
+    "clinic_name": "インビザライン",
+    "store_name": "アイデンタルクリニック沖縄院",
+    "Zipcode": "〒900-0015",
+    "adress": "沖縄県那覇市久茂地3-1-1 日本生命那覇ビル6F",
+    "access": "ゆいレール県庁前駅より徒歩3分・国際通り近く"
+  }
+]
