@@ -27,8 +27,8 @@ const asset = (path: string) => {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {title && <title>{title}</title>}
     {description && <meta name="description" content={description} />}
-    <script>
-      window.__BASE_PATH__ = {JSON.stringify(normalizedBasePath)};
+    <script define:vars={{ normalizedBasePath }}>
+      window.__BASE_PATH__ = normalizedBasePath;
     </script>
     <slot name="head" />
   </head>

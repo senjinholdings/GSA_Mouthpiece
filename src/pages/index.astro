@@ -18,7 +18,7 @@ const asset = (resource: string) => {
 ---
 <BaseLayout title={pageTitle} description={pageDescription}>
   <Fragment slot="head">
-    <script src={asset("common_data/js/gtm-loader.js")} defer is:inline></script>
+    <script src={asset("common_data/js/gtm-loader.js")} defer></script>
     <!-- Vercel deployment: 2025-07-21 23:40 -->
         <!-- Map modal feature added: 2024-01-29 15:30 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,7 +125,13 @@ const asset = (resource: string) => {
         <link rel="icon" type="image/png" href={asset("common_data/images/favicon.png")} id="favicon">
         <!-- Critical CSS -->
         <!-- Font loading detection -->
-        <script>'fonts' in document&&document.fonts.ready.then(function(){document.documentElement.classList.add('fonts-loaded')})</script>
+        <script is:inline>
+          if ('fonts' in document) {
+            document.fonts.ready.then(function(){
+              document.documentElement.classList.add('fonts-loaded')
+            })
+          }
+        </script>
   </Fragment>
   <div class="container">
           <!-- ヘッダー -->
@@ -256,7 +262,7 @@ const asset = (resource: string) => {
                   </div>
               </div>
 
-              <script>
+              <script is:inline>
                   // Tips section tab functionality
                   (function() {
                       const tabs = document.querySelectorAll('.tips-container .tab');
@@ -293,7 +299,7 @@ const asset = (resource: string) => {
                   })();
               </script>
 
-          <script>
+          <script is:inline>
           // 詳細情報を表示する関数
           function showDisclaimerInfo(type) {
               const modal = document.getElementById('disclaimer-modal');
@@ -396,7 +402,7 @@ const asset = (resource: string) => {
 
               <!-- 医療情報コラムセクション（外部JSで挿入） -->
               <div id="medical-columns-root"></div>
-              <script src={asset("columns/columns.js?v=2025091701")} defer is:inline></script>
+              <script src={asset("columns/columns.js?v=2025091701")} defer></script>
 
               <!-- 医療情報コラムセクション（旧：非表示） -->
               <!-- 医療情報コラムセクション -->
@@ -636,11 +642,11 @@ const asset = (resource: string) => {
 
       <!-- Slick Carousel JS -->
       <!-- Slick.js削除済み／jQueryは未使用のため読み込み削除 -->
-      <script src={asset("app.js?v=2025081417")} defer is:inline></script>
+      <script src={asset("app.js?v=2025081417")} defer></script>
 
 
       <!-- 1位クリニック動的表示機能 -->
-      <script>
+      <script is:inline>
           // リダイレクトリンクのクリックハンドラー
           document.addEventListener('click', function(e) {
               const link = e.target.closest('a');
@@ -1282,7 +1288,7 @@ const asset = (resource: string) => {
           });
           </script>
 
-          <script>
+          <script is:inline>
           // PR行（CSVのpr列を各クリニック分並べる）
           (function renderPrLineWhenReady(){
               const target = document.getElementById('pr-line');
@@ -1309,7 +1315,7 @@ const asset = (resource: string) => {
               }
           })();
           </script>
-          <script>
+          <script is:inline>
           // トップに戻るボタン（6.5%スクロールで表示）
           (function() {
               const THRESHOLD = 6.5; // %
@@ -1361,7 +1367,7 @@ const asset = (resource: string) => {
           </script>
 
       <!-- Debug panel: enable with ?debug=1 -->
-      <script>
+      <script is:inline>
           (function(){
               try {
                   const params = new URLSearchParams(window.location.search);
@@ -1409,7 +1415,7 @@ const asset = (resource: string) => {
           })();
       </script>
 
-      <script>
+      <script is:inline>
           // 比較表のタブ切り替え機能
           // 全てのパラメータを引き継ぐ共通処理
           function preserveAllParams() {
@@ -1934,10 +1940,10 @@ const asset = (resource: string) => {
       <!-- Clinic URLs are now managed dynamically from CSV database -->
 
       <!-- URL Parameter Tracking -->
-      <script src={asset("url-tracking.js?v=2025072201")} defer is:inline></script>
+      <script src={asset("url-tracking.js?v=2025072201")} defer></script>
 
       <!-- Service Worker登録 -->
-      <script>
+      <script is:inline>
           if ('serviceWorker' in navigator) {
               window.addEventListener('load', () => {
                   navigator.serviceWorker.register({JSON.stringify(asset('sw.js'))})
@@ -1948,7 +1954,7 @@ const asset = (resource: string) => {
       </script>
 
       <!-- Load common site data -->
-      <script>
+      <script is:inline>
           // Load common site data
           fetch({JSON.stringify(asset('common_data/data/site-common-texts.json'))})
               .then(response => response.json())
@@ -1976,14 +1982,14 @@ const asset = (resource: string) => {
                   console.error('Error loading common site data:', error);
               });
       </script>
-      <script src={asset("tracking-params.js")} defer is:inline></script>
+      <script src={asset("tracking-params.js")} defer></script>
 
       <!-- トップに戻るボタン -->
       <button id="back-to-top" class="back-to-top" aria-label="トップに戻る">
           <span>^</span>
       </button>
 
-      <script>
+      <script is:inline>
           // トップに戻るボタンの機能
           (function() {
               const backToTopBtn = document.getElementById('back-to-top');
