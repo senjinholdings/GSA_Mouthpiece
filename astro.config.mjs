@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   srcDir: 'src',
   publicDir: 'public',
-  base: '/mouthpiece_軽量化テスト_Astro_001/',
+  // base: '/', // Vercel uses root path by default
   build: {
     format: 'file'
   },
