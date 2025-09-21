@@ -12,7 +12,7 @@ const pageDescription = '医療ダイエットクリニックの検索結果ペ�
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link rel="stylesheet" href="/styles.css">
         <link rel="icon" type="image/png" href="/common_data/images/favicon.png">
-        <script src="/analytics.js"></script>
+        <script src="/analytics.js" is:inline></script>
         <style>
             .search-results-page { padding: 40px 20px; max-width: 768px; margin: 0 auto; }
             .search-header { margin-bottom: 40px; text-align: center; }
@@ -36,11 +36,11 @@ const pageDescription = '医療ダイエットクリニックの検索結果ペ�
             .btn { padding: 10px 16px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
             .btn-primary { background: #4bc0c0; color: white; border-color: #4bc0c0; }
         </style>
-        <script src="/config.js"></script>
-        <script defer src="/app.js"></script>
-        <script defer src="/force-center-alignment.js"></script>
-        <script defer src="/tracking-params.js"></script>
-        <script defer src="/url-tracking.js"></script>
+        <script src="/config.js" is:inline></script>
+        <script defer src="/app.js" is:inline></script>
+        <script defer src="/force-center-alignment.js" is:inline></script>
+        <script defer src="/tracking-params.js" is:inline></script>
+        <script defer src="/url-tracking.js" is:inline></script>
         <script>
             document.addEventListener('DOMContentLoaded', async () => {
                 const check = () => window.app && window.app.dataManager && window.app.dataManager.getAllClinics;

@@ -6,7 +6,7 @@ const pageDescription = '全国の人気クリニックを徹底比較！料金�
 ---
 <BaseLayout title={pageTitle} description={pageDescription}>
   <Fragment slot="head">
-    <script src="/common_data/js/gtm-loader.js" defer></script>
+    <script src="/common_data/js/gtm-loader.js" defer is:inline></script>
     <!-- Vercel deployment: 2025-07-21 23:40 -->
         <!-- Map modal feature added: 2024-01-29 15:30 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -384,7 +384,7 @@ const pageDescription = '全国の人気クリニックを徹底比較！料金�
 
               <!-- 医療情報コラムセクション（外部JSで挿入） -->
               <div id="medical-columns-root"></div>
-              <script src="/columns/columns.js?v=2025091701" defer></script>
+              <script src="/columns/columns.js?v=2025091701" defer is:inline></script>
 
               <!-- 医療情報コラムセクション（旧：非表示） -->
               <!-- 医療情報コラムセクション -->
@@ -624,7 +624,7 @@ const pageDescription = '全国の人気クリニックを徹底比較！料金�
 
       <!-- Slick Carousel JS -->
       <!-- Slick.js削除済み／jQueryは未使用のため読み込み削除 -->
-      <script src="/app.js?v=2025081417" defer></script>
+      <script src="/app.js?v=2025081417" defer is:inline></script>
 
 
       <!-- 1位クリニック動的表示機能 -->
@@ -1922,7 +1922,7 @@ const pageDescription = '全国の人気クリニックを徹底比較！料金�
       <!-- Clinic URLs are now managed dynamically from CSV database -->
 
       <!-- URL Parameter Tracking -->
-      <script src="/url-tracking.js?v=2025072201" defer></script>
+      <script src="/url-tracking.js?v=2025072201" defer is:inline></script>
 
       <!-- Service Worker登録 -->
       <script>
@@ -1964,7 +1964,7 @@ const pageDescription = '全国の人気クリニックを徹底比較！料金�
                   console.error('Error loading common site data:', error);
               });
       </script>
-      <script src="/tracking-params.js" defer></script>
+      <script src="/tracking-params.js" defer is:inline></script>
 
       <!-- トップに戻るボタン -->
       <button id="back-to-top" class="back-to-top" aria-label="トップに戻る">
