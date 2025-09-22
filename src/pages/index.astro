@@ -191,6 +191,14 @@ const asset = (resource: string) => {
                 height: auto;
             }
             a { color: inherit; text-decoration: none; }
+            main > section {
+                max-width: 100%;
+                overflow-x: hidden;
+                box-sizing: border-box;
+                margin: 0;
+                padding-left: 1%;
+                padding-right: 1%;
+            }
             .container {
                 width: 100%;
                 max-width: 768px;
@@ -314,8 +322,8 @@ const asset = (resource: string) => {
           </header>
 
           <!-- メインビジュアル -->
-          <section class="relative w-full bg-gray-50 py-4">
-              <div class="relative w-full max-w-3xl mx-auto px-3">
+          <section class="relative w-full bg-gray-50">
+              <div class="relative w-full max-w-3xl mx-auto">
                   <picture>
                       <img src={asset("images/mv.webp")} alt="おすすめ比較ランキング - 2025年最新版" class="w-full h-auto object-cover rounded-xl" loading="eager" fetchpriority="high" decoding="async" width="1500" height="928">
                   <div id="mv-region-name" class="absolute top-[4%] left-[0.5%] text-center text-gray-500 font-semibold z-10 pointer-events-none rounded-lg" style="width: clamp(60px, 15vw, 115px); font-size: clamp(14px, 3.5vw, 27px); padding: clamp(4px, 1vw, 8px);"></div>
@@ -341,7 +349,7 @@ const asset = (resource: string) => {
                   <div class="max-w-3xl mx-auto px-0.5">
                       <div class="relative mb-4">
                           <img src={asset("images/ranking_header_banner.webp")} alt="" class="w-full h-auto rounded-lg" loading="lazy" decoding="async">
-                          <div id="rank-region-name" class="absolute top-[6%] left-1/2 whitespace-nowrap -translate-x-1/2 text-center text-white font-semibold z-10 pointer-events-none" style="font-size: clamp(14px, 5.2vw, 37px);"></div>
+                          <div id="rank-region-name" class="absolute top-[6%] left-1/2 whitespace-nowrap -translate-x-1/2 text-center text-white font-bold z-10 pointer-events-none" style="font-size: clamp(14px, 5.2vw, 37px);"></div>
                       </div>
                       <div id="ranking-list" class="flex flex-nowrap gap-3 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden" style="padding: 0.1rem 0.2rem 0.1rem 0.2rem;">
                           <!-- ランキングはJavaScriptで動的に生成 -->
@@ -373,20 +381,20 @@ const asset = (resource: string) => {
                   <div class="tips-section w-full">
                       <div class="flex flex-col">
                           <!-- タブナビゲーション -->
-                          <div class="tabs flex gap-1.5 mb-0">
-                              <div class="tab active flex-1 bg-[#2CC7C5] text-white px-4 py-2.5 text-center cursor-pointer rounded-t font-semibold transition-all duration-300 text-sm flex items-center justify-center" data-tab="0">
-                                  <span class="tab-text"></span>
+                          <div class="tabs flex gap-0 mb-0">
+                              <div class="tab active flex-1 bg-[#2CC7C5] text-white px-2 py-2 text-center cursor-pointer font-semibold transition-all duration-300 text-xs flex items-center justify-center border-r border-white" data-tab="0" style="background-color: #2CC7C5; border-radius: 8px 0 0 0;">
+                                  <span class="tab-text whitespace-nowrap"></span>
                               </div>
-                              <div class="tab flex-1 bg-gray-100 text-gray-700 px-4 py-2.5 text-center cursor-pointer rounded-t font-semibold transition-all duration-300 text-sm flex items-center justify-center" data-tab="1">
-                                  <span class="tab-text"></span>
+                              <div class="tab flex-1 bg-gray-200 text-gray-600 px-2 py-2 text-center cursor-pointer font-semibold transition-all duration-300 text-xs flex items-center justify-center border-r border-white" data-tab="1" style="background-color: #e5e5e5;">
+                                  <span class="tab-text whitespace-nowrap"></span>
                               </div>
-                              <div class="tab flex-1 bg-gray-100 text-gray-700 px-4 py-2.5 text-center cursor-pointer rounded-t font-semibold transition-all duration-300 text-sm flex items-center justify-center" data-tab="2">
-                                  <span class="tab-text"></span>
+                              <div class="tab flex-1 bg-gray-200 text-gray-600 px-2 py-2 text-center cursor-pointer font-semibold transition-all duration-300 text-xs flex items-center justify-center" data-tab="2" style="background-color: #e5e5e5; border-radius: 0 8px 0 0;">
+                                  <span class="tab-text whitespace-nowrap"></span>
                               </div>
                           </div>
 
                           <!-- タブコンテンツコンテナ -->
-                          <div class="tab-contents relative bg-white border border-gray-300 rounded-b p-4">
+                          <div class="tab-contents relative bg-white border border-gray-200 rounded-b-lg p-4" style="border-top: none;">
                               <!-- タブ1: 効果 -->
                               <div class="tab-content active block" data-tab="0">
                                   <div class="w-full mb-4">
@@ -432,22 +440,21 @@ const asset = (resource: string) => {
                           tabs.forEach((tab, i) => {
                               if (i === index) {
                                   tab.classList.add('active');
-                                  tab.style.backgroundColor = '#2B5797';
+                                  tab.style.backgroundColor = '#2CC7C5';
                                   tab.style.color = 'white';
                               } else {
                                   tab.classList.remove('active');
-                                  tab.style.backgroundColor = '#CCCCCC';
-                                  tab.style.color = '#333';
+                                  tab.style.backgroundColor = '#e5e5e5';
+                                  tab.style.color = '#666';
                               }
                           });
 
                           // Update tab contents
                           tabContents.forEach((content, i) => {
-                              if (i === index) {
-                                  content.style.display = 'block';
-                              } else {
-                                  content.style.display = 'none';
-                              }
+                              const isActive = i === index;
+                              content.classList.toggle('active', isActive);
+                              content.classList.toggle('hidden', !isActive);
+                              content.style.display = isActive ? 'block' : 'none';
                           });
                       }
 
@@ -455,6 +462,9 @@ const asset = (resource: string) => {
                       tabs.forEach((tab, index) => {
                           tab.addEventListener('click', () => updateTabs(index));
                       });
+
+                      // Initialize default active tab state
+                      updateTabs(0);
                   })();
               </script>
 
@@ -497,36 +507,28 @@ const asset = (resource: string) => {
 
               <!-- 比較表セクション -->
               <section class="py-5 px-2.5">
-                  <div class="text-center mb-5">
-                      <h2 class="text-2xl font-bold mb-2"><span id="comparison-region-name">地域</span></h2>
-                      <h3 class="text-lg">クリニックを<span class="text-[#ff6b6b] font-bold">徹底比較</span></h3>
+                  <div class="comparison-header">
+                      <h2 class="comparison-title"><span id="comparison-region-name">地域</span>で人気のマウスピース矯正</h2>
+                      <h3 class="comparison-subtitle">クリニックを<span class="accent-text">徹底比較</span></h3>
                   </div>
 
-                  <div class="w-full max-w-3xl mx-auto overflow-x-auto" id="comparison-tab-menu" data-active-tab="tab1">
-                      <div class="flex border-b border-gray-300 mb-0">
-                          <div class="flex-1 py-2 px-4 text-center cursor-pointer bg-[#4C89B8] text-white font-semibold tab-active" data-tab="tab1">総合</div>
-                          <div class="flex-1 py-2 px-4 text-center cursor-pointer bg-gray-200 text-gray-700 font-semibold" data-tab="tab2">施術内容</div>
-                          <div class="flex-1 py-2 px-4 text-center cursor-pointer bg-gray-200 text-gray-700 font-semibold" data-tab="tab3">サービス</div>
+                  <div class="comparison-table w-full max-w-3xl mx-auto overflow-x-auto" id="comparison-tab-menu" data-active-tab="tab1">
+                      <div class="comparison-tab-menu">
+                          <div class="comparison-tab-menu-item tab-active" data-tab="tab1">総合</div>
+                          <div class="comparison-tab-menu-item" data-tab="tab2">施術内容</div>
+                          <div class="comparison-tab-menu-item" data-tab="tab3">サービス</div>
                       </div>
-                      <table id="comparison-table" class="w-full bg-white border border-gray-200">
-                          <thead class="bg-gray-50">
-                              <tr id="comparison-header-row" class="border-b border-gray-200">
-                                  <!-- Headers will be dynamically generated from site-common-texts.json -->
-                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">クリニック</th>
-                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">総合評価</th>
-                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">費用</th>
-                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">特徴</th>
-                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">公式サイト</th>
-                                  <th class="hidden"></th>
-                                  <th class="hidden"></th>
-                                  <th class="hidden"></th>
-                                  <th class="hidden"></th>
-                                  <th class="hidden"></th>
-                                  <th class="hidden"></th>
-                                  <th class="hidden">詳細</th>
+                      <table id="comparison-table">
+                          <thead>
+                              <tr id="comparison-header-row">
+                                  <th>クリニック</th>
+                                  <th>総合評価</th>
+                                  <th>費用</th>
+                                  <th>特徴</th>
+                                  <th>公式サイト</th>
                               </tr>
                           </thead>
-                          <tbody id="comparison-tbody" class="divide-y divide-gray-200">
+                          <tbody id="comparison-tbody">
                               <!-- 動的に生成される比較表の内容がここに表示されます -->
                           </tbody>
                       </table>
@@ -539,7 +541,65 @@ const asset = (resource: string) => {
                                   <span id="main-arrow" style="font-size: 8px; color: rgb(153, 153, 153); transition: transform 0.2s; transform: rotate(0deg);">▼</span>
                               </button>
                               <div id="main-content" class="main-disclaimer-content" style="display: none; padding: 5px; background-color: rgb(252, 252, 252); border-right: 1px solid rgb(240, 240, 240); border-bottom: 1px solid rgb(240, 240, 240); border-left: 1px solid rgb(240, 240, 240); border-image: initial; border-top: none; border-radius: 0px 0px 3px 3px; margin-top: -5px;">
-                                  <!-- 動的に生成される注釈コンテンツ -->
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-omt', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">Oh my teeth</span>
+                                          <span id="comp-omt-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-omt-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>「矯正開始後の通院は原則不要※1」※1 初回診断のご来院と、矯正開始前・矯正終了後の処置のご来院をお願いしています。<br>「歯並びの適応について」※記載のない歯並びでもお気軽にご相談ください。※記載の歯並びであっても、Oh my teethのマウスピース矯正の適応外と診断される場合もございます。※症状が強い場合は適応にならない場合があります。<br>「治療期間について」※治療期間は歯並びの状態や年齢などによって個人差があります。<br>「痛みについて」※痛みの感じ方には個人差があります。<br>「実績について」※2021年6月〜2023年10月の契約者（一部モニター除く）。</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-invisalign', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">インビザライン</span>
+                                          <span id="comp-invisalign-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-invisalign-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>※治療期間・費用は症例により大きく異なります。※認定医による治療が推奨されます。※保険適用外の自由診療です。※定期的なメンテナンスが必要です。※複雑な症例では追加治療が必要な場合があります。</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-ws', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">ウィスマイル</span>
+                                          <span id="comp-ws-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-ws-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>「料金について」※料金はすべて税込み。※追加治療となった際の追加マウスピース料金は無料となります。※別途治療計画作成において必須である精密検査費用をクリニックにお支払いいただく必要がございます。（税込22</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-kireiline', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">キレイライン矯正</span>
+                                          <span id="comp-kireiline-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-kireiline-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>「歯並びの適応について」※上記の歯並びであっても、キレイライン矯正が適応外となる場合もございます。注1、注3：症状が強い場合は適応にならない場合があります。注2：骨格性の開咬の場合は、治療適応外となります。注3：骨格的な問題がなくても、お口の中の状態によっては「中心のずれ」を治すことは難しい場合があります。「中心のずれ」にはさまざまな原因があり、ワイヤー矯正など他の矯正治療においても一般的にその修正は困難な場合があります。<br>「料金・デンタルローンについて」※デンタルローンを利用して10回コース（330</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-zenyum', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">ゼニュム</span>
+                                          <span id="comp-zenyum-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-zenyum-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>000円）を120回払いで支払う場合の分割支払金額です。※一部クリニックはローン非対応。※信販会社や手数料はクリニックにより異なります。※デンタルローンは18歳以上（高校生を除く）が対象となり、詳しい支払い方法や規約は各提携クリニックにより異なります。予約フォームの備考欄にご記載いただくか、初回検診にお越しの際にクリニックへご相談ください。</p>
+                                          </div>
+                                      </div>
+                                  </div>
                               </div>
                           </div>
                       </div>
@@ -574,7 +634,7 @@ const asset = (resource: string) => {
                   <div style="position: relative; display: inline-block; width: 100%;">
                       <img src={asset("images/ranking_header_banner.webp")} alt="" class="ranking-banner-image" loading="lazy" decoding="async">
                       <div id="first-choice-region-text" style="position: absolute;bottom: 44%;left: 6%;text-align: center;color: rgb(255, 255, 255);font-size: clamp(16px, 5vw, 38px);font-weight: 600;z-index: 10;pointer-events: none;">迷ったら<span id="first-choice-clinic-name"></span>がおすすめ</div>
-                  </div><section class="first-choice-recommendation-section" style="border: 5px solid rgb(253 208 124);border-radius: -5px;padding: 5px 5px 10px 5px;margin: 0px 20px;background-color: #fffef8;">
+                  </div><section class="first-choice-recommendation-section" style="border: 5px solid rgb(253 208 124);border-radius: -5px;padding: 5px 5px 10px 5px;margin: 0px 0px;background-color: #fffef8;">
 
 
               <!-- バナー -->
