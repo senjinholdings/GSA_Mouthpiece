@@ -177,18 +177,18 @@ const asset = (resource: string) => {
 
           <!-- メインビジュアル -->
           <section class="relative w-full">
-              <div class="w-full">
+              <div class="relative w-full">
                   <picture>
                       <img src={asset("images/mv.webp")} alt="おすすめ比較ランキング - 2025年最新版" class="w-full h-auto object-cover" loading="eager" fetchpriority="high" decoding="async" width="1500" height="928">
                   </picture>
-                  <div id="mv-region-name" style="position:absolute;top: 8%;left: 1%;width: clamp(60px, 15vw, 115px);text-align: center;color: #808080;font-size: clamp(14px, 3.5vw, 27px);font-weight: 600;z-index:10;pointer-events:none;padding: clamp(4px, 1vw, 8px);border-radius: 8px;"></div>
-                  <div id="mv-left-appeal-text" style="position:absolute;top: 25%;left: 14%;text-align: center;color: #808080;font-size: clamp(14px, 3.2vw, 25px);font-weight: 700;z-index:10;pointer-events:none;padding: clamp(6px, 1.5vw, 12px);"></div>
-                  <svg id="mv-main-svg-text" style="position:absolute;top: 35%;left:39%;transform:translateX(-50%);z-index:10;pointer-events:none;overflow: visible;width: 60vw;height: 10vh;">
+                  <div id="mv-region-name" class="absolute top-[4%] left-[0.5%] text-center text-gray-500 font-semibold z-10 pointer-events-none rounded-lg" style="width: clamp(60px, 15vw, 115px); font-size: clamp(14px, 3.5vw, 27px); padding: clamp(4px, 1vw, 8px);"></div>
+                  <div id="mv-left-appeal-text" class="absolute top-[25%] left-[14%] text-center text-gray-500 font-bold z-10 pointer-events-none" style="font-size: clamp(14px, 3.2vw, 25px); padding: clamp(6px, 1.5vw, 12px);"></div>
+                  <svg id="mv-main-svg-text" class="absolute top-[35%] left-[39%] -translate-x-1/2 z-10 pointer-events-none overflow-visible" style="width: 60vw; height: 10vh;">
                       <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#ff94ae" stroke="white" stroke-width="6px" paint-order="stroke" style="font-size: clamp(14px, 8vw, 56px);font-weight: 700;">
                           <tspan id="mv-region-text"></tspan>
                       </text>
                   </svg>
-                  <svg id="mv-appeal1-text" style="position:absolute;top: 52%;left:39%;transform:translateX(-50%);z-index:10;pointer-events:none;overflow: visible;width: 60vw;height: 10vh;">
+                  <svg id="mv-appeal1-text" class="absolute top-[52%] left-[39%] -translate-x-1/2 z-10 pointer-events-none overflow-visible" style="width: 60vw; height: 10vh;">
                       <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#ff94ae" stroke="white" stroke-width="6px" paint-order="stroke" style="font-size: clamp(14px, 8vw, 62px); font-weight: 700;">
 
                       </text>
@@ -201,10 +201,10 @@ const asset = (resource: string) => {
 
               <!-- ランキング表示セクション -->
               <section class="w-full max-w-3xl mx-auto py-4 px-0 bg-[#F1F1F1]">
-                  <div class="px-2.5 max-w-full mb-2.5 rounded-lg bg-transparent">
+                  <div class="relative px-2.5 max-w-full mb-2.5 rounded-lg bg-transparent">
                       <img src={asset("images/ranking_header_banner.webp")} alt="" class="max-w-full h-auto block mx-auto" loading="lazy" decoding="async">
+                      <div id="rank-region-name" class="absolute top-[6%] left-1/2 whitespace-nowrap -translate-x-1/2 text-center text-white font-semibold z-10 pointer-events-none" style="font-size: clamp(14px, 5.2vw, 37px);"></div>
                   </div>
-                  <div id="rank-region-name" style="position:absolute;top: 6%;left: 52%;white-space: nowrap;transform: translateX(-50%);text-align: center;color: rgb(255, 255, 255);font-size: clamp(14px, 5.2vw, 37px);font-weight: 600;z-index:10;pointer-events:none;"></div>
                   <div id="ranking-list" class="flex flex-nowrap gap-2 w-full max-w-full overflow-x-auto py-2.5 px-0 [&::-webkit-scrollbar]:hidden">
                       <!-- ランキングはJavaScriptで動的に生成 -->
                   </div>
