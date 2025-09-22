@@ -235,6 +235,24 @@ const asset = (resource: string) => {
                               console.error('❌ clinic-texts.csv の読み込み/変換エラー:', error);
                               this.clinicTexts = {};
                           }
+
+                          try {
+                              const bundle = await this.fetchJsonWithFallback([
+                                  '/data/compiled-data.json',
+                                  '/data/data-bundle.json'
+                              ]);
+                              if (bundle && bundle.clinicTexts && typeof bundle.clinicTexts === 'object') {
+                                  this.clinicTexts = bundle.clinicTexts;
+                                  console.log('✅ compiled-data.json から clinicTexts を取得');
+                              }
+                          } catch (error) {
+                              console.warn('⚠️ compiled-data.json の clinicTexts 取得に失敗しました:', error);
+                          }
+
+                          if (!this.clinicTexts || Object.keys(this.clinicTexts).length === 0) {
+                              console.warn('⚠️ clinic-texts が空のため、フィールド参照ができません');
+                              this.clinicTexts = {};
+                          }
                       }
 
                       // ダブルクオート対応のCSVパーサ
@@ -392,6 +410,7 @@ const asset = (resource: string) => {
               let clinicId = null;
               let rank = null;
               let regionId = null;
+              let cachedRedirectParams = null;
 
               // 方法1: localStorageを最優先で確認（サーバーがパラメータを削除する場合の対策）
               const storedParams = localStorage.getItem('redirectParams');
@@ -401,6 +420,7 @@ const asset = (resource: string) => {
                       clinicId = params.clinic_id;
                       rank = params.rank;
                       regionId = params.region_id;
+                      cachedRedirectParams = params;
                       console.log('方法1 localStorage（優先）:', { clinicId, rank, regionId });
                       // 使用後は削除
                       localStorage.removeItem('redirectParams');
@@ -465,6 +485,7 @@ const asset = (resource: string) => {
                           clinicId = params.clinic_id;
                           rank = params.rank;
                           regionId = params.region_id;
+                          if (!cachedRedirectParams) cachedRedirectParams = params;
                           console.log('方法4 localStorage:', { clinicId, rank, regionId });
                           localStorage.removeItem('redirectParams');
                       } catch (e) {
@@ -482,6 +503,7 @@ const asset = (resource: string) => {
                           clinicId = params.clinic_id;
                           rank = params.rank;
                           regionId = params.region_id;
+                          if (!cachedRedirectParams) cachedRedirectParams = params;
                           console.log('方法5 sessionStorage:', { clinicId, rank, regionId });
                           sessionStorage.removeItem('redirectParams');
                       } catch (e) {
@@ -608,9 +630,14 @@ const asset = (resource: string) => {
 
               // 方法2: localStorageから元URLのパラメータを復元
               try {
-                  const storedParams = localStorage.getItem('redirectParams');
-                  if (storedParams) {
-                      const params = JSON.parse(storedParams);
+                  let params = cachedRedirectParams;
+                  if (!params) {
+                      const storedParams = localStorage.getItem('redirectParams');
+                      if (storedParams) {
+                          params = JSON.parse(storedParams);
+                      }
+                  }
+                  if (params) {
                       console.log('🔍 localStorage params:', params);
 
                       // 元URLのパラメータを再構築
