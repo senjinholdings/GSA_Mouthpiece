@@ -121,8 +121,8 @@ const asset = (resource: string) => {
         <style is:inline>
           * { box-sizing: border-box; }
           body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; }
-          .container { opacity: 0; transition: opacity 0.3s; }
-          .container.loaded { opacity: 1; }
+          .main-container { opacity: 0; transition: opacity 0.3s; }
+          .main-container.loaded { opacity: 1; }
         </style>
 
         <!-- Preload critical resources -->
@@ -139,7 +139,10 @@ const asset = (resource: string) => {
         <script is:inline>
           // Add loaded class when DOM is ready
           document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('.container').classList.add('loaded');
+            const mainContainer = document.querySelector('.main-container');
+            if (mainContainer) {
+              mainContainer.classList.add('loaded');
+            }
           });
           // Font loading detection
           if ('fonts' in document) {
@@ -149,7 +152,7 @@ const asset = (resource: string) => {
           }
         </script>
   </Fragment>
-  <div class="container">
+  <div class="container main-container">
           <!-- ヘッダー -->
           <header class="site-header">
               <div class="header-content">
