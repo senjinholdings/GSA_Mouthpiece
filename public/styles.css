@@ -1551,7 +1551,7 @@ body > .container main section {
 .container {
     max-width: 768px !important;
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 0 0px;
     box-sizing: border-box;
 }
 
