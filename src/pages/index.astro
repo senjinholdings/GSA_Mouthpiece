@@ -200,12 +200,12 @@ const asset = (resource: string) => {
           <main>
 
               <!-- ランキング表示セクション -->
-              <section class="clinic-rankings ranking-section">
-                  <div class="ranking-header-banner">
-                      <img src={asset("images/ranking_header_banner.webp")} alt="" class="ranking-banner-image" loading="lazy" decoding="async">
+              <section class="w-full max-w-3xl mx-auto py-4 px-0 bg-[#F1F1F1]">
+                  <div class="px-2.5 max-w-full mb-2.5 rounded-lg bg-transparent">
+                      <img src={asset("images/ranking_header_banner.webp")} alt="" class="max-w-full h-auto block mx-auto" loading="lazy" decoding="async">
                   </div>
                   <div id="rank-region-name" style="position:absolute;top: 6%;left: 52%;white-space: nowrap;transform: translateX(-50%);text-align: center;color: rgb(255, 255, 255);font-size: clamp(14px, 5.2vw, 37px);font-weight: 600;z-index:10;pointer-events:none;"></div>
-                  <div id="ranking-list" class="ranking-container">
+                  <div id="ranking-list" class="flex flex-nowrap gap-2 w-full max-w-full overflow-x-auto py-2.5 px-0 [&::-webkit-scrollbar]:hidden">
                       <!-- ランキングはJavaScriptで動的に生成 -->
                   </div>
               </section>
@@ -357,37 +357,37 @@ const asset = (resource: string) => {
           </script>
 
               <!-- 比較表セクション -->
-              <section class="comparison-section">
-                  <div class="comparison-header">
-                      <h2 class="comparison-title"><span id="comparison-region-name">地域</span></h2>
-                      <h3 class="comparison-subtitle">クリニックを<span class="accent-text">徹底比較</span></h3>
+              <section class="py-5 px-2.5">
+                  <div class="text-center mb-5">
+                      <h2 class="text-2xl font-bold mb-2"><span id="comparison-region-name">地域</span></h2>
+                      <h3 class="text-lg">クリニックを<span class="text-[#ff6b6b] font-bold">徹底比較</span></h3>
                   </div>
 
-                  <div class="comparison-table" id="comparison-tab-menu" data-active-tab="tab1">
-                      <div class="comparison-tab-menu">
-                          <div class="comparison-tab-menu-item tab-active" data-tab="tab1">総合</div>
-                          <div class="comparison-tab-menu-item" data-tab="tab2">施術内容</div>
-                          <div class="comparison-tab-menu-item" data-tab="tab3">サービス</div>
+                  <div class="w-full max-w-3xl mx-auto overflow-x-auto" id="comparison-tab-menu" data-active-tab="tab1">
+                      <div class="flex border-b border-gray-300 mb-0">
+                          <div class="flex-1 py-2 px-4 text-center cursor-pointer bg-[#4C89B8] text-white font-semibold tab-active" data-tab="tab1">総合</div>
+                          <div class="flex-1 py-2 px-4 text-center cursor-pointer bg-gray-200 text-gray-700 font-semibold" data-tab="tab2">施術内容</div>
+                          <div class="flex-1 py-2 px-4 text-center cursor-pointer bg-gray-200 text-gray-700 font-semibold" data-tab="tab3">サービス</div>
                       </div>
-                      <table id="comparison-table">
-                          <thead>
-                              <tr id="comparison-header-row">
+                      <table id="comparison-table" class="w-full bg-white border border-gray-200">
+                          <thead class="bg-gray-50">
+                              <tr id="comparison-header-row" class="border-b border-gray-200">
                                   <!-- Headers will be dynamically generated from site-common-texts.json -->
-                                  <th>クリニック</th>
-                                  <th class="" style="">総合評価</th>
-                                  <th class="" style="">費用</th>
-                                  <th class="" style="">特徴</th>
-                                  <th>公式サイト</th>
-                                  <th class="th-none" style="display: none;"></th>
-                                  <th class="th-none" style="display: none;"></th>
-                                  <th class="th-none" style="display: none;"></th>
-                                  <th class="th-none" style="display: none;"></th>
-                                  <th class="th-none" style="display: none;"></th>
-                                  <th class="th-none" style="display: none;"></th>
-                                  <th class="th-none" style="display: none;">詳細</th>
+                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">クリニック</th>
+                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">総合評価</th>
+                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">費用</th>
+                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">特徴</th>
+                                  <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">公式サイト</th>
+                                  <th class="hidden"></th>
+                                  <th class="hidden"></th>
+                                  <th class="hidden"></th>
+                                  <th class="hidden"></th>
+                                  <th class="hidden"></th>
+                                  <th class="hidden"></th>
+                                  <th class="hidden">詳細</th>
                               </tr>
                           </thead>
-                          <tbody id="comparison-tbody">
+                          <tbody id="comparison-tbody" class="divide-y divide-gray-200">
                               <!-- 動的に生成される比較表の内容がここに表示されます -->
                           </tbody>
                       </table>
