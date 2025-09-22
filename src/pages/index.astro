@@ -25,7 +25,30 @@ const asset = (resource: string) => {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
         <style>
+            /* ヘッダーロゴのスタイル */
+            .site-logo {
+                font-size: 0.9rem;
+                font-weight: 700;
+                letter-spacing: 1px;
+                font-family: 'Comfortaa', cursive;
+                background: linear-gradient(135deg, #21d2ce 0%, #2d84ce 100%);
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                -webkit-background-clip: text;
+                -moz-background-clip: text;
+                -moz-text-fill-color: transparent;
+                margin: 0;
+                text-shadow: 0 2px 10px rgba(102, 126, 234, 0.1);
+                position: relative;
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+
             * { box-sizing: border-box; }
             *::before, *::after { box-sizing: inherit; }
             html { color-scheme: light; }
@@ -161,7 +184,7 @@ const asset = (resource: string) => {
                       <a href={asset("")} class="flex items-center hover:opacity-80 transition-opacity">
                           <div class="flex items-center gap-2.5">
                               <span class="block w-10 h-10"><img src={asset("common_data/images/favicon.png")} alt="医療ダイエット比較.com" class="w-full h-full" id="header-logo-icon"></span>
-                              <h1 class="text-lg font-semibold text-gray-800" id="site-logo">おすすめ比較.com</h1>
+                              <h1 class="site-logo" id="site-logo">矯正歯科おすすめ比較.com</h1>
                           </div>
                       </a>
                   </div>
