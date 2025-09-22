@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   srcDir: 'src',
@@ -9,5 +10,6 @@ export default defineConfig({
   },
   server: {
     host: true
-  }
+  },
+  integrations: [tailwind()]
 });
