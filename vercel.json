@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 10
-    }
-  },
   "rewrites": [
     { "source": "/mouthpiece001", "destination": "/mouthpiece001/dist/index.html" },
     { "source": "/mouthpiece001/", "destination": "/mouthpiece001/dist/index.html" },
