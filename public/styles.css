@@ -1432,7 +1432,7 @@ select {
 }
 
 body {
-    font-family: 'Noto Sans JP', 'Yu Gothic UI', 'Meiryo UI', 'MS UI Gothic', sans-serif;
+    font-family: 'Noto Sans JP','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
     line-height: 1.6;
     color: #6a6a6a;
     background-color: #f8fafe;
@@ -7700,7 +7700,7 @@ img{max-width:100%;height:auto}
 }
 
 /* Font loading optimization */
-.fonts-loaded body{font-family:'Noto Sans JP',sans-serif}
+.fonts-loaded body{font-family:'Noto Sans JP','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif}
 
 
 .slick-dotted.slick-slider {
@@ -8586,7 +8586,7 @@ body .case-slider .slick-slide img {
 .scroll-modal-bubble {
     position: absolute;
     bottom: 59%;
-    left: 77%;
+    left: 72%;
     transform: translate(-50%, 24px);
     color: #ff4f4f;
     padding: 6px 20px;
@@ -8684,7 +8684,7 @@ body .case-slider .slick-slide img {
 
 @media (max-width: 768px) {
     .scroll-bottom-modal { padding: 0 7px; }
-    .scroll-modal-bubble { left: 68%; }
+    .scroll-modal-bubble { left: 72%; }
     .scroll-modal-content { gap: 10px; padding: 10px 0; }
     .scroll-modal-left { flex: 1; gap: 10px; }
     .scroll-modal-logo {

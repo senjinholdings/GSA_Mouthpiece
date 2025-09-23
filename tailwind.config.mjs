@@ -8,7 +8,7 @@ export default {
         secondary: '#4ecdc4',
       },
       fontFamily: {
-        sans: ['Noto Sans JP', 'sans-serif'],
+        sans: ['Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', 'sans-serif'],
       },
       maxWidth: {
         'container': '768px',

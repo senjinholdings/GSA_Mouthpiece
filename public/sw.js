@@ -3,8 +3,10 @@ const urlsToCache = [
   '/',
   '/styles.css',
   '/app.js',
-  '/images/injection-MV.webp',
-  '/images/favicon.png',
+  // 実在しない: '/images/injection-MV.webp' を削除
+  // 実在しない: '/images/favicon.png' は '/common_data/images/favicon.png' に置換
+  // 実在しない: '/images/ranking_header_banner.webp' は存在（public/images配下）
+  '/common_data/images/favicon.png',
   '/images/ranking_header_banner.webp'
 ];
 

@@ -18,17 +18,17 @@ const asset = (resource: string) => {
 ---
 <BaseLayout title={pageTitle} description={pageDescription}>
   <Fragment slot="head">
-    <script src={asset("common_data/js/gtm-loader.js")} defer></script>
+    <!-- Preload critical resources -->
+    <link rel="preload" href={asset("app-complete.min.js?v=2025081418")} as="script">
+    <link rel="preload" href={asset("common_data/data/site-common-texts.json")} as="fetch" crossorigin="anonymous">
+    <link rel="preload" href={asset("common_data/data/mouthpiece_clinics_data_001.json")} as="fetch" crossorigin="anonymous">
+    <link rel="preload" href={asset("images/ranking_header_banner.webp")} as="image" type="image/webp" fetchpriority="high">
+
+    <!-- DNS Prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
     <!-- Vercel deployment: 2025-07-21 23:40 -->
         <!-- Map modal feature added: 2024-01-29 15:30 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-        <!-- Google Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
         <style>
             /* ヘッダースタイル */
             .site-header {
@@ -90,7 +90,7 @@ const asset = (resource: string) => {
                 font-size: 0.9rem;
                 font-weight: 700;
                 letter-spacing: 1px;
-                font-family: 'Comfortaa', cursive;
+                font-family: 'Trebuchet MS', 'Avenir Next', 'Hiragino Sans', 'Yu Gothic', sans-serif;
                 background: linear-gradient(135deg, #21d2ce 0%, #2d84ce 100%);
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
@@ -170,7 +170,7 @@ const asset = (resource: string) => {
             body {
                 margin: 0;
                 padding: 0;
-                font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
                 background-color: #ffffff;
                 color: #333333;
                 line-height: 1.6;
@@ -266,17 +266,18 @@ const asset = (resource: string) => {
         <!-- Critical CSS inline for immediate rendering -->
         <style is:inline>
           * { box-sizing: border-box; }
-          body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; }
+          body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+          }
           .main-container { opacity: 1; transition: opacity 0.3s ease; }
         </style>
 
         <!-- Preload critical resources -->
         <link rel="preload" href={asset("styles.css?v=2025081417")} as="style">
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" as="style">
 
         <!-- Load stylesheets -->
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <!-- Old styles - will be replaced by Tailwind -->
         <link rel="stylesheet" href={asset("styles.css?v=2025081417")}>
         <link rel="icon" type="image/png" href={asset("common_data/images/favicon.png")} id="favicon">
@@ -318,8 +319,8 @@ const asset = (resource: string) => {
               <div class="relative w-full max-w-3xl mx-auto">
                   <picture>
                       <img src={asset("images/mv.webp")} alt="おすすめ比較ランキング - 2025年最新版" class="w-full h-auto object-cover rounded-xl" loading="eager" fetchpriority="high" decoding="async" width="1500" height="928">
-                  <div id="mv-region-name" class="absolute top-[4%] left-[0.5%] text-center text-gray-500 font-semibold z-10 pointer-events-none rounded-lg" style="width: clamp(60px, 15vw, 115px); font-size: clamp(14px, 3.5vw, 27px); padding: clamp(4px, 1vw, 8px);"></div>
-                  <div id="mv-left-appeal-text" class="absolute top-[25%] left-[14%] text-center text-gray-500 font-bold z-10 pointer-events-none" style="font-size: clamp(14px, 3.2vw, 25px); padding: clamp(6px, 1.5vw, 12px);"></div>
+                  <div id="mv-region-name" class="absolute top-[4%] left-[1%] text-center text-gray-500 font-semibold z-10 pointer-events-none rounded-lg" style="width: clamp(60px, 15vw, 115px); min-height: 40px; font-size: clamp(14px, 3.5vw, 27px); padding: clamp(4px, 1vw, 8px);">&nbsp;</div>
+                  <div id="mv-left-appeal-text" class="absolute top-[25%] left-[14%] text-center text-gray-500 font-bold z-10 pointer-events-none" style="min-height: 45px; font-size: clamp(14px, 3.2vw, 25px); padding: clamp(6px, 1.5vw, 12px);">&nbsp;</div>
                   <svg id="mv-main-svg-text" class="absolute top-[35%] left-[39%] -translate-x-1/2 z-10 pointer-events-none overflow-visible" style="width: 60vw; height: 10vh;">
                       <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#ff94ae" stroke="white" stroke-width="6px" paint-order="stroke" style="font-size: clamp(14px, 8vw, 56px);font-weight: 700;">
                           <tspan id="mv-region-text"></tspan>
@@ -340,8 +341,8 @@ const asset = (resource: string) => {
               <section class="w-full bg-white">
                   <div class="max-w-3xl mx-auto px-0.5">
                       <div class="relative mb-4">
-                          <img src={asset("images/ranking_header_banner.webp")} alt="" class="w-full h-auto rounded-lg" loading="lazy" decoding="async">
-                          <div id="rank-region-name" class="absolute top-[6%] left-1/2 whitespace-nowrap -translate-x-1/2 text-center text-white font-bold z-10 pointer-events-none" style="font-size: clamp(14px, 5.2vw, 37px);"></div>
+                          <img src={asset("images/ranking_header_banner.webp")} alt="" class="w-full h-auto rounded-lg" width="728" height="150" loading="eager" fetchpriority="high" decoding="sync">
+                          <div id="rank-region-name" class="absolute top-[12%] left-1/2 whitespace-nowrap -translate-x-1/2 text-center text-white font-bold z-10 pointer-events-none" style="min-height: 45px; font-size: clamp(14px, 5.2vw, 37px); left: 52%;">&nbsp;</div>
                       </div>
                       <div id="ranking-list" class="flex flex-nowrap gap-3 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden" style="padding: 0.1rem 0.2rem 0.1rem 0.2rem;">
                           <!-- ランキングはJavaScriptで動的に生成 -->
@@ -390,7 +391,7 @@ const asset = (resource: string) => {
                               <!-- タブ1: 効果 -->
                               <div class="tab-content active block" data-tab="0">
                                   <div class="w-full mb-4">
-                                      <img src={asset("images/Tips1.webp")} alt="効果" class="w-full h-auto rounded" loading="lazy" decoding="async">
+                                      <img src={asset("images/Tips1.webp")} alt="効果" class="w-full h-auto rounded" width="700" height="400" loading="lazy" decoding="async">
                                   </div>
                                   <p class="text-sm leading-relaxed text-gray-700 mb-4">
 
@@ -400,7 +401,7 @@ const asset = (resource: string) => {
                               <!-- タブ2: クリニック選び -->
                               <div class="tab-content hidden" data-tab="1">
                                   <div style="width: 100%; margin-bottom: 15px;">
-                                      <img src={asset("images/Tips2.webp")} alt="クリニック選びのポイント" style="width: 100%; height: auto; border-radius: 4px;" loading="lazy" decoding="async">
+                                      <img src={asset("images/Tips2.webp")} alt="クリニック選びのポイント" style="width: 100%; height: auto; border-radius: 4px;" width="700" height="400" loading="lazy" decoding="async">
                                   </div>
                                   <p style="font-size: 14px; line-height: 1.8; color: #4C4C4C; margin-bottom: 15px;">
 
@@ -410,7 +411,7 @@ const asset = (resource: string) => {
                               <!-- タブ3: 今がおすすめ -->
                               <div class="tab-content" data-tab="2" style="display: none;">
                                   <div style="width: 100%; margin-bottom: 15px;">
-                                      <img src={asset("images/Tips3.webp")} alt="今がおすすめの理由" style="width: 100%; height: auto; border-radius: 4px;" loading="lazy" decoding="async">
+                                      <img src={asset("images/Tips3.webp")} alt="今がおすすめの理由" style="width: 100%; height: auto; border-radius: 4px;" width="700" height="400" loading="lazy" decoding="async">
                                   </div>
                                   <p style="font-size: 14px; line-height: 1.8; color: #4C4C4C; margin-bottom: 15px;">
 
@@ -624,7 +625,7 @@ const asset = (resource: string) => {
      <!-- 迷ったら1位クリニックセクション -->
               <div id="first-choice-recommendation-section">
                   <div style="position: relative; display: inline-block; width: 100%;">
-                      <img src={asset("images/ranking_header_banner.webp")} alt="" class="ranking-banner-image" loading="lazy" decoding="async">
+                      <img src={asset("images/ranking_header_banner.webp")} alt="" class="ranking-banner-image" width="728" height="150" loading="eager" fetchpriority="high" decoding="sync">
                       <div id="first-choice-region-text" style="position: absolute;bottom: 44%;left: 6%;text-align: center;color: rgb(255, 255, 255);font-size: clamp(16px, 5vw, 38px);font-weight: 600;z-index: 10;pointer-events: none;">迷ったら<span id="first-choice-clinic-name"></span>がおすすめ</div>
                   </div><section class="first-choice-recommendation-section" style="border: 5px solid rgb(253 208 124);border-radius: -5px;padding: 5px 5px 10px 5px;margin: 0px 0px;background-color: #fffef8;">
 
@@ -646,7 +647,7 @@ const asset = (resource: string) => {
               <div class="ribbon_point_box_no" id="first-choice-points">
 
                       <div class="ribbon_point_title2_s">
-                          <i class="fas fa-clock point-icon-inline"></i>
+                          <span class="point-icon-inline" style="font-size: 1.2em;">⏰</span>
                           <strong id="point1-title"></strong>
                       </div>
                       <div class="ribbon_point_txt">
@@ -654,7 +655,7 @@ const asset = (resource: string) => {
                       </div>
 
                       <div class="ribbon_point_title2_s">
-                          <i class="fas fa-clock point-icon-inline"></i>
+                          <span class="point-icon-inline" style="font-size: 1.2em;">⏰</span>
                           <strong id="point2-title"></strong>
                       </div>
                       <div class="ribbon_point_txt">
@@ -662,7 +663,7 @@ const asset = (resource: string) => {
                       </div>
 
                       <div class="ribbon_point_title2_s">
-                          <i class="fas fa-clock point-icon-inline"></i>
+                          <span class="point-icon-inline" style="font-size: 1.2em;">⏰</span>
                           <strong id="point3-title"></strong>
                       </div>
                       <div class="ribbon_point_txt">
@@ -853,16 +854,129 @@ const asset = (resource: string) => {
 
       <!-- Slick Carousel JS -->
       <!-- Slick.js削除済み／jQueryは未使用のため読み込み削除 -->
-      <script src={asset("app.js?v=2025081417")} defer></script>
+      <!-- app-lite.min.jsで必須機能のみ即座に読み込み -->
+      <script src={asset("app-complete.min.js?v=2025081418")} defer></script>
+
+      <!-- 残りの機能は遅延読み込み -->
+      <script is:inline define:vars={{ appJsUrl: asset("app.js?v=2025081417") }}>
+        let appScriptRetry = 0;
+
+        function loadAppScript(trigger) {
+          console.info('[index] injecting app.js', { trigger, url: appJsUrl });
+          const script = document.createElement('script');
+          script.src = appJsUrl;
+          script.async = true;
+          script.onload = () => {
+            console.info('[index] app.js loaded', { trigger });
+            const waitForApp = () => {
+              if (window.app) {
+                console.info('[index] window.app detected after app.js load');
+              } else if (appScriptRetry < 5) {
+                appScriptRetry += 1;
+                console.warn('[index] window.app not ready yet, retry', appScriptRetry);
+                setTimeout(waitForApp, 200);
+              } else {
+                console.error('[index] window.app still undefined after multiple checks');
+              }
+            };
+            waitForApp();
+          };
+          script.onerror = (err) => {
+            console.error('[index] app.js failed to load', { trigger, err });
+            if (appScriptRetry < 3) {
+              appScriptRetry += 1;
+              setTimeout(() => loadAppScript(`retry-${appScriptRetry}`), 1000);
+            } else {
+              console.error('[index] app.js giving up after retries');
+            }
+          };
+          document.body.appendChild(script);
+        }
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => loadAppScript('requestIdleCallback'), { timeout: 5000 });
+        } else {
+          setTimeout(() => loadAppScript('setTimeout-2000ms'), 2000);
+        }
+      </script>
 
 
       <!-- 1位クリニック動的表示機能 -->
       <script is:inline>
+          // DataManagerReady時にDOM更新を実行
+          window.addEventListener('dataManagerReady', function() {
+              console.log('[index] dataManagerReady fired', {
+                  loaded: window.dataManager?.loaded,
+                  clinics: window.dataManager?.clinics?.length,
+                  rankingsKeys: window.dataManager ? Object.keys(window.dataManager.rankingsByRegion || window.dataManager.rankings || {}) : null
+              });
+              updateDOMWithData();
+          });
+
+          function updateDOMWithData() {
+              if (!window.dataManager || !window.dataManager.loaded) return;
+
+              console.log('[index] updateDOMWithData start', {
+                  clinics: window.dataManager.clinics?.map(c => c.id),
+                  rankingSample: window.dataManager.getRankingsByRegion?.('013')
+              });
+
+              console.log('[index] window.app during update', window.app);
+              if (!window.app) {
+                  console.warn('[index] window.app is not available yet when updateDOMWithData runs');
+              }
+
+              const firstChoicePoints = document.getElementById('first-choice-points');
+              if (firstChoicePoints) {
+                  firstChoicePoints.setAttribute('data-debug-before', firstChoicePoints.innerHTML);
+              }
+
+              const rankings = window.dataManager.getRankingsByRegion('013');
+              if (rankings && rankings.length > 0) {
+                  const firstClinic = window.dataManager.getClinicById(rankings[0]);
+                  if (firstClinic) {
+                      // 1位クリニック名を更新
+                      const nameElem = document.getElementById('first-choice-clinic-name');
+                      if (nameElem) nameElem.textContent = firstClinic.name || '';
+
+                      // バナー画像を更新
+                      const bannerElem = document.getElementById('first-choice-banner-image');
+                      if (bannerElem && firstClinic['バナー画像']) {
+                          bannerElem.src = firstClinic['バナー画像'];
+                      }
+                  }
+              }
+
+              // ランキング表示更新
+              updateRankingDisplay();
+          }
+
+          function updateRankingDisplay() {
+              // ランキング表示のDOM更新ロジック
+              const rankings = window.dataManager.getRankingsByRegion('013');
+              console.log('[index] updateRankingDisplay', rankings);
+              rankings.forEach((clinicId, index) => {
+                  const clinic = window.dataManager.getClinicById(clinicId);
+                  console.log('[index] ranking item', index + 1, clinicId, clinic);
+                  if (clinic) {
+                      // 各ランキング要素の更新
+                      updateClinicRankingItem(index + 1, clinic);
+                  }
+              });
+          }
+
+          function updateClinicRankingItem(rank, clinic) {
+              // 個別のクリニック表示更新
+              const rankElem = document.querySelector(`.rank-${rank}`);
+              if (rankElem && clinic) {
+                  // クリニック情報の表示更新
+              }
+          }
+
           // リダイレクトリンクのクリックハンドラー
           document.addEventListener('click', function(e) {
               const link = e.target.closest('a');
               if (link && link.href) {
-                  console.log('Link clicked:', link.href);
 
                   // redirect.htmlへのリンクの場合
                   if (link.href.includes('/redirect.html')) {
@@ -887,11 +1001,9 @@ const asset = (resource: string) => {
                               // paramsに元URLパラメータを追加
                               params.original_params = originalParams;
 
-                              console.log('💾 保存するパラメータ:', params);
 
                               // localStorageに保存
                               localStorage.setItem('redirectParams', JSON.stringify(params));
-                              console.log('Saved redirect params to localStorage:', params);
 
                               // redirect.htmlに移動
                               window.open(link.href, '_blank', 'noopener');
@@ -911,20 +1023,17 @@ const asset = (resource: string) => {
                                   region_id: regionId || '013'
                               };
                               localStorage.setItem('redirectParams', JSON.stringify(params));
-                              console.log('Saved redirect params from URL to localStorage:', params);
                               window.open(link.href, '_blank', 'noopener');
                           }
                       }
                   } else {
                       // 直接URLの場合もパラメータを保存（念のため）
-                      console.log('Direct URL link clicked:', link.href);
                   }
               }
           });
 
                   // ランキングセクション用のアコーディオン関数
           function toggleRankingDisclaimer(event) {
-              console.log('>>> toggleRankingDisclaimer called');
 
               // イベント伝播を防ぐ
               if (event) {
@@ -939,7 +1048,6 @@ const asset = (resource: string) => {
                                           event.target.closest('#ranking-disclaimers-content') ||
                                           event.target.id === 'ranking-main-arrow';
                   if (!isRankingSection) {
-                      console.log('>>> Event target is not in ranking section, ignoring');
                       return false;
                   }
               }
@@ -949,16 +1057,13 @@ const asset = (resource: string) => {
 
               if (content) {
                   const currentDisplay = window.getComputedStyle(content).display;
-                  console.log('>>> Ranking current display:', currentDisplay);
 
                   if (content.style.display === 'none' || currentDisplay === 'none') {
                       content.style.display = 'block';
                       if (arrow) arrow.style.transform = 'rotate(180deg)';
-                      console.log('>>> Opened ranking disclaimer');
                   } else {
                       content.style.display = 'none';
                       if (arrow) arrow.style.transform = 'rotate(0deg)';
-                      console.log('>>> Closed ranking disclaimer');
                   }
               } else {
                   console.error('>>> Ranking disclaimer content not found!');
@@ -969,7 +1074,6 @@ const asset = (resource: string) => {
 
                   // 比較表セクション用のアコーディオン関数（第一段階）
           function toggleComparisonDisclaimer(eventOrSlug) {
-              console.log('>>> toggleComparisonDisclaimer called with:', eventOrSlug);
 
               // 引数がイベントオブジェクトの場合（第一段階）
               if (eventOrSlug && typeof eventOrSlug === 'object' && eventOrSlug.target) {
@@ -1000,7 +1104,6 @@ const asset = (resource: string) => {
 
           // 各クリニック個別のアコーディオン用の汎用関数
           function toggleClinicDisclaimer(uniqueSlug, event) {
-              console.log('>>> toggleClinicDisclaimer called for:', uniqueSlug);
               if (event) {
                   event.stopPropagation();
                   event.preventDefault();
@@ -1027,28 +1130,21 @@ const asset = (resource: string) => {
 
           // 元のtoggleDisclaimer関数（キャンペーンセクション用）
           function toggleDisclaimer(clinicSlug) {
-              console.log('>>> toggleDisclaimer called with clinicSlug:', clinicSlug);
 
               const content = document.getElementById(`${clinicSlug}-content`);
               const arrow = document.getElementById(`${clinicSlug}-arrow`);
 
-              console.log('>>> Found content element:', !!content);
-              console.log('>>> Found arrow element:', !!arrow);
 
               if (content) {
                   // 計算されたスタイルも確認
                   const currentDisplay = window.getComputedStyle(content).display;
-                  console.log('>>> Current display style:', currentDisplay);
-                  console.log('>>> Content style.display:', content.style.display);
 
                   if (currentDisplay === 'none' || content.style.display === 'none') {
                       content.style.display = 'block';
                       if (arrow) arrow.style.transform = 'rotate(180deg)';
-                      console.log('>>> Opened accordion for:', clinicSlug);
                   } else {
                       content.style.display = 'none';
                       if (arrow) arrow.style.transform = 'rotate(0deg)';
-                      console.log('>>> Closed accordion for:', clinicSlug);
                   }
               } else {
                   console.error('>>> Content element not found for:', clinicSlug);
@@ -1058,6 +1154,14 @@ const asset = (resource: string) => {
           // 1位クリニックの情報を設定
           function setFirstChoiceClinic(clinicData) {
               if (!clinicData) return;
+
+              const resolveAsset = window.resolveAssetPath || ((path) => {
+                  if (typeof path !== 'string' || path.length === 0) return path;
+                  if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|data:|mailto:|tel:)/i.test(path)) return path;
+                  const base = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? '/';
+                  const normalized = base.endsWith('/') ? base : `${base}/`;
+                  return `${normalized}${path.replace(/^\/+/, '')}`;
+              });
 
               // クリニック名を動的に取得
               const clinicCode = clinicData.code 
@@ -1070,7 +1174,6 @@ const asset = (resource: string) => {
 
 
               const clinicSlug = clinicData.code || clinicIdToSlugMap[clinicData.id] || clinicNameToSlugMap[clinicName] || clinicNameToSlugMap[clinicData.name] || 'omt';
-              if (window.__DEBUG__) console.log('[DEBUG] setFirstChoiceClinic: clinicSlug', clinicSlug, 'clinicName', clinicName, 'clinicData', clinicData);
 
 
               // テキスト要素を更新
@@ -1087,12 +1190,32 @@ const asset = (resource: string) => {
               if (clinicNameSpan) clinicNameSpan.textContent = clinicName;
               if (titleClinicName) titleClinicName.textContent = clinicName;
 
+              if (bannerImage && (clinicData['バナー画像'] || clinicData['詳細バナー画像パス'])) {
+                  const bannerPath = clinicData['バナー画像'] || clinicData['詳細バナー画像パス'];
+                  bannerImage.src = resolveAsset(bannerPath);
+              }
+
+              if (infoLogo && (clinicData['ロゴ画像'] || clinicData['クリニックロゴ画像パス'])) {
+                  const logoPath = clinicData['ロゴ画像'] || clinicData['クリニックロゴ画像パス'];
+                  infoLogo.src = resolveAsset(logoPath);
+              }
+
               if (ctaText) ctaText.textContent = `${clinicName}の公式サイト`;
 
               // クリニック別の内容設定（DataManagerから動的に取得）
               const dm = window.app?.dataManager || window.dataManager;
               if (dm && typeof dm.getClinicText === 'function') {
                   const clinicCode = clinicData.code || clinicSlug;
+
+                  const bannerFromText = dm.getClinicText(clinicCode, '詳細バナー画像パス', '') || dm.getClinicText(clinicCode, 'バナー画像', '');
+                  if (bannerImage && bannerFromText) {
+                      bannerImage.src = resolveAsset(bannerFromText);
+                  }
+
+                  const logoFromText = dm.getClinicText(clinicCode, 'クリニックロゴ画像パス', '') || dm.getClinicText(clinicCode, 'ロゴ画像', '');
+                  if (infoLogo && logoFromText) {
+                      infoLogo.src = resolveAsset(logoFromText);
+                  }
 
                   // キャンペーンテキストを動的に取得
                   const campaignInfo = dm.getClinicText(clinicCode, 'INFORMATIONキャンペーンテキスト', '期間限定キャンペーン<br>実施中');
@@ -1105,15 +1228,17 @@ const asset = (resource: string) => {
                   // URLを動的に生成
                   const regionId = new URLSearchParams(window.location.search).get('region_id') || '013';
                   const ctaUrl = window.app && window.app.urlHandler ? 
-                      window.app.urlHandler.getClinicUrlWithRegionId(clinicData.id) : 
-                      `/injection-lipolysis001/go/${clinicSlug}/?region_id=${regionId}`;
-                  if (ctaLink) ctaLink.href = ctaUrl;
+                      window.app.urlHandler.getClinicUrlWithRegionId(clinicData.id) : '#';
+                  if (ctaLink) ctaLink.href = ctaUrl || '#';
               } else {
                   // フォールバック（DataManagerが利用できない場合）
                   const clinicInfo = getClinicInfo(clinicSlug);
                   if (campaignText) campaignText.innerHTML = clinicInfo.campaign;
                   if (achievementText) achievementText.textContent = clinicInfo.achievement;
-                  if (ctaLink) ctaLink.href = clinicInfo.ctaUrl;
+                  if (ctaLink) ctaLink.href = clinicInfo.ctaUrl || '#';
+                  if (bannerImage && clinicInfo.banner) {
+                      bannerImage.src = resolveAsset(clinicInfo.banner);
+                  }
               }
 
               // 3つの理由を設定
@@ -1125,11 +1250,9 @@ const asset = (resource: string) => {
               // CASEセクションを設定（1位クリニックのみ）
               if (window.dataManager && window.dataManager.getClinicText) {
                   const clinicCode = clinicData.code || clinicSlug;
-                  if (window.__DEBUG__) console.log('[DEBUG] setFirstChoiceClinic: calling setCaseSection with clinicSlug', clinicSlug);
                   setCaseSection(clinicSlug, null);
               } else {
                   const clinicInfo = getClinicInfo(clinicSlug);
-                  if (window.__DEBUG__) console.log('[DEBUG] setFirstChoiceClinic: calling setCaseSection (fallback) with clinicSlug', clinicSlug);
                   setCaseSection(clinicSlug, clinicInfo.points);
               }
           }
@@ -1138,12 +1261,10 @@ const asset = (resource: string) => {
           function setCaseSection(clinicSlug, points) {
               const caseSection = document.getElementById('case-section');
               if (!caseSection) {
-                  if (window.__DEBUG__) console.log('[DEBUG] setCaseSection: #case-section not found');
                   return;
               }
               // 案件詳細セクション（1位）に表示するため、上部のCASEセクションは常に非表示にする
               caseSection.style.display = 'none';
-              if (window.__DEBUG__) console.log('[DEBUG] setCaseSection: hidden top case-section to avoid duplication');
           }
 
           // 症例写真カルーセルの初期化
@@ -1154,9 +1275,7 @@ const asset = (resource: string) => {
               const prevBtn = document.querySelector('.case-nav-prev');
               const nextBtn = document.querySelector('.case-nav-next');
 
-              if (window.__DEBUG__) console.log('[DEBUG] initCaseCarousel: elements', { hasContainer: !!container, slides: slides.length, dots: dots.length, hasPrev: !!prevBtn, hasNext: !!nextBtn });
               if (!container || slides.length === 0) {
-                  if (window.__DEBUG__) console.log('[DEBUG] initCaseCarousel: container missing or no slides');
                   return;
               }
 
@@ -1229,7 +1348,6 @@ const asset = (resource: string) => {
               });
 
               // 初期表示
-              if (window.__DEBUG__) console.log('[DEBUG] initCaseCarousel: showSlide(0)');
               showSlide(0);
           }
 
@@ -1295,10 +1413,12 @@ const asset = (resource: string) => {
               if (dm3 && typeof dm3.getClinicText === 'function') {
                   const clinicCode = clinicSlug;
                   const clinicName = getClinicNameFromCode(clinicCode);
+                  const clinicTextEntry = (dm3.clinicTexts && (dm3.clinicTexts[clinicName] || dm3.clinicTexts[clinicCode])) || {};
                   return {
-                      campaign: clinicInfo['INFORMATIONキャンペーンテキスト'] || '期間限定キャンペーン<br>実施中',
-                      achievement: '＼' + (clinicInfo['実績/症例数'] || '実績多数') + '／',
-                      ctaUrl: clinicInfo['公式サイトURL'] || `https://www.example.com/go/${clinicSlug}/`
+                      campaign: clinicTextEntry['INFORMATIONキャンペーンテキスト'] || '期間限定キャンペーン<br>実施中',
+                      achievement: '＼' + (clinicTextEntry['実績/症例数'] || '実績多数') + '／',
+                      ctaUrl: clinicTextEntry['公式サイトURL'] || '#',
+                      banner: clinicTextEntry['詳細バナー画像パス'] || clinicTextEntry['バナー画像'] || ''
                   };
               }
 
@@ -1306,7 +1426,8 @@ const asset = (resource: string) => {
               return {
                   campaign: '期間限定キャンペーン<br>実施中',
                   achievement: '＼実績多数／',
-                  ctaUrl: `https://www.example.com/go/${clinicSlug}/`
+                  ctaUrl: '#',
+                  banner: ''
               };
           }
 
@@ -1399,36 +1520,29 @@ const asset = (resource: string) => {
           // 1位クリニック情報の更新を実行
           function updateFirstChoiceClinic() {
               if (!window.app || !window.app.dataManager) {
-                  if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: app/dataManager not ready');
                   return;
               }
 
               // 現在の地域IDを取得
               const regionId = window.app.urlHandler ? window.app.urlHandler.getRegionId() : '013';
-              if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: regionId', regionId);
 
               // ランキングデータを取得
               const ranking = window.app.dataManager.getRankingByRegionId(regionId);
 
               if (!ranking || !ranking.ranks) {
-                  if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: no ranking for region', regionId, ranking);
-                  console.log('No ranking data found for region:', regionId);
                   return;
               }
 
               // 1位のクリニックIDを取得
               const firstPlaceClinicId = ranking.ranks.no1;
-              if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: firstPlaceClinicId', firstPlaceClinicId);
 
               if (!firstPlaceClinicId) {
-                  console.log('No first place clinic found');
                   return;
               }
 
               // クリニック情報を取得
               const allClinics = window.app.dataManager.getAllClinics();
               const firstClinic = allClinics.find(clinic => clinic.id === firstPlaceClinicId);
-              if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: firstClinic resolved', firstClinic);
 
               if (firstClinic) {
                   setFirstChoiceClinic(firstClinic);
@@ -1438,7 +1552,6 @@ const asset = (resource: string) => {
                       window.dataLayer.push({
                           'event': 'first_clinic_is_dio'
                       });
-                      console.log('GTM Event: first_clinic_is_dio');
                   }
               }
           }
@@ -1460,10 +1573,8 @@ const asset = (resource: string) => {
 
               retryCount++;
               if (retryCount < maxRetries) {
-                  // console.log(`App not ready yet, retry ${retryCount}/${maxRetries}`);
                   setTimeout(tryUpdateFirstChoice, 500);
               } else {
-                  // console.log('Max retries reached, app may not be loaded');
               }
           }
 
@@ -1484,7 +1595,6 @@ const asset = (resource: string) => {
                   const newRegionId = window.app.urlHandler ? window.app.urlHandler.getRegionId() : '013';
                   if (newRegionId !== currentRegionId) {
                       currentRegionId = newRegionId;
-                      console.log('Region changed to:', newRegionId);
                       setTimeout(() => updateFirstChoiceClinic(), 100); // 少し遅延を入れる
                   }
               }, 1000);
@@ -1597,7 +1707,6 @@ const asset = (resource: string) => {
                   panel.appendChild(ctrl);
                   panel.appendChild(pre);
                   document.body.appendChild(panel);
-                  const orig = { log: console.log, error: console.error, warn: console.warn, info: console.info };
                   function appendLine(level, args){
                       const msg = Array.from(args).map(a=>{
                           try { return typeof a==='string'?a:JSON.stringify(a); } catch(e){ return String(a); }
@@ -1605,22 +1714,23 @@ const asset = (resource: string) => {
                       const line = '['+level+'] '+msg+'\n';
                       pre.textContent += line;
                   }
-                  console.log = function(){ appendLine('LOG', arguments); orig.log.apply(console, arguments); };
+                  const orig = {
+                      error: console.error.bind(console),
+                      warn: console.warn.bind(console),
+                      info: console.info.bind(console)
+                  };
                   console.error = function(){ appendLine('ERR', arguments); orig.error.apply(console, arguments); };
                   console.warn = function(){ appendLine('WRN', arguments); orig.warn.apply(console, arguments); };
                   console.info = function(){ appendLine('INF', arguments); orig.info.apply(console, arguments); };
                   document.getElementById('dbg-clear').onclick = function(){ pre.textContent=''; };
                   document.getElementById('dbg-hide').onclick = function(){ panel.style.display='none'; };
-                  console.log('[DEBUG] panel ready');
-                  document.addEventListener('DOMContentLoaded', function(){ console.log('[DEBUG] DOMContentLoaded fired'); });
-                  window.addEventListener('load', function(){ console.log('[DEBUG] window load fired'); });
                   setTimeout(function(){
-                      console.log('[DEBUG] runtime check', {
-                          hasApp: !!window.app,
-                          hasDataManager: !!(window.app && window.app.dataManager),
-                          caseSection: !!document.getElementById('case-section'),
-                          caseSlides: document.querySelectorAll('.case-slide').length
-                      });
+                      appendLine('DBG', [
+                          `hasApp=${!!window.app}`,
+                          `hasDataManager=${!!(window.app && window.app.dataManager)}`,
+                          `caseSection=${!!document.getElementById('case-section')}`,
+                          `caseSlides=${document.querySelectorAll('.case-slide').length}`
+                      ]);
                   }, 500);
               } catch(e) {}
           })();
@@ -1680,39 +1790,45 @@ const asset = (resource: string) => {
                   tableContainer.setAttribute('data-active-tab', tabType);
 
                   // タブに応じて動的にヘッダーテキストを更新（JSONファイルから取得）
-                  const headerConfig = window.dataManager ? window.dataManager.getClinicHeaderConfig() : null;
+                  const headerConfig = window.dataManager && typeof window.dataManager.getClinicHeaderConfig === 'function'
+                      ? window.dataManager.getClinicHeaderConfig()
+                      : {};
 
-                  const headerTextMap = {
-                      'tab1': [
-                          headerConfig && headerConfig['比較表ヘッダー1'] || 'クリニック', 
-                          headerConfig && headerConfig['比較表ヘッダー2'] || '総合評価',
-                          headerConfig && headerConfig['比較表ヘッダー3'] || '費用',
-                          headerConfig && headerConfig['比較表ヘッダー4'] || '特徴',
-                          headerConfig && headerConfig['比較表ヘッダー11'] || '公式サイト'
-                      ],
-                      'tab2': [
-                          headerConfig && headerConfig['比較表ヘッダー1'] || 'クリニック', 
-                          headerConfig && headerConfig['比較表ヘッダー5'] || '矯正範囲',
-                          headerConfig && headerConfig['比較表ヘッダー6'] || '目安期間',
-                          headerConfig && headerConfig['比較表ヘッダー7'] || '通院頻度',
-                          headerConfig && headerConfig['比較表ヘッダー11'] || '公式サイト'
-                      ], 
-                      'tab3': [
-                          headerConfig && headerConfig['比較表ヘッダー1'] || 'クリニック', 
-                          headerConfig && headerConfig['比較表ヘッダー8'] || '実績/症例数',
-                          headerConfig && headerConfig['比較表ヘッダー9'] || 'ワイヤー矯正の紹介',
-                          headerConfig && headerConfig['比較表ヘッダー10'] || 'サポート',
-                          headerConfig && headerConfig['比較表ヘッダー11'] || '公式サイト'
-                      ]
+                  const defaultHeaders = {
+                      tab1: ['クリニック', '総合評価', '費用', '特徴', '公式サイト'],
+                      tab2: ['クリニック', '矯正範囲', '目安期間', '通院頻度', '公式サイト'],
+                      tab3: ['クリニック', '実績/症例数', 'ワイヤー矯正の紹介', 'サポート', '公式サイト']
                   };
 
-                  const currentHeaderTexts = headerTextMap[tabType] || headerTextMap['tab1'];
+                  const headerTextMap = new Map([
+                      ['tab1', [
+                          headerConfig['比較表ヘッダー1'] ?? defaultHeaders.tab1[0],
+                          headerConfig['比較表ヘッダー2'] ?? defaultHeaders.tab1[1],
+                          headerConfig['比較表ヘッダー3'] ?? defaultHeaders.tab1[2],
+                          headerConfig['比較表ヘッダー4'] ?? defaultHeaders.tab1[3],
+                          headerConfig['比較表ヘッダー11'] ?? defaultHeaders.tab1[4]
+                      ]],
+                      ['tab2', [
+                          headerConfig['比較表ヘッダー1'] ?? defaultHeaders.tab2[0],
+                          headerConfig['比較表ヘッダー5'] ?? defaultHeaders.tab2[1],
+                          headerConfig['比較表ヘッダー6'] ?? defaultHeaders.tab2[2],
+                          headerConfig['比較表ヘッダー7'] ?? defaultHeaders.tab2[3],
+                          headerConfig['比較表ヘッダー11'] ?? defaultHeaders.tab2[4]
+                      ]],
+                      ['tab3', [
+                          headerConfig['比較表ヘッダー1'] ?? defaultHeaders.tab3[0],
+                          headerConfig['比較表ヘッダー8'] ?? defaultHeaders.tab3[1],
+                          headerConfig['比較表ヘッダー9'] ?? defaultHeaders.tab3[2],
+                          headerConfig['比較表ヘッダー10'] ?? defaultHeaders.tab3[3],
+                          headerConfig['比較表ヘッダー11'] ?? defaultHeaders.tab3[4]
+                      ]]
+                  ]);
 
-                  // requestAnimationFrameを使用して最適化
-                  requestAnimationFrame(() => {
-                      // 表示される列のヘッダーテキストを動的に更新
-                      let headerTextIndex = 0;
-                      headers.forEach((th, index) => {
+                  const currentHeaderTexts = headerTextMap.get(tabType) || headerTextMap.get('tab1') || defaultHeaders.tab1;
+
+                  // 表示される列のヘッダーテキストを動的に更新
+                  let headerTextIndex = 0;
+                  headers.forEach((th, index) => {
                           if (showIndexes.includes(index)) {
                               if (headerTextIndex < currentHeaderTexts.length) {
                                   th.textContent = currentHeaderTexts[headerTextIndex];
@@ -1759,7 +1875,6 @@ const asset = (resource: string) => {
                               }
                           });
                       });
-                  });
               }
 
               tabMenuItems.forEach(item => {
@@ -1785,7 +1900,6 @@ const asset = (resource: string) => {
           // window.toggleMainDisclaimer関数は958行目の実装を使用
 
           window.toggleDisclaimer = function(clinicId) {
-              console.log('>>> toggleDisclaimer called:', clinicId);
 
               // 特別な処理: dio-campaign-first-choiceの場合
               if (clinicId === 'dio-campaign-first-choice') {
@@ -1818,11 +1932,9 @@ const asset = (resource: string) => {
                           if (isHidden) {
                               fbContent.style.display = 'block';
                               fbArrow.style.transform = 'rotate(180deg)';
-                              console.log('→ Fallback general accordion opened:', baseCode);
                           } else {
                               fbContent.style.display = 'none';
                               fbArrow.style.transform = 'rotate(0deg)';
-                              console.log('→ Fallback general accordion closed:', baseCode);
                           }
                           return; // フォールバックで処理完了
                       }
@@ -1842,16 +1954,13 @@ const asset = (resource: string) => {
                               return false;
                           })();
                           const needsMove = targetAnchor && accordion && accordion.parentElement !== targetAnchor;
-                          console.log('Relocation check:', { hasAnchor: !!targetAnchor, isInMain, needsMove });
                           if (needsMove) {
                               targetAnchor.appendChild(accordion);
-                              console.log('Relocated first-choice accordion under .first-choice-recommendation-section');
                           }
                       } catch (e) { console.warn('Relocation error:', e); }
 
                       const computed = window.getComputedStyle(content);
                       const currentDisplay = computed.display;
-                      console.log('First choice accordion - current display:', currentDisplay, '| visibility:', computed.visibility, '| opacity:', computed.opacity);
 
                       const accordion = content.closest('.disclaimer-accordion');
                       const section = content.closest('section');
@@ -1882,9 +1991,7 @@ const asset = (resource: string) => {
                       }
                       if (ancestors.length) {
                           try {
-                              console.log('Ancestors with potential hidden styles (text):\n' + JSON.stringify(ancestors, null, 2));
                           } catch (e) {
-                              console.log('Ancestors with potential hidden styles:', ancestors);
                           }
                       }
 
@@ -1907,10 +2014,8 @@ const asset = (resource: string) => {
                           content.style.maxHeight = 'none';
                           content.style.height = 'auto';
                           arrow.style.transform = 'rotate(180deg)';
-                          console.log('→ First choice accordion opened (applied force-show + inline styles)');
                           try {
                               const rect = content.getBoundingClientRect();
-                              console.log('First choice content rect after open:', { top: rect.top, left: rect.left, width: rect.width, height: rect.height });
                           } catch (e) {}
 
                           // main-disclaimer-contentが親要素として影響している場合の対処
@@ -1921,10 +2026,8 @@ const asset = (resource: string) => {
                               if (acc && mainContent.contains(acc)) {
                                   if (sectionAnchor) {
                                       sectionAnchor.appendChild(acc);
-                                      console.log('Relocated first-choice accordion (during open) under .first-choice-recommendation-section');
                                   } else {
                                       mainContent.parentNode.insertBefore(acc, mainContent.nextSibling);
-                                      console.log('Relocated first-choice accordion (during open) outside main-content');
                                   }
                               }
                           }
@@ -1937,7 +2040,6 @@ const asset = (resource: string) => {
                                   window.scrollTo({ top: targetTop, behavior: 'auto' });
                                   setTimeout(() => {
                                       const rect3 = content.getBoundingClientRect();
-                                      console.log('After scroll check:', { pageYOffset: window.pageYOffset, rectTop: rect3.top, rectHeight: rect3.height });
                                       // まだ見えていなければもう一度
                                       if (rect3.top < -10 || rect3.top > window.innerHeight) {
                                           const targetTop2 = rect3.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - 80;
@@ -1956,10 +2058,8 @@ const asset = (resource: string) => {
                           content.style.maxHeight = '';
                           content.style.height = '';
                           arrow.style.transform = 'rotate(0deg)';
-                          console.log('→ First choice accordion closed');
                           try {
                               const rect = content.getBoundingClientRect();
-                              console.log('First choice content rect after close:', { top: rect.top, left: rect.left, width: rect.width, height: rect.height });
                           } catch (e) {}
                           // 祖先の上書きクラスを外す
                           let n = content.parentElement;
@@ -1995,8 +2095,6 @@ const asset = (resource: string) => {
               const content = document.getElementById(contentId);
               const arrow = document.getElementById(arrowId);
 
-              console.log('Looking for:', contentId, '→', content ? 'FOUND' : 'NOT FOUND');
-              console.log('Looking for:', arrowId, '→', arrow ? 'FOUND' : 'NOT FOUND');
 
               if (content && arrow) {
                   const computed = window.getComputedStyle(content);
@@ -2028,7 +2126,6 @@ const asset = (resource: string) => {
                           node = node.parentElement;
                       }
                       if (ancestors.length) {
-                          try { console.log('Ancestors (general) with potential hidden styles (text):\n' + JSON.stringify(ancestors, null, 2)); } catch (e) { console.log('Ancestors (general):', ancestors); }
                       }
 
                       // 表示
@@ -2036,17 +2133,14 @@ const asset = (resource: string) => {
                       content.style.visibility = 'visible';
                       content.style.opacity = '1';
                       arrow.style.transform = 'rotate(180deg)';
-                      console.log('→ General accordion opened:', clinicId);
                       try {
                           const rect = content.getBoundingClientRect();
-                          console.log('General content rect after open:', { top: rect.top, left: rect.left, width: rect.width, height: rect.height });
                           const doScroll = () => {
                               const r2 = content.getBoundingClientRect();
                               const targetTop = r2.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - 80;
                               window.scrollTo({ top: targetTop, behavior: 'auto' });
                               setTimeout(() => {
                                   const r3 = content.getBoundingClientRect();
-                                  console.log('After scroll check (general):', { pageYOffset: window.pageYOffset, rectTop: r3.top, rectHeight: r3.height });
                               }, 120);
                           };
                           doScroll();
@@ -2057,7 +2151,6 @@ const asset = (resource: string) => {
                       content.style.visibility = '';
                       content.style.opacity = '';
                       arrow.style.transform = 'rotate(0deg)';
-                      console.log('→ General accordion closed:', clinicId);
                       // 祖先の上書きクラスを外す
                       let n = content.parentElement;
                       while (n && n !== document.body) {
@@ -2151,7 +2244,7 @@ const asset = (resource: string) => {
       <!-- Clinic URLs are now managed dynamically from CSV database -->
 
       <!-- URL Parameter Tracking -->
-      <script src={asset("url-tracking.js?v=2025072201")} defer></script>
+      <!-- url-tracking.jsはapp.js内で遅延読み込み -->
 
       <!-- Service Worker登録 -->
       <script define:vars={{ swPath: asset('sw.js') }}>
@@ -2193,7 +2286,7 @@ const asset = (resource: string) => {
                   console.error('Error loading common site data:', error);
               });
       </script>
-      <script src={asset("tracking-params.js")} defer></script>
+      <!-- tracking-params.jsはapp.js内で遅延読み込み -->
 
       <!-- トップに戻るボタン -->
       <button id="back-to-top" class="back-to-top" aria-label="トップに戻る">
