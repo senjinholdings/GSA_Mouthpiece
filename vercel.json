@@ -6,5 +6,7 @@
     { "source": "/mouthpiece004/(.*)", "destination": "/mouthpiece004/dist/$1" },
     { "source": "/mouthpiece005/(.*)", "destination": "/mouthpiece005/dist/$1" },
     { "source": "/mouthpiece006/(.*)", "destination": "/mouthpiece006/dist/$1" }
+  ,
+    { "source": "/mouthpiece007/(.*)", "destination": "/mouthpiece007/dist/$1" }
   ]
 }
