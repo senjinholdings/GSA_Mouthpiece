@@ -69,16 +69,36 @@ if [ $? -eq 0 ]; then
     # vercel.jsonを更新
     if [ -f "vercel.json" ]; then
         echo "📝 vercel.jsonを更新中..."
-        # 既存のvercel.jsonを読み込み、新しいルートを追加
-        # 最後の]の前に新しいルートを追加
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            # macOS
-            sed -i '' "s|\]|,\n    { \"source\": \"/${NEW_DIR}/(.*)\", \"destination\": \"/${NEW_DIR}/dist/\$1\" }\n  ]|" vercel.json
-        else
-            # Linux
-            sed -i "s|\]|,\n    { \"source\": \"/${NEW_DIR}/(.*)\", \"destination\": \"/${NEW_DIR}/dist/\$1\" }\n  ]|" vercel.json
-        fi
-        echo "✅ vercel.jsonを更新しました"
+        # Pythonを使って安全にJSONを更新（環境変数を渡す）
+        NEW_DIR="$NEW_DIR" python3 -c "
+import json
+import os
+
+# 環境変数から新しいディレクトリ名を取得
+new_dir = os.environ.get('NEW_DIR')
+
+# vercel.jsonを読み込み
+with open('vercel.json', 'r') as f:
+    data = json.load(f)
+
+# 新しいルートを追加
+new_route = {
+    'source': f'/{new_dir}/(.*)',
+    'destination': f'/{new_dir}/dist/$1'
+}
+
+# rewritesセクションに追加
+if 'rewrites' in data:
+    data['rewrites'].append(new_route)
+else:
+    data['rewrites'] = [new_route]
+
+# ファイルに書き込み
+with open('vercel.json', 'w') as f:
+    json.dump(data, f, indent=2)
+
+print('✅ vercel.jsonを更新しました')
+"
     else
         echo "⚠️  vercel.jsonが見つかりません。手動で以下を追加してください:"
         echo "    { \"source\": \"/${NEW_DIR}/(.*)\", \"destination\": \"/${NEW_DIR}/dist/\$1\" }"
