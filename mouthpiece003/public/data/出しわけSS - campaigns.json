@@ -1,0 +1,18 @@
+[
+  {
+    "clinic_id": "dio",
+    "campaign": "初回限定75%OFF",
+    "valid_until": "2025-12-31"
+  },
+  {
+    "clinic_id": "plainbeauty",
+    "campaign": "カウンセリング無料",
+    "valid_until": "2025-12-31"
+  },
+  {
+    "clinic_id": "eminal",
+    "campaign": "学割10%OFF",
+    "valid_until": "2025-12-31"
+  }
+]
+

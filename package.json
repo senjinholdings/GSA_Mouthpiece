@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:001": "astro build --base=/mouthpiece001/ --outDir=dist/mouthpiece001",
+    "build:002": "astro build --base=/mouthpiece002/ --outDir=dist/mouthpiece002",
     "preview": "astro preview",
     "test": "vitest run",
     "test:watch": "vitest"
