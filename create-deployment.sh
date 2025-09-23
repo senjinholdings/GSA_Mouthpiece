@@ -62,7 +62,36 @@ npm run build
 
 if [ $? -eq 0 ]; then
     echo "✅ ${NEW_DIR}が正常に作成されました！"
-    echo "🚀 プレビューを開始するには以下を実行してください:"
+
+    # ルートディレクトリに戻る
+    cd ..
+
+    # vercel.jsonを更新
+    if [ -f "vercel.json" ]; then
+        echo "📝 vercel.jsonを更新中..."
+        # 既存のvercel.jsonを読み込み、新しいルートを追加
+        # 最後の]の前に新しいルートを追加
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            sed -i '' "s|\]|,\n    { \"source\": \"/${NEW_DIR}/(.*)\", \"destination\": \"/${NEW_DIR}/dist/\$1\" }\n  ]|" vercel.json
+        else
+            # Linux
+            sed -i "s|\]|,\n    { \"source\": \"/${NEW_DIR}/(.*)\", \"destination\": \"/${NEW_DIR}/dist/\$1\" }\n  ]|" vercel.json
+        fi
+        echo "✅ vercel.jsonを更新しました"
+    else
+        echo "⚠️  vercel.jsonが見つかりません。手動で以下を追加してください:"
+        echo "    { \"source\": \"/${NEW_DIR}/(.*)\", \"destination\": \"/${NEW_DIR}/dist/\$1\" }"
+    fi
+
+    echo ""
+    echo "📌 次の手順:"
+    echo "1. Gitにコミット＆プッシュ:"
+    echo "   git add ${NEW_DIR} vercel.json"
+    echo "   git commit -m \"Add ${NEW_DIR} deployment\""
+    echo "   git push"
+    echo ""
+    echo "2. ローカルでプレビュー:"
     echo "   cd ${NEW_DIR} && npm run preview"
 else
     echo "❌ ビルドに失敗しました"
