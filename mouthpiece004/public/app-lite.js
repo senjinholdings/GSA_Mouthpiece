@@ -1,0 +1,124 @@
+// where: public/app-lite.js
+// what: Lightweight DataManager for critical path rendering.
+// why: Add base-path-aware asset resolution so JSON loads when served from subdirectories.
+
+(function() {
+    'use strict';
+
+    const BASE_PATH_RAW = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? '/';
+    const BASE_PATH_PREFIX = BASE_PATH_RAW === '/' || BASE_PATH_RAW === '' ? '' : BASE_PATH_RAW.replace(/\/+$/, '');
+    const withBasePath = (resource) => {
+        if (typeof resource !== 'string' || resource.length === 0) {
+            return resource;
+        }
+        if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|data:|mailto:|tel:)/i.test(resource)) {
+            return resource;
+        }
+        if (!BASE_PATH_PREFIX) {
+            return resource.startsWith('./') ? resource.slice(2) : resource;
+        }
+        let normalized = resource.startsWith('./') ? resource.slice(2) : resource;
+        if (!normalized.startsWith('/')) {
+            normalized = `/${normalized}`;
+        }
+        return `${BASE_PATH_PREFIX}${normalized}`;
+    };
+
+    // DataManager - 最小限の実装
+    class DataManager {
+        constructor() {
+            this.commonTexts = {};
+            this.clinics = [];
+            this.rankings = {};
+            this.clinicTexts = {};
+            this.loaded = false;
+        }
+
+        async loadData(regionId = '013') {
+            try {
+                // 並列でデータを取得
+                const [commonTexts, clinicsData] = await Promise.all([
+                    fetch(withBasePath('/common_data/data/site-common-texts.json')).then(r => r.json()),
+                    fetch(withBasePath('/common_data/data/mouthpiece_clinics_data_001.json')).then(r => r.json())
+                ]);
+
+                this.commonTexts = commonTexts;
+                this.clinics = clinicsData.clinics || [];
+                this.rankings = clinicsData.rankings || {};
+                this.clinicTexts = clinicsData.clinicTexts || {};
+                this.loaded = true;
+
+                // イベントを発火
+                window.dispatchEvent(new CustomEvent('dataManagerReady'));
+                return true;
+            } catch (error) {
+                console.error('Data loading error:', error);
+                return false;
+            }
+        }
+
+        getText(key, defaultValue = '') {
+            return this.commonTexts[key] || defaultValue;
+        }
+
+        getClinicById(clinicId) {
+            return this.clinics.find(c => c.id === clinicId);
+        }
+
+        getClinicCodeById(clinicId) {
+            const clinic = this.getClinicById(clinicId);
+            return clinic ? clinic.code : null;
+        }
+
+        getClinicText(clinicCode, key, defaultValue = '') {
+            const clinic = this.clinics.find(c => c.code === clinicCode);
+            return clinic && clinic[key] ? clinic[key] : defaultValue;
+        }
+
+        getClinicHeaderConfig() {
+            const config = this.clinicTexts && this.clinicTexts['比較表ヘッダー設定'];
+            return config && typeof config === 'object' ? config : {};
+        }
+
+        getRankingsByRegion(regionId = '013') {
+            return this.rankings[regionId] || [];
+        }
+    }
+
+    // URLパラメータハンドラ - 最小限の実装
+    class UrlParamHandler {
+        getParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        getRegionId() {
+            return this.getParam('region_id') || '013';
+        }
+    }
+
+    // グローバルに公開
+    window.DataManager = DataManager;
+    window.dataManager = new DataManager();
+    window.urlParamHandler = new UrlParamHandler();
+
+    // ページ読み込み時にデータを自動ロード
+    document.addEventListener('DOMContentLoaded', function() {
+        const regionId = window.urlParamHandler.getRegionId();
+        window.dataManager.loadData(regionId);
+    });
+
+    // 基本的なユーティリティ関数
+    window.getClinicUrlFromConfig = function(clinicId, rank = 1) {
+        if (window.dataManager) {
+            const clinicCode = window.dataManager.getClinicCodeById(clinicId);
+            if (clinicCode) {
+                const urlKey = `遷移先URL（${rank}位）`;
+                const url = window.dataManager.getClinicText(clinicCode, urlKey, '');
+                if (url) return url;
+            }
+        }
+        return '#';
+    };
+
+})();

@@ -1,0 +1,2286 @@
+---
+import '../styles/global.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = '2025年最新版｜おすすめ比較ランキング';
+const pageDescription = '全国の人気クリニックを徹底比較！料金・特徴・口コミ・アクセス情報などをわかりやすく一覧でご紹介。あなたにぴったりのクリニック選びをサポートします。';
+const basePath = import.meta.env.BASE_URL ?? '/';
+const normalizedBasePath = basePath.endsWith('/') ? basePath : `${basePath}/`;
+const asset = (resource: string) => {
+  if (!resource) return normalizedBasePath;
+  const idx = resource.search(/[?#]/);
+  const pathPart = idx === -1 ? resource : resource.slice(0, idx);
+  const suffix = idx === -1 ? '' : resource.slice(idx);
+  const cleaned = pathPart.replace(/^\/+/, '');
+  return `${normalizedBasePath}${cleaned}${suffix}`;
+};
+
+---
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <Fragment slot="head">
+    <!-- Preload critical resources -->
+    <link rel="preload" href={asset("app-complete.min.js?v=2025081418")} as="script">
+    <link rel="preload" href={asset("common_data/data/site-common-texts.json")} as="fetch" crossorigin="anonymous">
+    <link rel="preload" href={asset("common_data/data/mouthpiece_clinics_data_001.json")} as="fetch" crossorigin="anonymous">
+    <link rel="preload" href={asset("images/ranking_header_banner.webp")} as="image" type="image/webp" fetchpriority="high">
+
+    <!-- DNS Prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+    <!-- Vercel deployment: 2025-07-21 23:40 -->
+        <!-- Map modal feature added: 2024-01-29 15:30 -->
+        <style>
+            /* ヘッダースタイル */
+            .site-header {
+                position: sticky;
+                top: 0;
+                background: #fff;
+                width: 100%;
+                z-index: 1000;
+                border-bottom: 1px solid #f0f0f0;
+                box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+            }
+
+            .header-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 0 auto;
+                position: relative;
+                padding: 8px 16px;
+                max-width: 768px;
+            }
+
+            .logo-section {
+                display: flex;
+                align-items: center;
+            }
+
+            .logo-link {
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+            }
+
+            .logo-main {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .logo-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                transition: all 0.3s ease;
+                padding: 2%;
+                width: 40px;
+                height: 40px;
+            }
+
+            .logo-icon img {
+                width: 100%;
+                object-fit: contain;
+                display: block;
+            }
+
+            /* ヘッダーロゴのスタイル */
+            .site-logo {
+                font-size: 0.9rem;
+                font-weight: 700;
+                letter-spacing: 1px;
+                font-family: 'Trebuchet MS', 'Avenir Next', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+                background: linear-gradient(135deg, #21d2ce 0%, #2d84ce 100%);
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                -webkit-background-clip: text;
+                -moz-background-clip: text;
+                -moz-text-fill-color: transparent;
+                margin: 0;
+                text-shadow: 0 2px 10px rgba(102, 126, 234, 0.1);
+                position: relative;
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+
+            .header-nav {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .hamburger-menu {
+                background: none;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                justify-content: space-around;
+                z-index: 1002;
+                width: 40px;
+                height: 35px;
+                padding: 5px;
+            }
+
+            .hamburger-line {
+                width: 100%;
+                height: 3px;
+                background-color: #4C4C4C;
+                transition: all 0.3s ease;
+            }
+
+            /* モバイル対応 */
+            @media (max-width: 768px) {
+                .logo-icon {
+                    width: 32px;
+                    height: 32px;
+                    font-size: 1.1rem;
+                    border-radius: 6px;
+                    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.25);
+                }
+
+                .hamburger-menu {
+                    width: 35px;
+                    height: 35px;
+                    padding: 5px;
+                }
+
+                .hamburger-line {
+                    height: 2px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .header-content, .site-header {
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    box-sizing: border-box !important;
+                    padding: 2px 4px !important;
+                }
+            }
+
+            * { box-sizing: border-box; }
+            *::before, *::after { box-sizing: inherit; }
+            html { color-scheme: light; }
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+                background-color: #ffffff;
+                color: #333333;
+                line-height: 1.6;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 100vh;
+                width: 100%;
+            }
+            body > *:not(.sidebar-menu):not(.sidebar-overlay):not(.map-modal):not(.disclaimer-modal):not(.banner-modal):not(.scroll-bottom-modal) {
+                width: 100%;
+                max-width: 768px;
+                margin: 0 auto;
+            }
+            img {
+                max-width: 100%;
+                display: block;
+                height: auto;
+            }
+            a { color: inherit; text-decoration: none; }
+            main > section {
+                max-width: 100%;
+                overflow-x: hidden;
+                box-sizing: border-box;
+                margin: 0;
+                padding-left: 1%;
+                padding-right: 1%;
+            }
+            .container {
+                width: 100%;
+                max-width: 768px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+            .site-header {
+                position: sticky;
+                top: 0;
+                background-color: #ffffff;
+                z-index: 1000;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            .header-content {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 20px;
+            }
+            .logo-main {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .logo-icon img {
+                width: 40px;
+                height: 40px;
+            }
+            .site-logo {
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+            }
+            .hero-section {
+                position: relative;
+                margin: 0;
+            }
+            .hero-image-wrapper {
+                position: relative;
+                width: 100%;
+                max-width: 768px;
+                margin: 0 auto;
+                overflow: hidden;
+                border-radius: 12px;
+                background: #f9f9f9;
+                aspect-ratio: 1500 / 928;
+            }
+            .hero-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            @media (max-width: 768px) {
+                .container { padding: 0 0px; }
+                .header-content { padding: 12px; }
+                .site-logo { font-size: 1rem; }
+            }
+        </style>
+        <!-- 重要なリソースのpreload -->
+        <link rel="preload" as="image" href={asset("images/mv.webp")} fetchpriority="high" type="image/webp">
+        <link rel="preload" as="style" href={asset("styles.css?v=2025080101")}>
+
+        <!-- Google Fontsはプリロードせず、通常のロードのみにする -->
+        <!-- Critical CSS inline for immediate rendering -->
+        <style is:inline>
+          * { box-sizing: border-box; }
+          body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+          }
+          .main-container { opacity: 1; transition: opacity 0.3s ease; }
+        </style>
+
+        <!-- Preload critical resources -->
+        <link rel="preload" href={asset("styles.css?v=2025081417")} as="style">
+
+        <!-- Load stylesheets -->
+        <!-- Old styles - will be replaced by Tailwind -->
+        <link rel="stylesheet" href={asset("styles.css?v=2025081417")}>
+        <link rel="icon" type="image/png" href={asset("common_data/images/favicon.png")} id="favicon">
+        <!-- Critical CSS -->
+        <!-- Font loading detection -->
+        <script is:inline>
+          // Font loading detection
+          if ('fonts' in document) {
+            document.fonts.ready.then(function(){
+              document.documentElement.classList.add('fonts-loaded')
+            })
+          }
+        </script>
+  </Fragment>
+  <div class="max-w-3xl mx-auto px-0 main-container">
+          <!-- ヘッダー -->
+          <header class="site-header">
+              <div class="header-content">
+                  <div class="logo-section">
+                      <a href={asset("")} class="logo-link">
+                          <div class="logo-main">
+                              <span class="logo-icon"><img src={asset("common_data/images/favicon.png")} alt="医療ダイエット比較.com" id="header-logo-icon"></span>
+                              <h1 class="site-logo" id="site-logo">矯正歯科おすすめ比較.com</h1>
+                          </div>
+                      </a>
+                  </div>
+                  <nav class="header-nav">
+                      <button class="hamburger-menu" id="hamburger-menu" aria-label="メニュー">
+                          <span class="hamburger-line"></span>
+                          <span class="hamburger-line"></span>
+                          <span class="hamburger-line"></span>
+                      </button>
+                  </nav>
+              </div>
+          </header>
+
+          <!-- メインビジュアル -->
+          <section class="relative w-full bg-gray-50">
+              <div class="relative w-full max-w-3xl mx-auto">
+                  <picture>
+                      <img src={asset("images/mv.webp")} alt="おすすめ比較ランキング - 2025年最新版" class="w-full h-auto object-cover rounded-xl" loading="eager" fetchpriority="high" decoding="async" width="1500" height="928">
+                  <div id="mv-region-name" class="absolute top-[4%] left-[3%] text-center text-gray-500 font-semibold z-10 pointer-events-none rounded-lg" style="width: clamp(60px, 15vw, 115px); min-height: 40px; font-size: clamp(14px, 3.5vw, 27px); padding: clamp(4px, 1vw, 8px);">&nbsp;</div>
+                  <div id="mv-left-appeal-text" class="absolute top-[25%] left-[14%] text-center text-gray-500 font-bold z-10 pointer-events-none" style="min-height: 45px; font-size: clamp(14px, 3.2vw, 25px); padding: clamp(6px, 1.5vw, 12px);">&nbsp;</div>
+                  <svg id="mv-main-svg-text" class="absolute top-[35%] left-[39%] -translate-x-1/2 z-10 pointer-events-none overflow-visible" style="width: 60vw; height: 10vh;">
+                      <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#ff94ae" stroke="white" stroke-width="6px" paint-order="stroke" style="font-size: clamp(14px, 8vw, 56px);font-weight: 700;">
+                          <tspan id="mv-region-text"></tspan>
+                      </text>
+                  </svg>
+                  <svg id="mv-appeal1-text" class="absolute top-[52%] left-[39%] -translate-x-1/2 z-10 pointer-events-none overflow-visible" style="width: 60vw; height: 10vh;">
+                      <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#ff94ae" stroke="white" stroke-width="6px" paint-order="stroke" style="font-size: clamp(14px, 8vw, 62px); font-weight: 700;">
+
+                      </text>
+                  </svg>
+              </div>
+              <div id="pr-line" class="text-right px-5 py-1 text-gray-500 text-xs font-normal max-w-3xl mx-auto"></div>
+          </section>
+
+          <main>
+
+              <!-- ランキング表示セクション -->
+              <section class="w-full bg-white">
+                  <div class="max-w-3xl mx-auto px-0.5">
+                      <div class="relative mb-4">
+                          <img src={asset("images/ranking_header_banner.webp")} alt="" class="w-full h-auto rounded-lg" width="728" height="150" loading="eager" fetchpriority="high" decoding="sync">
+                          <div id="rank-region-name" class="absolute top-[6%] left-1/2 whitespace-nowrap -translate-x-1/2 text-center text-white font-bold z-10 pointer-events-none" style="min-height: 45px; font-size: clamp(14px, 5.2vw, 37px);">&nbsp;</div>
+                      </div>
+                      <div id="ranking-list" class="flex flex-nowrap gap-3 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden" style="padding: 0.1rem 0.2rem 0.1rem 0.2rem;">
+                          <!-- ランキングはJavaScriptで動的に生成 -->
+                      </div>
+                  </div>
+              </section>
+
+              <!-- ランキング表示セクション下の注意事項 -->
+              <section id="ranking-disclaimers-section" class="disclaimers-section" style="padding: 0px 10px; background: #ffffff;">
+                  <div class="container" style="max-width: 768px; margin: 0 auto;">
+                      <!-- 注意事項アコーディオン -->
+                      <div class="disclaimer-accordion" style="margin-top: 15px;">
+                          <!-- 第1段階: 各クリニックの注意事項 -->
+                          <div class="main-disclaimer">
+                              <button id="ranking-disclaimer-button" class="main-disclaimer-header ranking-disclaimer-header" style="width: 100%; text-align: left; padding: 8px 12px; background-color: #ffffff; border: 1px solid #f0f0f0; border-radius: 3px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                  <span style="font-size: 10px; font-weight: 500; color: #666;">各クリニックの注意事項</span>
+                                  <span id="ranking-main-arrow" style="font-size: 8px; color: rgb(153, 153, 153); transition: transform 0.2s; transform: rotate(0deg);">▼</span>
+                              </button>
+                              <div id="ranking-disclaimers-content" class="main-disclaimer-content" style="display: none; padding: 5px; background-color: rgb(252, 252, 252); border-right: 1px solid rgb(240, 240, 240); border-bottom: 1px solid rgb(240, 240, 240); border-left: 1px solid rgb(240, 240, 240); border-image: initial; border-top: none; border-radius: 0px 0px 3px 3px; margin-top: -5px;">
+                                  <!-- 動的に生成される注釈コンテンツ -->
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </section>
+
+              <!-- ユーザーの悩みを解消するためのTips -->
+              <div class="tips-container max-w-3xl mx-auto my-5 px-2.5 relative">
+                  <div class="tips-section w-full">
+                      <div class="flex flex-col">
+                          <!-- タブナビゲーション -->
+                          <div class="tabs flex gap-0 mb-0">
+                              <div class="tab active flex-1 bg-[#2CC7C5] text-white px-2 py-2 text-center cursor-pointer font-semibold transition-all duration-300 text-xs flex items-center justify-center border-r border-white" data-tab="0" style="background-color: #2CC7C5; border-radius: 8px 0 0 0;">
+                                  <span class="tab-text whitespace-nowrap"></span>
+                              </div>
+                              <div class="tab flex-1 bg-gray-200 text-gray-600 px-2 py-2 text-center cursor-pointer font-semibold transition-all duration-300 text-xs flex items-center justify-center border-r border-white" data-tab="1" style="background-color: #e5e5e5;">
+                                  <span class="tab-text whitespace-nowrap"></span>
+                              </div>
+                              <div class="tab flex-1 bg-gray-200 text-gray-600 px-2 py-2 text-center cursor-pointer font-semibold transition-all duration-300 text-xs flex items-center justify-center" data-tab="2" style="background-color: #e5e5e5; border-radius: 0 8px 0 0;">
+                                  <span class="tab-text whitespace-nowrap"></span>
+                              </div>
+                          </div>
+
+                          <!-- タブコンテンツコンテナ -->
+                          <div class="tab-contents relative bg-white border border-gray-200 rounded-b-lg p-4" style="border-top: none;">
+                              <!-- タブ1: 効果 -->
+                              <div class="tab-content active block" data-tab="0">
+                                  <div class="w-full mb-4">
+                                      <img src={asset("images/Tips1.webp")} alt="効果" class="w-full h-auto rounded" width="700" height="400" loading="lazy" decoding="async">
+                                  </div>
+                                  <p class="text-sm leading-relaxed text-gray-700 mb-4">
+
+                                  </p>
+                              </div>
+
+                              <!-- タブ2: クリニック選び -->
+                              <div class="tab-content hidden" data-tab="1">
+                                  <div style="width: 100%; margin-bottom: 15px;">
+                                      <img src={asset("images/Tips2.webp")} alt="クリニック選びのポイント" style="width: 100%; height: auto; border-radius: 4px;" width="700" height="400" loading="lazy" decoding="async">
+                                  </div>
+                                  <p style="font-size: 14px; line-height: 1.8; color: #4C4C4C; margin-bottom: 15px;">
+
+                                  </p>
+                              </div>
+
+                              <!-- タブ3: 今がおすすめ -->
+                              <div class="tab-content" data-tab="2" style="display: none;">
+                                  <div style="width: 100%; margin-bottom: 15px;">
+                                      <img src={asset("images/Tips3.webp")} alt="今がおすすめの理由" style="width: 100%; height: auto; border-radius: 4px;" width="700" height="400" loading="lazy" decoding="async">
+                                  </div>
+                                  <p style="font-size: 14px; line-height: 1.8; color: #4C4C4C; margin-bottom: 15px;">
+
+                                  </p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <script is:inline>
+                  // Tips section tab functionality
+                  (function() {
+                      const tabs = document.querySelectorAll('.tips-container .tab');
+                      const tabContents = document.querySelectorAll('.tips-container .tab-content');
+
+                      function updateTabs(index) {
+                          // Update tabs
+                          tabs.forEach((tab, i) => {
+                              if (i === index) {
+                                  tab.classList.add('active');
+                                  tab.style.backgroundColor = '#2CC7C5';
+                                  tab.style.color = 'white';
+                              } else {
+                                  tab.classList.remove('active');
+                                  tab.style.backgroundColor = '#e5e5e5';
+                                  tab.style.color = '#666';
+                              }
+                          });
+
+                          // Update tab contents
+                          tabContents.forEach((content, i) => {
+                              const isActive = i === index;
+                              content.classList.toggle('active', isActive);
+                              content.classList.toggle('hidden', !isActive);
+                              content.style.display = isActive ? 'block' : 'none';
+                          });
+                      }
+
+                      // Tab click handlers
+                      tabs.forEach((tab, index) => {
+                          tab.addEventListener('click', () => updateTabs(index));
+                      });
+
+                      // Initialize default active tab state
+                      updateTabs(0);
+                  })();
+              </script>
+
+          <script is:inline>
+          // 詳細情報を表示する関数
+          function showDisclaimerInfo(type) {
+              const modal = document.getElementById('disclaimer-modal');
+              const modalBody = document.getElementById('disclaimer-modal-body');
+
+              const disclaimers = {
+                  'dio-success-rate': {
+                      title: 'ダイエット成功率99％について',
+                      content: '※最終体重測定2023/2/1～2023/7/31で薬なし、食事指導なしを除く、3ヶ月コース（ビューティー/リピート除く）の契約終了者が対象。効果には個人差があります。初回体重50kg以上or初回BMI25以上の方限定。'
+                  }
+              };
+
+              const info = disclaimers[type];
+              if (info) {
+                  modalBody.innerHTML = `
+                      <h3 style="margin-top: 0; color: #333;">${info.title}</h3>
+                      <p style="font-size: 14px; line-height: 1.6; color: #666;">${info.content}</p>
+                  `;
+                  modal.style.display = 'block';
+              }
+          }
+
+          // モーダルを閉じる関数
+          function closeDisclaimerInfo() {
+              document.getElementById('disclaimer-modal').style.display = 'none';
+          }
+
+          // モーダルの外側をクリックしたら閉じる
+          window.onclick = function(event) {
+              const modal = document.getElementById('disclaimer-modal');
+              if (event.target == modal) {
+                  modal.style.display = 'none';
+              }
+          }
+          </script>
+
+              <!-- 比較表セクション -->
+              <section class="py-5 px-2.5">
+                  <div class="comparison-header">
+                      <h2 class="comparison-title"><span id="comparison-region-name">地域</span>で人気のマウスピース矯正</h2>
+                      <h3 class="comparison-subtitle">クリニックを<span class="accent-text">徹底比較</span></h3>
+                  </div>
+
+                  <div class="comparison-table w-full max-w-3xl mx-auto overflow-x-auto" id="comparison-tab-menu" data-active-tab="tab1">
+                      <div class="comparison-tab-menu">
+                          <div class="comparison-tab-menu-item tab-active" data-tab="tab1">総合</div>
+                          <div class="comparison-tab-menu-item" data-tab="tab2">施術内容</div>
+                          <div class="comparison-tab-menu-item" data-tab="tab3">サービス</div>
+                      </div>
+                      <table id="comparison-table">
+                          <thead>
+                              <tr id="comparison-header-row">
+                                  <th>クリニック</th>
+                                  <th>総合評価</th>
+                                  <th>費用</th>
+                                  <th>特徴</th>
+                                  <th>公式サイト</th>
+                              </tr>
+                          </thead>
+                          <tbody id="comparison-tbody">
+                              <!-- 動的に生成される比較表の内容がここに表示されます -->
+                          </tbody>
+                      </table>
+                      <!-- 注意事項アコーディオン -->
+                      <div class="disclaimer-accordion" style="margin-top: 15px;">
+                          <!-- 第1段階: 各クリニックの注意事項 -->
+                          <div class="main-disclaimer">
+                              <button id="comparison-disclaimer-button" class="main-disclaimer-header comparison-disclaimer-header" style="width: 100%; text-align: left; padding: 8px 12px; background-color: #fafafa; border: 1px solid #f0f0f0; border-radius: 3px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                  <span style="font-size: 10px; font-weight: 500; color: #666;">各クリニックの注意事項</span>
+                                  <span id="main-arrow" style="font-size: 8px; color: rgb(153, 153, 153); transition: transform 0.2s; transform: rotate(0deg);">▼</span>
+                              </button>
+                              <div id="main-content" class="main-disclaimer-content" style="display: none; padding: 5px; background-color: rgb(252, 252, 252); border-right: 1px solid rgb(240, 240, 240); border-bottom: 1px solid rgb(240, 240, 240); border-left: 1px solid rgb(240, 240, 240); border-image: initial; border-top: none; border-radius: 0px 0px 3px 3px; margin-top: -5px;">
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-omt', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">Oh my teeth</span>
+                                          <span id="comp-omt-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-omt-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>「矯正開始後の通院は原則不要※1」※1 初回診断のご来院と、矯正開始前・矯正終了後の処置のご来院をお願いしています。<br>「歯並びの適応について」※記載のない歯並びでもお気軽にご相談ください。※記載の歯並びであっても、Oh my teethのマウスピース矯正の適応外と診断される場合もございます。※症状が強い場合は適応にならない場合があります。<br>「治療期間について」※治療期間は歯並びの状態や年齢などによって個人差があります。<br>「痛みについて」※痛みの感じ方には個人差があります。<br>「実績について」※2021年6月〜2023年10月の契約者（一部モニター除く）。</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-invisalign', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">インビザライン</span>
+                                          <span id="comp-invisalign-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-invisalign-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>※治療期間・費用は症例により大きく異なります。※認定医による治療が推奨されます。※保険適用外の自由診療です。※定期的なメンテナンスが必要です。※複雑な症例では追加治療が必要な場合があります。</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-ws', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">ウィスマイル</span>
+                                          <span id="comp-ws-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-ws-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>「料金について」※料金はすべて税込み。※追加治療となった際の追加マウスピース料金は無料となります。※別途治療計画作成において必須である精密検査費用をクリニックにお支払いいただく必要がございます。（税込22</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-kireiline', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">キレイライン矯正</span>
+                                          <span id="comp-kireiline-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-kireiline-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>「歯並びの適応について」※上記の歯並びであっても、キレイライン矯正が適応外となる場合もございます。注1、注3：症状が強い場合は適応にならない場合があります。注2：骨格性の開咬の場合は、治療適応外となります。注3：骨格的な問題がなくても、お口の中の状態によっては「中心のずれ」を治すことは難しい場合があります。「中心のずれ」にはさまざまな原因があり、ワイヤー矯正など他の矯正治療においても一般的にその修正は困難な場合があります。<br>「料金・デンタルローンについて」※デンタルローンを利用して10回コース（330</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="disclaimer-item">
+                                      <button class="disclaimer-header" onclick="return toggleClinicDisclaimer('comp-zenyum', event)" style="width: 100%; text-align: left; padding: 6px 10px; background-color: #f8f8f8; border: 1px solid #eeeeee; border-radius: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                          <span style="font-size: 9px; font-weight: 400; color: #777;">ゼニュム</span>
+                                          <span id="comp-zenyum-arrow" style="font-size: 7px; color: #aaa; transition: transform 0.2s;">▼</span>
+                                      </button>
+                                      <div id="comp-zenyum-content" class="disclaimer-content" style="display: none; padding: 6px 10px; background-color: #fefefe; border: 1px solid #eeeeee; border-top: none; border-radius: 0 0 2px 2px; margin-top: -2px;">
+                                          <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                                              <p>000円）を120回払いで支払う場合の分割支払金額です。※一部クリニックはローン非対応。※信販会社や手数料はクリニックにより異なります。※デンタルローンは18歳以上（高校生を除く）が対象となり、詳しい支払い方法や規約は各提携クリニックにより異なります。予約フォームの備考欄にご記載いただくか、初回検診にお越しの際にクリニックへご相談ください。</p>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </section>
+
+              <!-- 案件詳細セクション -->
+              <section class="clinic-details-section">
+                  <div class="details-header-banner">
+                      <img src={asset("images/details_header_bannar3.webp")} alt="コスパ×効果×通いやすさで選ぶ医療痩身クリニックBEST3" class="details-banner-image" loading="lazy" decoding="async">
+                      <div id="detail-region-name">地域で人気のクリニック</div>
+                      <div id="detail-rank-best">3<span style="font-size: 0.6em;"> 選！</span></div>
+                  </div>
+
+                  <div id="clinic-details-list" class="clinic-details-container">
+                      <!-- 詳細コンテンツはJavaScriptで動的に生成 -->
+                  </div>
+              </section>
+
+              <!-- 医療情報コラムセクション（外部JSで挿入） -->
+              <div id="medical-columns-root"></div>
+              <script src={asset("columns/columns.js?v=2025091701")} defer></script>
+
+              <!-- 医療情報コラムセクション（旧：非表示） -->
+              <!-- 医療情報コラムセクション -->
+
+
+
+
+     <!-- 迷ったら1位クリニックセクション -->
+              <div id="first-choice-recommendation-section">
+                  <div style="position: relative; display: inline-block; width: 100%;">
+                      <img src={asset("images/ranking_header_banner.webp")} alt="" class="ranking-banner-image" width="728" height="150" loading="eager" fetchpriority="high" decoding="sync">
+                      <div id="first-choice-region-text" style="position: absolute;bottom: 44%;left: 6%;text-align: center;color: rgb(255, 255, 255);font-size: clamp(16px, 5vw, 38px);font-weight: 600;z-index: 10;pointer-events: none;">迷ったら<span id="first-choice-clinic-name"></span>がおすすめ</div>
+                  </div><section class="first-choice-recommendation-section" style="border: 5px solid rgb(253 208 124);border-radius: -5px;padding: 5px 5px 10px 5px;margin: 0px 0px;background-color: #fffef8;">
+
+
+              <!-- バナー -->
+              <div class="first-choice-banner" style="text-align: center;/* margin-bottom: 30px; */">
+                  <img id="first-choice-banner-image" src="" alt="" style="max-width: 100%; height: auto;">
+              </div>
+
+              <!-- クリニックがおすすめの3つの理由 -->
+              <div class="section-title" style="
+  margin: 2%;
+  text-align: center;
+  ">
+                  <h3><span id="first-choice-title-clinic-name"></span>がおすすめの<span style="color: #2CC7C5;">3つの理由</span></h3>
+              </div>
+
+              <!-- ポイント -->
+              <div class="ribbon_point_box_no" id="first-choice-points">
+
+                      <div class="ribbon_point_title2_s">
+                          <span class="point-icon-inline" style="font-size: 1.2em;">⏰</span>
+                          <strong id="point1-title"></strong>
+                      </div>
+                      <div class="ribbon_point_txt">
+                          <p id="point1-description" style="font-size:14px;"></p>
+                      </div>
+
+                      <div class="ribbon_point_title2_s">
+                          <span class="point-icon-inline" style="font-size: 1.2em;">⏰</span>
+                          <strong id="point2-title"></strong>
+                      </div>
+                      <div class="ribbon_point_txt">
+                          <p id="point2-description" style="font-size:14px;"></p>
+                      </div>
+
+                      <div class="ribbon_point_title2_s">
+                          <span class="point-icon-inline" style="font-size: 1.2em;">⏰</span>
+                          <strong id="point3-title"></strong>
+                      </div>
+                      <div class="ribbon_point_txt">
+                          <p id="point3-description" style="font-size:14px;"></p>
+                      </div>
+
+                  <div class="ribbon_point_link" id="first-choice-official-link">
+                      【公式】<a href="https://www.xn--ecki4eoz3204ct89aepry34c.com/draft/go/dio/?max_scroll=100&amp;region_id=013" target="_blank" rel="noopener"><strong>https://dioclinic.jp/</strong></a>
+                  </div>
+              </div>
+
+              <!-- Information -->
+              <div class="campaign-container">
+                  <div class="campaign-header">INFORMATION!</div>
+                  <div class="campaign-content">
+                      <div class="camp_header3">
+                          <div class="info_logo">
+                              <img id="first-choice-info-logo" src="" alt="">
+                          </div>
+                          <div class="camp_txt" id="first-choice-campaign-text">
+                          </div>
+                      </div>
+
+                      <div class="cv_box_img">
+                          <div class="cta-microcopy" aria-hidden="true"><span class="cta-microcopy-label">タイムセール</span></div>
+                          <span id="first-choice-achievement-text"></span>
+                          <p class="btn btn_second_primary" style="margin-top: 10px;">
+                              <a id="first-choice-cta-link" href="https://www.xn--ecki4eoz3204ct89aepry34c.com/draft/go/dio/?max_scroll=100&amp;region_id=013" target="_blank" rel="noopener">
+                                  <span class="bt_s" id="first-choice-cta-text"></span>
+                                  <span class="btn-arrow">▶</span>
+                              </a>
+                          </p>
+                      </div>
+                  </div>
+              </div>
+
+
+              <!-- ディオクリニックの確認事項アコーディオン -->
+              <div class="disclaimer-accordion" style="margin-top: 15px;">
+                  <button class="disclaimer-header" onclick="toggleDisclaimer('dio-campaign-first-choice')" style="width: 100%; text-align: left; padding: 8px 12px; background-color: #fafafa; border: 1px solid #f0f0f0; border-radius: 3px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                      <span id="first-choice-disclaimer-title" style="font-size: 10px; font-weight: 500; color: #666;"></span>
+                      <span id="dio-campaign-first-choice-arrow" style="font-size: 8px; color: rgb(153, 153, 153); transition: transform 0.2s;">▼</span>
+                  </button>
+                  <div id="dio-campaign-first-choice-content" class="disclaimer-content" style="display: none; padding: 8px 12px; background-color: rgb(252, 252, 252); border-right: 1px solid rgb(240, 240, 240); border-bottom: 1px solid rgb(240, 240, 240); border-left: 1px solid rgb(240, 240, 240); border-image: initial; border-top: none; border-radius: 0px 0px 3px 3px; margin-top: -1px;">
+                      <div style="font-size: 9px; color: #777; line-height: 1.4;">
+
+                      </div>
+                  </div>
+              </div>
+          </section>
+              </div>
+
+          </main>
+
+          <!-- 詳細情報モーダル -->
+          <div id="disclaimer-modal" class="disclaimer-modal" style="display: none;">
+              <div class="disclaimer-modal-content">
+                  <span class="disclaimer-modal-close" onclick="closeDisclaimerInfo()">&times;</span>
+                  <div id="disclaimer-modal-body"></div>
+              </div>
+      </div>
+
+      <!-- トップに戻るボタン -->
+      <button id="back-to-top" aria-label="トップに戻る" title="トップに戻る" style="display:none">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+              <polyline points="6,14 12,8 18,14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+      </button>
+
+      <!-- フッター -->
+          <div id="footer">
+              <div class="footer_contents">
+                  <h4><a href={asset("")}>医療ダイエット比較.com</a></h4>
+
+                  <ul>
+                      <h5>人気クリニック</h5>
+                      <li><a href="#clinic1"></a></li>
+                      <li><a href="#clinic2"></a></li>
+                      <li><a href="#clinic3"></a></li>
+                  </ul>
+
+                  <ul>
+                      <h5>運営</h5>
+                      <li><a href={asset("common_page/company/")} class="footer-page-link">運営者情報</a></li>
+                      <li><a href={asset("common_page/privacy/")} class="footer-page-link">プライバシーポリシー</a></li>
+                      <li><a href={asset("common_page/disclaimer/")} class="footer-page-link">免責事項</a></li>
+                      <li><a href="mailto:clinic.hikaku.review@gmail.com">お問い合わせ</a></li>
+                  </ul>
+
+              </div>
+
+              <div class="footer-bottom">
+                  <p class="copyright"></div></p>
+                  <p class="disclaimer">※本サイトの情報は参考程度に留め、必ず各クリニックにご相談ください。</p>
+              </div>
+          </div>
+
+          <!-- サイドバーメニュー -->
+          <div class="sidebar-overlay" id="sidebar-overlay"></div>
+          <div class="sidebar-menu" id="sidebar-menu">
+              <div class="sidebar-header">
+                  <h3 class="sidebar-title">絞り込み検索</h3>
+                  <button class="close-sidebar" id="close-sidebar" aria-label="閉じる">×</button>
+              </div>
+              <div class="sidebar-content">
+                  <div class="sidebar-filter-group">
+                      <label for="sidebar-region-select" class="sidebar-filter-label">地域選択</label>
+                      <select id="sidebar-region-select" class="sidebar-select">
+                          <!-- 地域オプションはJavaScriptで動的に生成 -->
+                      </select>
+                  </div>
+                  <div class="sidebar-filter-group">
+                      <label for="sidebar-clinic-search" class="sidebar-filter-label">クリニック名検索</label>
+                      <input type="text" id="sidebar-clinic-search" class="sidebar-search-input" placeholder="クリニック名を入力">
+                  </div>
+                  <div class="sidebar-filter-group">
+                      <label for="sidebar-specialty-filter" class="sidebar-filter-label">対応部位</label>
+                      <select id="sidebar-specialty-filter" class="sidebar-select">
+                          <option value="">すべての部位</option>
+                          <option value="face">顔</option>
+                          <option value="upperarm">二の腕</option>
+                          <option value="stomach">お腹</option>
+                          <option value="buttocks">お尻</option>
+                          <option value="thigh">太もも</option>
+                          <option value="other">その他</option>
+                      </select>
+                  </div>
+                  <div class="sidebar-filter-group">
+                      <label for="sidebar-hours-filter" class="sidebar-filter-label">店舗数</label>
+                      <select id="sidebar-hours-filter" class="sidebar-select">
+                          <option value="">店舗数指定なし</option>
+                          <option value="small">0〜5店舗</option>
+                          <option value="medium">6〜10店舗</option>
+                          <option value="large">10〜20店舗</option>
+                          <option value="xlarge">それ以上</option>
+                      </select>
+                  </div>
+                  <div class="sidebar-search-button">
+                      <a href="search-results/" class="sidebar-search-link">詳細検索ページへ</a>
+                  </div>
+              </div>
+          </div>
+
+          <div id="error-message" class="error-message" style="display: none;">
+              <p id="error-text"></p>
+          </div>
+
+          <!-- 地図モーダル -->
+          <div id="map-modal" class="map-modal" style="display: none;">
+              <div class="map-modal-overlay"></div>
+              <div class="map-modal-content">
+                  <div class="map-modal-header">
+                      <h3 class="map-modal-title" id="map-modal-clinic-name">クリニック名</h3>
+                      <button class="map-modal-close" id="map-modal-close" aria-label="閉じる">&times;</button>
+                  </div>
+                  <div class="map-modal-body">
+                      <div class="map-modal-map" id="map-modal-map-container">
+                          <!-- Google Maps iframe will be inserted here -->
+                      </div>
+                      <table class="map-modal-info-table">
+                          <tbody>
+                              <tr>
+                                  <th>住所</th>
+                                  <td id="map-modal-address"></td>
+                              </tr>
+                              <tr>
+                                  <th>アクセス</th>
+                                  <td id="map-modal-access"></td>
+                              </tr>
+                              <tr>
+                                  <th>営業時間</th>
+                                  <td id="map-modal-hours">11:00〜21:00</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                      <div class="map-modal-footer">
+                          <p class="btn btn_second_primary" style="margin-top: 20px;">
+                              <a id="map-modal-button" href="#" target="_blank" rel="noopener">
+                                  <span class="bt_s" id="map-modal-button-text">公式サイトから申し込む</span>
+                                  <span class="btn-arrow">▶</span>
+                              </a>
+                          </p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Slick Carousel JS -->
+      <!-- Slick.js削除済み／jQueryは未使用のため読み込み削除 -->
+      <!-- app-lite.min.jsで必須機能のみ即座に読み込み -->
+      <script src={asset("app-complete.min.js?v=2025081418")} defer></script>
+
+      <!-- 残りの機能は遅延読み込み -->
+      <script is:inline define:vars={{ appJsUrl: asset("app.js?v=2025081417") }}>
+        let appScriptRetry = 0;
+
+        function loadAppScript(trigger) {
+          console.info('[index] injecting app.js', { trigger, url: appJsUrl });
+          const script = document.createElement('script');
+          script.src = appJsUrl;
+          script.async = true;
+          script.onload = () => {
+            console.info('[index] app.js loaded', { trigger });
+            const waitForApp = () => {
+              if (window.app) {
+                console.info('[index] window.app detected after app.js load');
+              } else if (appScriptRetry < 5) {
+                appScriptRetry += 1;
+                console.warn('[index] window.app not ready yet, retry', appScriptRetry);
+                setTimeout(waitForApp, 200);
+              } else {
+                console.error('[index] window.app still undefined after multiple checks');
+              }
+            };
+            waitForApp();
+          };
+          script.onerror = (err) => {
+            console.error('[index] app.js failed to load', { trigger, err });
+            if (appScriptRetry < 3) {
+              appScriptRetry += 1;
+              setTimeout(() => loadAppScript(`retry-${appScriptRetry}`), 1000);
+            } else {
+              console.error('[index] app.js giving up after retries');
+            }
+          };
+          document.body.appendChild(script);
+        }
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => loadAppScript('requestIdleCallback'), { timeout: 5000 });
+        } else {
+          setTimeout(() => loadAppScript('setTimeout-2000ms'), 2000);
+        }
+      </script>
+
+
+      <!-- 1位クリニック動的表示機能 -->
+      <script is:inline>
+          // DataManagerReady時にDOM更新を実行
+          window.addEventListener('dataManagerReady', function() {
+              console.log('[index] dataManagerReady fired', {
+                  loaded: window.dataManager?.loaded,
+                  clinics: window.dataManager?.clinics?.length,
+                  rankingsKeys: window.dataManager ? Object.keys(window.dataManager.rankingsByRegion || window.dataManager.rankings || {}) : null
+              });
+              updateDOMWithData();
+          });
+
+          function updateDOMWithData() {
+              if (!window.dataManager || !window.dataManager.loaded) return;
+
+              console.log('[index] updateDOMWithData start', {
+                  clinics: window.dataManager.clinics?.map(c => c.id),
+                  rankingSample: window.dataManager.getRankingsByRegion?.('013')
+              });
+
+              console.log('[index] window.app during update', window.app);
+              if (!window.app) {
+                  console.warn('[index] window.app is not available yet when updateDOMWithData runs');
+              }
+
+              const firstChoicePoints = document.getElementById('first-choice-points');
+              if (firstChoicePoints) {
+                  firstChoicePoints.setAttribute('data-debug-before', firstChoicePoints.innerHTML);
+              }
+
+              const rankings = window.dataManager.getRankingsByRegion('013');
+              if (rankings && rankings.length > 0) {
+                  const firstClinic = window.dataManager.getClinicById(rankings[0]);
+                  if (firstClinic) {
+                      // 1位クリニック名を更新
+                      const nameElem = document.getElementById('first-choice-clinic-name');
+                      if (nameElem) nameElem.textContent = firstClinic.name || '';
+
+                      // バナー画像を更新
+                      const bannerElem = document.getElementById('first-choice-banner-image');
+                      if (bannerElem && firstClinic['バナー画像']) {
+                          bannerElem.src = firstClinic['バナー画像'];
+                      }
+                  }
+              }
+
+              // ランキング表示更新
+              updateRankingDisplay();
+          }
+
+          function updateRankingDisplay() {
+              // ランキング表示のDOM更新ロジック
+              const rankings = window.dataManager.getRankingsByRegion('013');
+              console.log('[index] updateRankingDisplay', rankings);
+              rankings.forEach((clinicId, index) => {
+                  const clinic = window.dataManager.getClinicById(clinicId);
+                  console.log('[index] ranking item', index + 1, clinicId, clinic);
+                  if (clinic) {
+                      // 各ランキング要素の更新
+                      updateClinicRankingItem(index + 1, clinic);
+                  }
+              });
+          }
+
+          function updateClinicRankingItem(rank, clinic) {
+              // 個別のクリニック表示更新
+              const rankElem = document.querySelector(`.rank-${rank}`);
+              if (rankElem && clinic) {
+                  // クリニック情報の表示更新
+              }
+          }
+
+          // リダイレクトリンクのクリックハンドラー
+          document.addEventListener('click', function(e) {
+              const link = e.target.closest('a');
+              if (link && link.href) {
+
+                  // redirect.htmlへのリンクの場合
+                  if (link.href.includes('/redirect.html')) {
+                      e.preventDefault(); // デフォルトのリンク動作を阻止
+
+                      // URLからパラメータを抽出
+                      const url = new URL(link.href);
+                      const hashParams = url.hash ? url.hash.substring(1) : '';
+
+                      if (hashParams.startsWith('params=')) {
+                          try {
+                              const paramsJson = decodeURIComponent(hashParams.substring(7));
+                              const params = JSON.parse(paramsJson);
+
+                              // 現在のページのパラメータも追加保存
+                              const currentUrl = new URL(window.location.href);
+                              const originalParams = {};
+                              for (const [key, value] of currentUrl.searchParams) {
+                                  originalParams[key] = value;
+                              }
+
+                              // paramsに元URLパラメータを追加
+                              params.original_params = originalParams;
+
+
+                              // localStorageに保存
+                              localStorage.setItem('redirectParams', JSON.stringify(params));
+
+                              // redirect.htmlに移動
+                              window.open(link.href, '_blank', 'noopener');
+                          } catch (error) {
+                              console.error('Failed to save redirect params:', error);
+                          }
+                      } else {
+                          // ハッシュパラメータがない場合はURLパラメータから取得
+                          const clinicId = url.searchParams.get('clinic_id');
+                          const rank = url.searchParams.get('rank');
+                          const regionId = url.searchParams.get('region_id');
+
+                          if (clinicId) {
+                              const params = {
+                                  clinic_id: clinicId,
+                                  rank: rank || '1',
+                                  region_id: regionId || '013'
+                              };
+                              localStorage.setItem('redirectParams', JSON.stringify(params));
+                              window.open(link.href, '_blank', 'noopener');
+                          }
+                      }
+                  } else {
+                      // 直接URLの場合もパラメータを保存（念のため）
+                  }
+              }
+          });
+
+                  // ランキングセクション用のアコーディオン関数
+          function toggleRankingDisclaimer(event) {
+
+              // イベント伝播を防ぐ
+              if (event) {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  event.stopImmediatePropagation();
+              }
+
+              // イベントターゲットがランキングセクション内かどうかをチェック
+              if (event && event.target) {
+                  const isRankingSection = event.target.closest('.ranking-disclaimer-header') ||
+                                          event.target.closest('#ranking-disclaimers-content') ||
+                                          event.target.id === 'ranking-main-arrow';
+                  if (!isRankingSection) {
+                      return false;
+                  }
+              }
+
+              const content = document.getElementById('ranking-disclaimers-content');
+              const arrow = document.getElementById('ranking-main-arrow');
+
+              if (content) {
+                  const currentDisplay = window.getComputedStyle(content).display;
+
+                  if (content.style.display === 'none' || currentDisplay === 'none') {
+                      content.style.display = 'block';
+                      if (arrow) arrow.style.transform = 'rotate(180deg)';
+                  } else {
+                      content.style.display = 'none';
+                      if (arrow) arrow.style.transform = 'rotate(0deg)';
+                  }
+              } else {
+                  console.error('>>> Ranking disclaimer content not found!');
+              }
+
+              return false;
+          }
+
+                  // 比較表セクション用のアコーディオン関数（第一段階）
+          function toggleComparisonDisclaimer(eventOrSlug) {
+
+              // 引数がイベントオブジェクトの場合（第一段階）
+              if (eventOrSlug && typeof eventOrSlug === 'object' && eventOrSlug.target) {
+                  const event = eventOrSlug;
+                  // イベント伝播を防ぐ
+                  if (event) {
+                      event.stopPropagation();
+                      event.preventDefault();
+                      event.stopImmediatePropagation();
+                  }
+
+                  const content = document.getElementById('main-content');
+                  const arrow = document.getElementById('main-arrow');
+
+                  if (content) {
+                      const currentDisplay = window.getComputedStyle(content).display;
+                      if (content.style.display === 'none' || currentDisplay === 'none') {
+                          content.style.display = 'block';
+                          if (arrow) arrow.style.transform = 'rotate(180deg)';
+                      } else {
+                          content.style.display = 'none';
+                          if (arrow) arrow.style.transform = 'rotate(0deg)';
+                      }
+                  }
+                  return false;
+              }
+          }
+
+          // 各クリニック個別のアコーディオン用の汎用関数
+          function toggleClinicDisclaimer(uniqueSlug, event) {
+              if (event) {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  event.stopImmediatePropagation();
+              }
+
+              const content = document.getElementById(`${uniqueSlug}-content`);
+              const arrow = document.getElementById(`${uniqueSlug}-arrow`);
+
+              if (content && arrow) {
+                  const currentDisplay = window.getComputedStyle(content).display;
+                  if (currentDisplay === 'none' || content.style.display === 'none') {
+                      content.style.display = 'block';
+                      if (arrow) arrow.style.transform = 'rotate(180deg)';
+                  } else {
+                      content.style.display = 'none';
+                      if (arrow) arrow.style.transform = 'rotate(0deg)';
+                  }
+              } else {
+                  console.error('>>> disclaimer content/arrow not found for:', uniqueSlug);
+              }
+              return false;
+          }
+
+          // 元のtoggleDisclaimer関数（キャンペーンセクション用）
+          function toggleDisclaimer(clinicSlug) {
+
+              const content = document.getElementById(`${clinicSlug}-content`);
+              const arrow = document.getElementById(`${clinicSlug}-arrow`);
+
+
+              if (content) {
+                  // 計算されたスタイルも確認
+                  const currentDisplay = window.getComputedStyle(content).display;
+
+                  if (currentDisplay === 'none' || content.style.display === 'none') {
+                      content.style.display = 'block';
+                      if (arrow) arrow.style.transform = 'rotate(180deg)';
+                  } else {
+                      content.style.display = 'none';
+                      if (arrow) arrow.style.transform = 'rotate(0deg)';
+                  }
+              } else {
+                  console.error('>>> Content element not found for:', clinicSlug);
+              }
+          }
+
+          // 1位クリニックの情報を設定
+          function setFirstChoiceClinic(clinicData) {
+              if (!clinicData) return;
+
+              // クリニック名を動的に取得
+              const clinicCode = clinicData.code 
+                  || window.app?.dataManager?.getClinicCodeById?.(clinicData.id)
+                  || window.dataManager?.getClinicCodeById?.(clinicData.id);
+              const dmForText = window.app?.dataManager || window.dataManager;
+              const clinicName = (dmForText && typeof dmForText.getClinicText === 'function' 
+                  ? dmForText.getClinicText(clinicCode, 'ブランド名', clinicData.name)
+                  : null) || clinicData.name || 'Oh my teeth';
+
+
+              const clinicSlug = clinicData.code || clinicIdToSlugMap[clinicData.id] || clinicNameToSlugMap[clinicName] || clinicNameToSlugMap[clinicData.name] || 'omt';
+
+
+              // テキスト要素を更新
+              const regionText = document.getElementById('first-choice-region-text');
+              const clinicNameSpan = document.getElementById('first-choice-clinic-name');
+              const titleClinicName = document.getElementById('first-choice-title-clinic-name');
+              const bannerImage = document.getElementById('first-choice-banner-image');
+              const infoLogo = document.getElementById('first-choice-info-logo');
+              const campaignText = document.getElementById('first-choice-campaign-text');
+              const achievementText = document.getElementById('first-choice-achievement-text');
+              const ctaLink = document.getElementById('first-choice-cta-link');
+              const ctaText = document.getElementById('first-choice-cta-text');
+
+              if (clinicNameSpan) clinicNameSpan.textContent = clinicName;
+              if (titleClinicName) titleClinicName.textContent = clinicName;
+
+              if (ctaText) ctaText.textContent = `${clinicName}の公式サイト`;
+
+              // クリニック別の内容設定（DataManagerから動的に取得）
+              const dm = window.app?.dataManager || window.dataManager;
+              if (dm && typeof dm.getClinicText === 'function') {
+                  const clinicCode = clinicData.code || clinicSlug;
+
+                  // キャンペーンテキストを動的に取得
+                  const campaignInfo = dm.getClinicText(clinicCode, 'INFORMATIONキャンペーンテキスト', '期間限定キャンペーン<br>実施中');
+                  if (campaignText) campaignText.innerHTML = campaignInfo;
+
+                  // INFORMATIONサブテキストを動的に取得
+                  const achievementInfo = dm.getClinicText(clinicCode, 'INFORMATIONサブテキスト', '＼月額・総額がリーズナブルなクリニック／');
+                  if (achievementText) achievementText.textContent = achievementInfo;
+
+                  // URLを動的に生成
+                  const regionId = new URLSearchParams(window.location.search).get('region_id') || '013';
+                  const ctaUrl = window.app && window.app.urlHandler ? 
+                      window.app.urlHandler.getClinicUrlWithRegionId(clinicData.id) : 
+                      `/injection-lipolysis001/go/${clinicSlug}/?region_id=${regionId}`;
+                  if (ctaLink) ctaLink.href = ctaUrl;
+              } else {
+                  // フォールバック（DataManagerが利用できない場合）
+                  const clinicInfo = getClinicInfo(clinicSlug);
+                  if (campaignText) campaignText.innerHTML = clinicInfo.campaign;
+                  if (achievementText) achievementText.textContent = clinicInfo.achievement;
+                  if (ctaLink) ctaLink.href = clinicInfo.ctaUrl;
+              }
+
+              // 3つの理由を設定
+              setThreeReasons(clinicSlug);
+
+              // アコーディオンの確認事項を更新
+              updateFirstChoiceDisclaimer(clinicData);
+
+              // CASEセクションを設定（1位クリニックのみ）
+              if (window.dataManager && window.dataManager.getClinicText) {
+                  const clinicCode = clinicData.code || clinicSlug;
+                  setCaseSection(clinicSlug, null);
+              } else {
+                  const clinicInfo = getClinicInfo(clinicSlug);
+                  setCaseSection(clinicSlug, clinicInfo.points);
+              }
+          }
+
+          // 症例写真セクションを設定（常に表示）
+          function setCaseSection(clinicSlug, points) {
+              const caseSection = document.getElementById('case-section');
+              if (!caseSection) {
+                  return;
+              }
+              // 案件詳細セクション（1位）に表示するため、上部のCASEセクションは常に非表示にする
+              caseSection.style.display = 'none';
+          }
+
+          // 症例写真カルーセルの初期化
+          function initCaseCarousel() {
+              const container = document.querySelector('.case-carousel-container');
+              const slides = document.querySelectorAll('.case-slide');
+              const dots = document.querySelectorAll('.case-dot');
+              const prevBtn = document.querySelector('.case-nav-prev');
+              const nextBtn = document.querySelector('.case-nav-next');
+
+              if (!container || slides.length === 0) {
+                  return;
+              }
+
+              let currentIndex = 0;
+
+              // スライドを表示する関数
+              function showSlide(index) {
+                  // インデックスの範囲チェック
+                  if (index < 0) index = slides.length - 1;
+                  if (index >= slides.length) index = 0;
+                  currentIndex = index;
+
+                  // スライドの位置を変更（scroll-snapを活用）
+                  const slideWidth = container.clientWidth;
+                  container.scrollTo({
+                      left: slideWidth * currentIndex,
+                      behavior: 'smooth'
+                  });
+
+                  // ドットの状態を更新
+                  dots.forEach((dot, i) => {
+                      if (i === currentIndex) {
+                          dot.classList.add('active');
+                          dot.style.background = '#2CC7C5';
+                      } else {
+                          dot.classList.remove('active');
+                          dot.style.background = '#ccc';
+                      }
+                  });
+              }
+
+              // 前のスライドへ
+              if (prevBtn) {
+                  prevBtn.addEventListener('click', () => {
+                      showSlide(currentIndex - 1);
+                  });
+              }
+
+              // 次のスライドへ
+              if (nextBtn) {
+                  nextBtn.addEventListener('click', () => {
+                      showSlide(currentIndex + 1);
+                  });
+              }
+
+              // ドットクリックでスライド移動
+              dots.forEach((dot, index) => {
+                  dot.addEventListener('click', () => {
+                      showSlide(index);
+                  });
+              });
+
+              // スクロールイベントでドット状態を更新
+              container.addEventListener('scroll', () => {
+                  const scrollLeft = container.scrollLeft;
+                  const slideWidth = container.clientWidth;
+                  const newIndex = Math.round(scrollLeft / slideWidth);
+                  if (newIndex !== currentIndex) {
+                      currentIndex = newIndex;
+                      dots.forEach((dot, i) => {
+                          if (i === currentIndex) {
+                              dot.classList.add('active');
+                              dot.style.background = '#2CC7C5';
+                          } else {
+                              dot.classList.remove('active');
+                              dot.style.background = '#ccc';
+                          }
+                      });
+                  }
+              });
+
+              // 初期表示
+              showSlide(0);
+          }
+
+          // アコーディオンの確認事項を更新
+          function updateFirstChoiceDisclaimer(clinicData) {
+              const disclaimerHeader = document.getElementById('first-choice-disclaimer-title');
+              const disclaimerArrow = document.getElementById('dio-campaign-first-choice-arrow');
+              const disclaimerContentDiv = document.getElementById('dio-campaign-first-choice-content');
+              const disclaimerButton = disclaimerArrow ? disclaimerArrow.closest('button.disclaimer-header') : null;
+              const disclaimerContent = disclaimerContentDiv ? disclaimerContentDiv.querySelector('div') : null;
+
+              if (!clinicData) return;
+
+              const clinicName = clinicData.name || 'ディオクリニック';
+              const clinicCode = clinicData.code || 'dio';
+
+              // ヘッダーテキストを更新
+              if (disclaimerHeader) {
+                  disclaimerHeader.textContent = `${clinicName}の確認事項`;
+              }
+
+              // ボタンのonclick属性/IDは固定のまま。初期状態のみ明示
+              if (disclaimerArrow) {
+                  disclaimerArrow.style.transform = 'rotate(0deg)';
+              }
+              if (disclaimerContentDiv) {
+                  disclaimerContentDiv.style.display = 'none';
+                  disclaimerContentDiv.classList.remove('force-show');
+                  disclaimerContentDiv.style.visibility = '';
+                  disclaimerContentDiv.style.opacity = '';
+              }
+
+              // 確認事項の内容を動的に取得
+              const dm2 = window.app?.dataManager || window.dataManager;
+              if (dm2 && typeof dm2.getClinicText === 'function' && disclaimerContent) {
+                  const disclaimerText = dm2.getClinicText(clinicCode, 'INFORMATION確認事項', '');
+                  if (disclaimerText) {
+                      const disclaimerHtml = disclaimerText.split('<br>')
+                          .map(text => text.trim())
+                          .filter(text => text)
+                          .map(text => `<p>${text}</p>`)
+                          .join('\n                        ');
+                      disclaimerContent.innerHTML = disclaimerHtml;
+                  }
+              }
+          }
+
+          // クリニックコードから名前を取得するヘルパー関数
+          function getClinicNameFromCode(clinicCode) {
+              const dm = window.app?.dataManager || window.dataManager;
+              if (dm && dm.clinics) {
+                  const clinic = dm.clinics.find(c => c.code === clinicCode);
+                  if (clinic) return clinic.name;
+              }
+              // フォールバック：コードをそのまま返す
+              return clinicCode;
+          }
+
+          // 動的にクリニック情報を取得（clinic-texts.jsonから）
+          function getClinicInfo(clinicSlug) {
+              // DataManagerが利用可能な場合は動的に取得
+              const dm3 = window.app?.dataManager || window.dataManager;
+              if (dm3 && typeof dm3.getClinicText === 'function') {
+                  const clinicCode = clinicSlug;
+                  const clinicName = getClinicNameFromCode(clinicCode);
+                  return {
+                      campaign: clinicInfo['INFORMATIONキャンペーンテキスト'] || '期間限定キャンペーン<br>実施中',
+                      achievement: '＼' + (clinicInfo['実績/症例数'] || '実績多数') + '／',
+                      ctaUrl: clinicInfo['公式サイトURL'] || `https://www.example.com/go/${clinicSlug}/`
+                  };
+              }
+
+              // フォールバック（DataManagerが利用できない場合）
+              return {
+                  campaign: '期間限定キャンペーン<br>実施中',
+                  achievement: '＼実績多数／',
+                  ctaUrl: `https://www.example.com/go/${clinicSlug}/`
+              };
+          }
+
+          // クリニックURLを取得（CSVデータベースから動的に）
+          function getClinicUrl(clinicSlug, rank = 1) {
+              // DataManagerから動的に取得
+              const dm4 = window.app?.dataManager || window.dataManager;
+              if (dm4 && typeof dm4.getClinicText === 'function') {
+                  const urlKey = `遷移先URL（${rank}位）`;
+                  const url = dm4.getClinicText(clinicSlug, urlKey, '');
+                  if (url) {
+                      return url;
+                  }
+              }
+              // フォールバック（念のため）
+              return 'https://sss.ac01.l-ad.net/cl/p1a64143O61e70f7/?bid=a6640dkh37648h88&param2=[ADID_PLACEHOLDER]&param3=[GCLID_PLACEHOLDER]';
+          }
+
+          // 3つの理由を設定
+          function setThreeReasons(clinicSlug) {
+              const pointsContainer = document.getElementById('first-choice-points');
+              if (!pointsContainer) return;
+
+              // DataManagerを使用して動的にPOINTタイトルと内容を取得
+              const dm = window.app?.dataManager || window.dataManager;
+              if (!dm) {
+                  console.error('DataManager not found');
+                  return;
+              }
+
+
+              const clinicKeyForTexts = (window.slugToNameMap && window.slugToNameMap[clinicSlug]) || clinicSlug;
+
+              // DataManagerを使ってPOINT情報を取得（正しいキーを使用）
+              const point1Title = dm.getClinicText(clinicKeyForTexts, 'POINT1タイトル', '');
+              const point1Content = dm.getClinicText(clinicKeyForTexts, 'POINT1内容', '');
+              const point2Title = dm.getClinicText(clinicKeyForTexts, 'POINT2タイトル', '');
+              const point2Content = dm.getClinicText(clinicKeyForTexts, 'POINT2内容', '');
+              const point3Title = dm.getClinicText(clinicKeyForTexts, 'POINT3タイトル', '');
+              const point3Content = dm.getClinicText(clinicKeyForTexts, 'POINT3内容', '');
+
+
+              const reasons = [
+                  {
+                      title: point1Title,
+                      description: point1Content
+                  },
+                  {
+                      title: point2Title,
+                      description: point2Content
+                  },
+                  {
+                      title: point3Title,
+                      description: point3Content
+                  }
+              ];
+
+              const officialUrl = `https://www.xn--ecki4eoz3204ct89aepry34c.com/go/${clinicSlug}/?max_scroll=100&region_id=013`;
+
+              // アイコンを3種類用意（案件詳細ポイントに合わせた雰囲気）
+              const iconClasses = ['fa-lightbulb', 'fa-mobile-alt', 'fa-yen-sign'];
+
+              let html = '';
+              reasons.forEach((reason, idx) => {
+                  const icon = iconClasses[idx] || 'fa-clock';
+                  html += `
+                      <div class="ribbon_point_title2_s">
+                          <i class="fas ${icon} point-icon-inline"></i>
+                          <strong>${dm.processDecoTags ? dm.processDecoTags(reason.title) : reason.title}</strong>
+                      </div>
+                      <div class="ribbon_point_txt">
+                          <p style="font-size:14px;">${dm.processDecoTags ? dm.processDecoTags(reason.description) : reason.description}</p>
+                      </div>
+                  `;
+              });
+
+              // 公式リンクも更新
+              const officialLink = document.getElementById('first-choice-official-link');
+              if (officialLink) {
+                  const clinicUrl = dm.getClinicText(clinicKeyForTexts, '公式サイトURL', 'https://omt.jp/');
+                  officialLink.innerHTML = `【公式】<a href="${officialUrl}" target="_blank" rel="noopener"><strong>${clinicUrl}</strong></a>`;
+              }
+
+              pointsContainer.innerHTML = html + (pointsContainer.innerHTML.match(/<div class="ribbon_point_link"[\s\S]*?<\/div>/)?.[0] || '');
+          }
+
+
+
+
+          // 1位クリニック情報の更新を実行
+          function updateFirstChoiceClinic() {
+              if (!window.app || !window.app.dataManager) {
+                  return;
+              }
+
+              // 現在の地域IDを取得
+              const regionId = window.app.urlHandler ? window.app.urlHandler.getRegionId() : '013';
+
+              // ランキングデータを取得
+              const ranking = window.app.dataManager.getRankingByRegionId(regionId);
+
+              if (!ranking || !ranking.ranks) {
+                  return;
+              }
+
+              // 1位のクリニックIDを取得
+              const firstPlaceClinicId = ranking.ranks.no1;
+
+              if (!firstPlaceClinicId) {
+                  return;
+              }
+
+              // クリニック情報を取得
+              const allClinics = window.app.dataManager.getAllClinics();
+              const firstClinic = allClinics.find(clinic => clinic.id === firstPlaceClinicId);
+
+              if (firstClinic) {
+                  setFirstChoiceClinic(firstClinic);
+                  // GTMイベントの発火
+                  if (firstClinic.code === 'dio') {
+                      window.dataLayer = window.dataLayer || [];
+                      window.dataLayer.push({
+                          'event': 'first_clinic_is_dio'
+                      });
+                  }
+              }
+          }
+
+          // 初期化時に実行
+          document.addEventListener('DOMContentLoaded', function() {
+              updateFirstChoiceClinic();
+          });
+
+          // app.jsが読み込まれた後にも実行（タイマーで複数回試行）
+          let retryCount = 0;
+          const maxRetries = 10;
+
+          function tryUpdateFirstChoice() {
+              if (window.app && window.app.dataManager && window.app.dataManager.getAllClinics().length > 0) {
+                  updateFirstChoiceClinic();
+                  return;
+              }
+
+              retryCount++;
+              if (retryCount < maxRetries) {
+                  setTimeout(tryUpdateFirstChoice, 500);
+              } else {
+              }
+          }
+
+          // 少し遅延してから開始
+          setTimeout(tryUpdateFirstChoice, 100);
+
+          // 地域変更時のイベントリスナーも追加
+          function setupRegionChangeWatcher() {
+              if (!window.app || !window.app.urlHandler) {
+                  setTimeout(setupRegionChangeWatcher, 500);
+                  return;
+              }
+
+              let currentRegionId = window.app.urlHandler.getRegionId();
+
+              // URLパラメータ変更の監視
+              setInterval(() => {
+                  const newRegionId = window.app.urlHandler ? window.app.urlHandler.getRegionId() : '013';
+                  if (newRegionId !== currentRegionId) {
+                      currentRegionId = newRegionId;
+                      setTimeout(() => updateFirstChoiceClinic(), 100); // 少し遅延を入れる
+                  }
+              }, 1000);
+          }
+
+          // 地域監視を開始
+          setupRegionChangeWatcher();
+
+          // ページ読み込み完了時にもう一度実行
+          window.addEventListener('load', function() {
+              setTimeout(() => updateFirstChoiceClinic(), 1000);
+          });
+          </script>
+
+          <script is:inline>
+          // PR行（CSVのpr列を各クリニック分並べる）
+          (function renderPrLineWhenReady(){
+              const target = document.getElementById('pr-line');
+              if (!target) return;
+              const tryRender = () => {
+                  const dm = window.app?.dataManager || window.dataManager;
+                  if (!dm || !dm.clinicTexts || !dm.clinics || dm.clinics.length === 0) return false;
+                  const items = [];
+                  dm.clinics.forEach(c => {
+                      const val = dm.getClinicText(c.code || c.name, 'pr', '').trim();
+                      if (val) items.push(val);
+                  });
+                  if (items.length === 0) return false;
+                  let html = 'PR ' + items[0];
+                  for (let i = 1; i < items.length; i++) html += '<br>' + items[i];
+                  target.innerHTML = html;
+                  return true;
+              };
+              if (!tryRender()) {
+                  let count = 0;
+                  const timer = setInterval(() => {
+                      if (tryRender() || ++count > 60) clearInterval(timer);
+                  }, 250);
+              }
+          })();
+          </script>
+          <script is:inline>
+          // トップに戻るボタン（6.5%スクロールで表示）
+          (function() {
+              const THRESHOLD = 6.5; // %
+              const btn = document.getElementById('back-to-top');
+              if (!btn) return;
+              function updateVisibility() {
+                  const doc = document.documentElement;
+                  const scrollTop = window.pageYOffset || doc.scrollTop || 0;
+                  const maxScroll = (doc.scrollHeight - doc.clientHeight) || 1;
+                  const percent = (scrollTop / maxScroll) * 100;
+                  if (percent >= THRESHOLD) {
+                      btn.style.display = 'flex';
+                  } else {
+                      btn.style.display = 'none';
+                  }
+              }
+              function updatePosition() {
+                  const cta = document.querySelector('.scroll-bottom-modal');
+                  let bottomPx = 20;
+                  if (cta && cta.classList && cta.classList.contains('show')) {
+                      const rect = cta.getBoundingClientRect();
+                      const gap = 16; // CTAとボタンの間隔
+                      if (rect && rect.height) {
+                          bottomPx = Math.max(20, Math.round(rect.height) + gap);
+                      } else {
+                          // フォールバック（CSSのmin-heightに近い値）
+                          bottomPx = 96;
+                      }
+                  }
+                  btn.style.bottom = bottomPx + 'px';
+              }
+              window.addEventListener('scroll', () => { updateVisibility(); updatePosition(); }, { passive: true });
+              window.addEventListener('resize', () => { updateVisibility(); updatePosition(); });
+              updateVisibility();
+              updatePosition();
+              // 追従CTAの状態変化を監視
+              const observer = new MutationObserver(() => { updatePosition(); });
+              observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+              // 閉じるボタンのクリックでも調整
+              document.addEventListener('click', (e) => {
+                  if (e.target && (e.target.closest && e.target.closest('.scroll-modal-close'))) {
+                      setTimeout(updatePosition, 50);
+                  }
+              });
+              btn.addEventListener('click', function() {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+              });
+          })();
+          </script>
+
+      <!-- Debug panel: enable with ?debug=1 -->
+      <script is:inline>
+          (function(){
+              try {
+                  const params = new URLSearchParams(window.location.search);
+                  const debugOn = params.get('debug') === '1';
+                  window.__DEBUG__ = debugOn;
+                  if (!debugOn) return;
+                  const panel = document.createElement('div');
+                  panel.id = 'debug-log-panel';
+                  panel.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:35vh;overflow:auto;background:#111;color:#0f0;font:12px/1.4 monospace;z-index:99999;border-top:1px solid #333;padding:6px;opacity:0.95;';
+                  const ctrl = document.createElement('div');
+                  ctrl.innerHTML = '<strong style="color:#fff">DEBUG LOG</strong> <button id="dbg-clear" style="margin-left:8px;">clear</button> <button id="dbg-hide" style="margin-left:4px;">hide</button>';
+                  ctrl.style.cssText = 'margin-bottom:4px;';
+                  const pre = document.createElement('pre');
+                  pre.id = 'debug-log';
+                  pre.style.margin = '0';
+                  panel.appendChild(ctrl);
+                  panel.appendChild(pre);
+                  document.body.appendChild(panel);
+                  function appendLine(level, args){
+                      const msg = Array.from(args).map(a=>{
+                          try { return typeof a==='string'?a:JSON.stringify(a); } catch(e){ return String(a); }
+                      }).join(' ');
+                      const line = '['+level+'] '+msg+'\n';
+                      pre.textContent += line;
+                  }
+                  const orig = {
+                      error: console.error.bind(console),
+                      warn: console.warn.bind(console),
+                      info: console.info.bind(console)
+                  };
+                  console.error = function(){ appendLine('ERR', arguments); orig.error.apply(console, arguments); };
+                  console.warn = function(){ appendLine('WRN', arguments); orig.warn.apply(console, arguments); };
+                  console.info = function(){ appendLine('INF', arguments); orig.info.apply(console, arguments); };
+                  document.getElementById('dbg-clear').onclick = function(){ pre.textContent=''; };
+                  document.getElementById('dbg-hide').onclick = function(){ panel.style.display='none'; };
+                  setTimeout(function(){
+                      appendLine('DBG', [
+                          `hasApp=${!!window.app}`,
+                          `hasDataManager=${!!(window.app && window.app.dataManager)}`,
+                          `caseSection=${!!document.getElementById('case-section')}`,
+                          `caseSlides=${document.querySelectorAll('.case-slide').length}`
+                      ]);
+                  }, 500);
+              } catch(e) {}
+          })();
+      </script>
+
+      <script is:inline>
+          // 比較表のタブ切り替え機能
+          // 全てのパラメータを引き継ぐ共通処理
+          function preserveAllParams() {
+              const currentParams = new URLSearchParams(window.location.search);
+              if (currentParams.toString()) {
+                  // すべての内部リンクにパラメータを追加
+                  const links = document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"], a[href]:not([href^="http"]):not([href^="#"])');
+                  links.forEach(link => {
+                      try {
+                          const url = new URL(link.href, window.location.origin);
+                          // 既存のパラメータを保持しつつ、現在のパラメータを追加
+                          for (const [key, value] of currentParams) {
+                              if (!url.searchParams.has(key)) {
+                                  url.searchParams.set(key, value);
+                              }
+                          }
+                          link.href = url.toString();
+                      } catch (e) {
+                          // 相対URLの場合
+                          const separator = link.href.includes('?') ? '&' : '?';
+                          link.href = link.href + separator + currentParams.toString();
+                      }
+                  });
+              }
+          }
+
+          document.addEventListener('DOMContentLoaded', function() {
+              // パラメータを引き継ぐ
+              preserveAllParams();
+
+              const tabMenuItems = document.querySelectorAll('.comparison-tab-menu-item');
+              const table = document.querySelector('.comparison-table table');
+
+              function updateTableColumns(tabType) {
+                  if (!table) return;
+
+                  const tableContainer = document.querySelector('.comparison-table');
+                  const headers = table.querySelectorAll('th');
+                  const rows = table.querySelectorAll('tbody tr');
+
+                  // タブごとの表示列インデックス（実際のHTMLの列番号に合わせて修正）
+                  const tabColumnsMap = {
+                      'tab1': [0, 1, 2, 3, 10], // 総合: クリニック名, 総合評価, 費用, 特徴, 公式サイトURL
+                      'tab2': [0, 4, 5, 6, 10], // 施術内容: クリニック名, 矯正範囲, 目安期間, 通院頻度, 公式サイトURL
+                      'tab3': [0, 7, 8, 9, 10]  // サービス: クリニック名, 実績/症例数, ワイヤー矯正の紹介, サポート, 公式サイトURL
+                  };
+
+                  const showIndexes = tabColumnsMap[tabType] || tabColumnsMap['tab1'];
+
+                  // コンテナにアクティブなタブを設定
+                  tableContainer.setAttribute('data-active-tab', tabType);
+
+                  // タブに応じて動的にヘッダーテキストを更新（JSONファイルから取得）
+                  const headerConfig = window.dataManager && typeof window.dataManager.getClinicHeaderConfig === 'function'
+                      ? window.dataManager.getClinicHeaderConfig()
+                      : {};
+
+                  const defaultHeaders = {
+                      tab1: ['クリニック', '総合評価', '費用', '特徴', '公式サイト'],
+                      tab2: ['クリニック', '矯正範囲', '目安期間', '通院頻度', '公式サイト'],
+                      tab3: ['クリニック', '実績/症例数', 'ワイヤー矯正の紹介', 'サポート', '公式サイト']
+                  };
+
+                  const headerTextMap = new Map([
+                      ['tab1', [
+                          headerConfig['比較表ヘッダー1'] ?? defaultHeaders.tab1[0],
+                          headerConfig['比較表ヘッダー2'] ?? defaultHeaders.tab1[1],
+                          headerConfig['比較表ヘッダー3'] ?? defaultHeaders.tab1[2],
+                          headerConfig['比較表ヘッダー4'] ?? defaultHeaders.tab1[3],
+                          headerConfig['比較表ヘッダー11'] ?? defaultHeaders.tab1[4]
+                      ]],
+                      ['tab2', [
+                          headerConfig['比較表ヘッダー1'] ?? defaultHeaders.tab2[0],
+                          headerConfig['比較表ヘッダー5'] ?? defaultHeaders.tab2[1],
+                          headerConfig['比較表ヘッダー6'] ?? defaultHeaders.tab2[2],
+                          headerConfig['比較表ヘッダー7'] ?? defaultHeaders.tab2[3],
+                          headerConfig['比較表ヘッダー11'] ?? defaultHeaders.tab2[4]
+                      ]],
+                      ['tab3', [
+                          headerConfig['比較表ヘッダー1'] ?? defaultHeaders.tab3[0],
+                          headerConfig['比較表ヘッダー8'] ?? defaultHeaders.tab3[1],
+                          headerConfig['比較表ヘッダー9'] ?? defaultHeaders.tab3[2],
+                          headerConfig['比較表ヘッダー10'] ?? defaultHeaders.tab3[3],
+                          headerConfig['比較表ヘッダー11'] ?? defaultHeaders.tab3[4]
+                      ]]
+                  ]);
+
+                  const currentHeaderTexts = headerTextMap.get(tabType) || headerTextMap.get('tab1') || defaultHeaders.tab1;
+
+                  // 表示される列のヘッダーテキストを動的に更新
+                  let headerTextIndex = 0;
+                  headers.forEach((th, index) => {
+                          if (showIndexes.includes(index)) {
+                              if (headerTextIndex < currentHeaderTexts.length) {
+                                  th.textContent = currentHeaderTexts[headerTextIndex];
+                                  headerTextIndex++;
+                              }
+                          }
+                      });
+
+                      // ヘッダーの表示/非表示
+                      headers.forEach((th, index) => {
+                          if (showIndexes.includes(index)) {
+                              // 表示する列: すべてのインラインスタイルを削除
+                              th.removeAttribute('style');
+                              th.classList.remove('th-none');
+                              th.classList.remove('td-none');
+                          } else {
+                              // 非表示の列
+                              th.style.display = 'none';
+                              th.style.visibility = 'hidden';
+                              th.style.width = '0';
+                              th.style.padding = '0';
+                              th.style.border = '0';
+                              th.classList.add('th-none');
+                          }
+                      });
+
+                      // 各行のセルの表示/非表示
+                      rows.forEach(row => {
+                          const cells = row.querySelectorAll('td');
+                          cells.forEach((td, index) => {
+                              if (showIndexes.includes(index)) {
+                                  // 表示する列: すべてのインラインスタイルを削除
+                                  td.removeAttribute('style');
+                                  td.classList.remove('th-none');
+                                  td.classList.remove('td-none');
+                              } else {
+                                  // 非表示の列
+                                  td.style.display = 'none';
+                                  td.style.visibility = 'hidden';
+                                  td.style.width = '0';
+                                  td.style.padding = '0';
+                                  td.style.border = '0';
+                                  td.classList.add('td-none');
+                              }
+                          });
+                      });
+              }
+
+              tabMenuItems.forEach(item => {
+                  item.addEventListener('click', function() {
+                      // すべてのタブを非アクティブに
+                      tabMenuItems.forEach(tab => tab.classList.remove('tab-active'));
+                      // クリックしたタブをアクティブに
+                      this.classList.add('tab-active');
+
+                      // タブに応じて表示列を切り替え
+                      const tabType = this.getAttribute('data-tab');
+                      updateTableColumns(tabType);
+                  });
+              });
+
+              // 初期表示
+              updateTableColumns('tab1');
+
+          });
+
+          // アコーディオン機能（2段階）
+          // この関数は958行目で既に定義されているため、ここでの再定義は削除
+          // window.toggleMainDisclaimer関数は958行目の実装を使用
+
+          window.toggleDisclaimer = function(clinicId) {
+
+              // 特別な処理: dio-campaign-first-choiceの場合
+              if (clinicId === 'dio-campaign-first-choice') {
+                  // シンプルなトグル処理
+                  const content = document.getElementById('dio-campaign-first-choice-content');
+                  const arrow = document.getElementById('dio-campaign-first-choice-arrow');
+
+                  if (content && arrow) {
+                      if (content.style.display === 'none' || !content.style.display) {
+                          content.style.display = 'block';
+                          arrow.style.transform = 'rotate(180deg)';
+                      } else {
+                          content.style.display = 'none';
+                          arrow.style.transform = 'rotate(0deg)';
+                      }
+                      return; // 処理完了
+                  }
+
+                  // 元の複雑な処理に続く
+                  const contentOriginal = document.getElementById('dio-campaign-first-choice-content');
+                  const arrowOriginal = document.getElementById('dio-campaign-first-choice-arrow');
+
+                  if (!(content && arrow)) {
+                      // フォールバック: 比較表下の第二段階（idが 'dio-content' / 'dio-arrow'）に対応
+                      const baseCode = (clinicId.split('-')[0] || 'dio');
+                      const fbContent = document.getElementById(baseCode + '-content');
+                      const fbArrow = document.getElementById(baseCode + '-arrow');
+                      if (fbContent && fbArrow) {
+                          const isHidden = window.getComputedStyle(fbContent).display === 'none';
+                          if (isHidden) {
+                              fbContent.style.display = 'block';
+                              fbArrow.style.transform = 'rotate(180deg)';
+                          } else {
+                              fbContent.style.display = 'none';
+                              fbArrow.style.transform = 'rotate(0deg)';
+                          }
+                          return; // フォールバックで処理完了
+                      }
+                  }
+
+                  if (content && arrow) {
+                      // 常に所定位置へ退避（念のため）
+                      try {
+                          const mainContent = document.getElementById('main-content');
+                          const accordion = content.closest('.disclaimer-accordion');
+                          const containerAnchor = document.getElementById('first-choice-recommendation-section');
+                          const sectionAnchor = document.querySelector('#first-choice-recommendation-section .first-choice-recommendation-section');
+                          const targetAnchor = sectionAnchor || containerAnchor;
+                          const isInMain = (() => {
+                              let n = accordion;
+                              while (n && n !== document.body) { if (n.id === 'main-content') return true; n = n.parentElement; }
+                              return false;
+                          })();
+                          const needsMove = targetAnchor && accordion && accordion.parentElement !== targetAnchor;
+                          if (needsMove) {
+                              targetAnchor.appendChild(accordion);
+                          }
+                      } catch (e) { console.warn('Relocation error:', e); }
+
+                      const computed = window.getComputedStyle(content);
+                      const currentDisplay = computed.display;
+
+                      const accordion = content.closest('.disclaimer-accordion');
+                      const section = content.closest('section');
+                      const ancestors = [];
+                      let node = content.parentElement;
+                      while (node && node !== document.body) {
+                          const cs = window.getComputedStyle(node);
+                          const isHidden = cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0' || cs.maxHeight === '0px' || cs.height === '0px';
+                          if (isHidden) {
+                              const info = { tag: node.tagName, cls: node.className, id: node.id, display: cs.display, visibility: cs.visibility, opacity: cs.opacity, height: cs.height, maxHeight: cs.maxHeight };
+                              ancestors.push(info);
+                              // 一時的に可視化
+                              node.classList.add('force-ancestor-show');
+                              if (node.classList.contains('hidden')) {
+                                  node.classList.remove('hidden');
+                                  node.setAttribute('data-removed-hidden', '1');
+                              }
+                              if (node.hasAttribute('hidden')) {
+                                  node.removeAttribute('hidden');
+                                  node.setAttribute('data-removed-hidden-attr', '1');
+                              }
+                              if (node.getAttribute('aria-hidden') === 'true') {
+                                  node.setAttribute('aria-hidden', 'false');
+                                  node.setAttribute('data-changed-aria-hidden', '1');
+                              }
+                          }
+                          node = node.parentElement;
+                      }
+                      if (ancestors.length) {
+                          try {
+                          } catch (e) {
+                          }
+                      }
+
+                      if (currentDisplay === 'none') {
+                          // 表示 - 強制的に見える状態へ
+                          if (accordion) {
+                              accordion.style.display = 'block';
+                              accordion.style.visibility = 'visible';
+                              accordion.style.opacity = '1';
+                              accordion.style.position = 'relative';
+                              accordion.style.zIndex = '9999';
+                          }
+                          if (section) {
+                              section.style.display = section.style.display || 'block';
+                          }
+                          content.classList.add('force-show');
+                          content.style.display = 'block';
+                          content.style.visibility = 'visible';
+                          content.style.opacity = '1';
+                          content.style.maxHeight = 'none';
+                          content.style.height = 'auto';
+                          arrow.style.transform = 'rotate(180deg)';
+                          try {
+                              const rect = content.getBoundingClientRect();
+                          } catch (e) {}
+
+                          // main-disclaimer-contentが親要素として影響している場合の対処
+                          const mainContent = document.getElementById('main-content');
+                          if (mainContent && window.getComputedStyle(mainContent).display === 'none') {
+                              const acc = content.closest('.disclaimer-accordion');
+                              const sectionAnchor = document.querySelector('#first-choice-recommendation-section .first-choice-recommendation-section');
+                              if (acc && mainContent.contains(acc)) {
+                                  if (sectionAnchor) {
+                                      sectionAnchor.appendChild(acc);
+                                  } else {
+                                      mainContent.parentNode.insertBefore(acc, mainContent.nextSibling);
+                                  }
+                              }
+                          }
+
+                          // スクロールして表示を確認（ヘッダー分オフセット）
+                          try {
+                              const doScroll = () => {
+                                  const rect2 = content.getBoundingClientRect();
+                                  const targetTop = rect2.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - 80;
+                                  window.scrollTo({ top: targetTop, behavior: 'auto' });
+                                  setTimeout(() => {
+                                      const rect3 = content.getBoundingClientRect();
+                                      // まだ見えていなければもう一度
+                                      if (rect3.top < -10 || rect3.top > window.innerHeight) {
+                                          const targetTop2 = rect3.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - 80;
+                                          window.scrollTo({ top: targetTop2, behavior: 'auto' });
+                                      }
+                                  }, 120);
+                              };
+                              doScroll();
+                          } catch (e) {}
+                      } else {
+                          // 非表示 - 強制表示状態を解除
+                          content.classList.remove('force-show');
+                          content.style.display = 'none';
+                          content.style.visibility = '';
+                          content.style.opacity = '';
+                          content.style.maxHeight = '';
+                          content.style.height = '';
+                          arrow.style.transform = 'rotate(0deg)';
+                          try {
+                              const rect = content.getBoundingClientRect();
+                          } catch (e) {}
+                          // 祖先の上書きクラスを外す
+                          let n = content.parentElement;
+                          while (n && n !== document.body) {
+                              if (n.classList.contains('force-ancestor-show')) {
+                                  n.classList.remove('force-ancestor-show');
+                                  if (n.getAttribute('data-removed-hidden') === '1') {
+                                      n.classList.add('hidden');
+                                      n.removeAttribute('data-removed-hidden');
+                                  }
+                                  if (n.getAttribute('data-removed-hidden-attr') === '1') {
+                                      n.setAttribute('hidden', '');
+                                      n.removeAttribute('data-removed-hidden-attr');
+                                  }
+                                  if (n.getAttribute('data-changed-aria-hidden') === '1') {
+                                      n.setAttribute('aria-hidden', 'true');
+                                      n.removeAttribute('data-changed-aria-hidden');
+                                  }
+                              }
+                              n = n.parentElement;
+                          }
+                      }
+                  } else {
+                      console.warn('First choice elements not found:', { hasContent: !!content, hasArrow: !!arrow });
+                  }
+                  return; // 特別処理終了
+              }
+
+              // 通常のアコーディオン処理（祖先可視化と詳細ログ付き）
+              const contentId = clinicId + '-content';
+              const arrowId = clinicId + '-arrow';
+
+              const content = document.getElementById(contentId);
+              const arrow = document.getElementById(arrowId);
+
+
+              if (content && arrow) {
+                  const computed = window.getComputedStyle(content);
+                  const currentDisplay = computed.display;
+                  if (currentDisplay === 'none') {
+                      // 祖先の非表示を検出し、一時的に可視化
+                      const ancestors = [];
+                      let node = content.parentElement;
+                      while (node && node !== document.body) {
+                          const cs = window.getComputedStyle(node);
+                          const isHidden = cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0' || cs.maxHeight === '0px' || cs.height === '0px';
+                          if (isHidden) {
+                              const info = { tag: node.tagName, cls: node.className, id: node.id, display: cs.display, visibility: cs.visibility, opacity: cs.opacity, height: cs.height, maxHeight: cs.maxHeight };
+                              ancestors.push(info);
+                              node.classList.add('force-ancestor-show');
+                              if (node.classList.contains('hidden')) {
+                                  node.classList.remove('hidden');
+                                  node.setAttribute('data-removed-hidden', '1');
+                              }
+                              if (node.hasAttribute('hidden')) {
+                                  node.removeAttribute('hidden');
+                                  node.setAttribute('data-removed-hidden-attr', '1');
+                              }
+                              if (node.getAttribute('aria-hidden') === 'true') {
+                                  node.setAttribute('aria-hidden', 'false');
+                                  node.setAttribute('data-changed-aria-hidden', '1');
+                              }
+                          }
+                          node = node.parentElement;
+                      }
+                      if (ancestors.length) {
+                      }
+
+                      // 表示
+                      content.style.display = 'block';
+                      content.style.visibility = 'visible';
+                      content.style.opacity = '1';
+                      arrow.style.transform = 'rotate(180deg)';
+                      try {
+                          const rect = content.getBoundingClientRect();
+                          const doScroll = () => {
+                              const r2 = content.getBoundingClientRect();
+                              const targetTop = r2.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - 80;
+                              window.scrollTo({ top: targetTop, behavior: 'auto' });
+                              setTimeout(() => {
+                                  const r3 = content.getBoundingClientRect();
+                              }, 120);
+                          };
+                          doScroll();
+                      } catch (e) {}
+                  } else {
+                      // 非表示（クリーンアップ含む）
+                      content.style.display = 'none';
+                      content.style.visibility = '';
+                      content.style.opacity = '';
+                      arrow.style.transform = 'rotate(0deg)';
+                      // 祖先の上書きクラスを外す
+                      let n = content.parentElement;
+                      while (n && n !== document.body) {
+                          if (n.classList.contains('force-ancestor-show')) {
+                              n.classList.remove('force-ancestor-show');
+                              if (n.getAttribute('data-removed-hidden') === '1') {
+                                  n.classList.add('hidden');
+                                  n.removeAttribute('data-removed-hidden');
+                              }
+                              if (n.getAttribute('data-removed-hidden-attr') === '1') {
+                                  n.setAttribute('hidden', '');
+                                  n.removeAttribute('data-removed-hidden-attr');
+                              }
+                              if (n.getAttribute('data-changed-aria-hidden') === '1') {
+                                  n.setAttribute('aria-hidden', 'true');
+                                  n.removeAttribute('data-changed-aria-hidden');
+                              }
+                          }
+                          n = n.parentElement;
+                      }
+                  }
+              }
+          }
+
+          // ディオクリニックの確認事項ボタンに直接イベントリスナーを設定
+          // クリックイベントは既にHTML内のonclick属性で設定済みなので、追加の設定は不要
+          // 二重にイベントが発生しないよう、この部分は削除
+
+          // Add click animation to links
+          document.querySelectorAll('.medical-columns-section .toc-link, .medical-columns-section .contact-link').forEach(link => {
+              link.addEventListener('click', function(e) {
+                  // contact-linkの場合は外部リンクなので、アニメーションのみ実行
+                  this.style.opacity = '0.7';
+                  setTimeout(() => {
+                      this.style.opacity = '1';
+                  }, 150);
+
+                  // toc-linkの場合のみスムーズスクロールを実行
+                  if (this.classList.contains('toc-link') && this.getAttribute('href').startsWith('#')) {
+                      e.preventDefault();
+                      const targetId = this.getAttribute('href').substring(1);
+                      const targetElement = document.getElementById(targetId);
+                      if (targetElement) {
+                          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                  }
+              });
+          });
+
+          // Tips Section Tab Functionality
+          document.addEventListener('DOMContentLoaded', function() {
+              // Add event listeners for disclaimer accordions
+              const rankingBtn = document.getElementById('ranking-disclaimer-button');
+              if (rankingBtn) {
+                  rankingBtn.addEventListener('click', toggleRankingDisclaimer);
+              }
+
+              const comparisonBtn = document.getElementById('comparison-disclaimer-button');
+              if (comparisonBtn) {
+                  comparisonBtn.addEventListener('click', toggleComparisonDisclaimer);
+              }
+
+              const tabs = document.querySelectorAll('.tips-container .tab');
+              const tabContents = document.querySelectorAll('.tips-container .tab-content');
+
+              tabs.forEach(tab => {
+                  tab.addEventListener('click', function() {
+                      const tabIndex = this.getAttribute('data-tab');
+
+                      // Update tab styles
+                      tabs.forEach(t => {
+                          t.style.backgroundColor = '#F1F1F1';
+                          t.style.color = '#4C4C4C';
+                      });
+                      this.style.backgroundColor = '#2CC7C5';
+                      this.style.color = 'white';
+
+                      // Show/hide content
+                      tabContents.forEach(content => {
+                          if (content.getAttribute('data-tab') === tabIndex) {
+                              content.style.display = 'block';
+                          } else {
+                              content.style.display = 'none';
+                          }
+                      });
+                  });
+              });
+          });
+      </script>
+
+      <!-- Clinic URLs are now managed dynamically from CSV database -->
+
+      <!-- URL Parameter Tracking -->
+      <!-- url-tracking.jsはapp.js内で遅延読み込み -->
+
+      <!-- Service Worker登録 -->
+      <script define:vars={{ swPath: asset('sw.js') }}>
+          if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                  navigator.serviceWorker.register(swPath)
+                      .then(registration => {})
+                      .catch(err => {});
+              });
+          }
+      </script>
+
+      <!-- Load common site data -->
+      <script define:vars={{ commonDataPath: asset('common_data/data/site-common-texts.json') }}>
+          // Load common site data
+          fetch(commonDataPath)
+              .then(response => response.json())
+              .then(data => {
+                  // Update site logo
+                  const siteLogo = document.getElementById('site-logo');
+                  if (siteLogo && data.サイト名) {
+                      siteLogo.textContent = data.サイト名;
+                  }
+
+                  // Update favicon
+                  const favicon = document.getElementById('header-logo-icon');
+                  if (favicon && data.ファビコン画像パス) {
+                      favicon.src = data.ファビコン画像パス;
+                  }
+
+                  // Update footer site name (copyright text contains both site name and copyright)
+                  const footerSiteName = document.querySelector('.copyright');
+                  if (footerSiteName && data.サイト名) {
+                      footerSiteName.textContent = '© 2025 ' + data.サイト名;
+                  }
+
+              })
+              .catch(error => {
+                  console.error('Error loading common site data:', error);
+              });
+      </script>
+      <!-- tracking-params.jsはapp.js内で遅延読み込み -->
+
+      <!-- トップに戻るボタン -->
+      <button id="back-to-top" class="back-to-top" aria-label="トップに戻る">
+          <span>^</span>
+      </button>
+
+      <script is:inline>
+          // トップに戻るボタンの機能
+          (function() {
+              const backToTopBtn = document.getElementById('back-to-top');
+
+              // スクロール時の表示/非表示制御
+              window.addEventListener('scroll', function() {
+                  if (window.pageYOffset > 300) {
+                      backToTopBtn.classList.add('show');
+                  } else {
+                      backToTopBtn.classList.remove('show');
+                  }
+              });
+
+              // クリック時のスムーズスクロール
+              backToTopBtn.addEventListener('click', function() {
+                  window.scrollTo({
+                      top: 0,
+                      behavior: 'smooth'
+                  });
+              });
+          })();
+      </script>
+</BaseLayout>

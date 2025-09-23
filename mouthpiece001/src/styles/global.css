@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles that can't be replaced with Tailwind classes */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans antialiased;
+  }
+}
+
+@layer components {
+  /* Custom component styles */
+  .btn-primary {
+    @apply px-6 py-3 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity;
+  }
+
+  .container-custom {
+    @apply max-w-container mx-auto px-0;
+  }
+}
+
+/* Keep critical animations and complex styles */
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
