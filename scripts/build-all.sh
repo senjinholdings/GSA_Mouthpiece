@@ -15,7 +15,7 @@ build_dir() {
   npm --prefix "$dir" run build
   echo "🚚 Copy $dir/dist -> dist/$dir"
   mkdir -p "dist/$dir"
-  rsync -a "$dir/dist/" "dist/$dir/"
+  cp -r "$dir/dist/"* "dist/$dir/"
 }
 
 for n in 001 002 003 004 005 006 007; do
