@@ -5,6 +5,134 @@
 const __BASE_PATH_RAW = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? '/';
 const __BASE_PATH_PREFIX = (__BASE_PATH_RAW === '/' || __BASE_PATH_RAW === '' ? '' : __BASE_PATH_RAW.replace(/\/+$/, ''));
 
+
+const RegionUtils = (() => {
+    const normalizeRegionId = (value) => {
+        if (value == null) {
+            return null;
+        }
+        const match = String(value).match(/\d+/);
+        if (!match) {
+            return null;
+        }
+        return match[0].padStart(3, '0');
+    };
+
+    const stripBasePath = (pathname) => {
+        if (typeof pathname !== 'string' || pathname.length === 0) {
+            return '/';
+        }
+        const base = __BASE_PATH_PREFIX || '';
+        if (base && pathname.startsWith(base)) {
+            const remainder = pathname.slice(base.length);
+            return remainder.startsWith('/') ? remainder : `/${remainder}`;
+        }
+        return pathname;
+    };
+
+    const detectRegionIdFromPath = (pathname) => {
+        if (typeof pathname !== 'string') {
+            return null;
+        }
+        const relative = stripBasePath(pathname).replace(/^\/+/, '');
+        if (!relative) {
+            return null;
+        }
+        const segments = relative.split('/').filter(Boolean);
+        if (segments.length === 0) {
+            return null;
+        }
+        if (segments[0].toLowerCase() === 'r' && segments[1]) {
+            return normalizeRegionId(segments[1]);
+        }
+        const match = segments[0].match(/^r[-_]?(\d{1,3})$/i);
+        if (match) {
+            return normalizeRegionId(match[1]);
+        }
+        return null;
+    };
+
+    const detectRegionIdFromQuery = (search) => {
+        if (typeof search !== 'string') {
+            return null;
+        }
+        try {
+            const params = new URLSearchParams(search);
+            return normalizeRegionId(params.get('region_id'));
+        } catch (_) {
+            return null;
+        }
+    };
+
+    const rememberRegionId = (regionId) => {
+        const normalized = normalizeRegionId(regionId);
+        if (!normalized) {
+            return null;
+        }
+        if (typeof window !== 'undefined') {
+            window.__REGION_ID__ = normalized;
+        }
+        return normalized;
+    };
+
+    const determineRegionId = ({ fallback = '013', prefer = 'path' } = {}) => {
+        if (typeof window === 'undefined') {
+            return fallback;
+        }
+        const stored = normalizeRegionId(window.__REGION_ID__);
+        if (stored) {
+            return stored;
+        }
+        const fromPath = detectRegionIdFromPath(window.location.pathname || '');
+        const fromQuery = detectRegionIdFromQuery(window.location.search || '');
+        const candidate = prefer === 'query'
+            ? (fromQuery || fromPath)
+            : (fromPath || fromQuery);
+        if (candidate) {
+            rememberRegionId(candidate);
+            return candidate;
+        }
+        return fallback;
+    };
+
+    const buildRegionPath = (regionId) => {
+        const normalized = normalizeRegionId(regionId);
+        if (!normalized) {
+            return null;
+        }
+        const base = __BASE_PATH_PREFIX || '';
+        return base ? `${base}/r/${normalized}/` : `/r/${normalized}/`;
+    };
+
+    const navigateToRegion = (regionId, { replace = false } = {}) => {
+        const target = buildRegionPath(regionId);
+        if (!target || typeof window === 'undefined') {
+            return;
+        }
+        rememberRegionId(regionId);
+        if (replace) {
+            window.history.replaceState({}, '', target);
+        } else {
+            window.location.assign(target);
+        }
+    };
+
+    return {
+        normalizeRegionId,
+        detectRegionIdFromPath,
+        detectRegionIdFromQuery,
+        determineRegionId,
+        rememberRegionId,
+        buildRegionPath,
+        navigateToRegion,
+    };
+})();
+
+if (typeof window !== 'undefined' && !window.RegionUtils) {
+    window.RegionUtils = RegionUtils;
+}
+
+
 /**
  * Resolve an asset/data path against the deployment base path while leaving absolute URLs untouched.
  */
@@ -90,11 +218,20 @@ class UrlParamHandler {
     }
 
     getRegionId() {
-        return this.getParam('region_id') || '013'; // デフォルトは東京
+        return RegionUtils.determineRegionId();
     }
 
-    updateRegionId(regionId) {
-        this.setParam('region_id', regionId);
+    updateRegionId(regionId, options = {}) {
+        const normalized = RegionUtils.normalizeRegionId(regionId);
+        if (!normalized) {
+            return;
+        }
+        RegionUtils.rememberRegionId(normalized);
+        if (options?.navigate) {
+            RegionUtils.navigateToRegion(normalized, { replace: options?.replace === true });
+            return;
+        }
+        this.setParam('region_id', normalized);
     }
 
     // クリニックURLを取得（CSVから直接URLを取得し、パラメータを適切に処理）
@@ -2369,9 +2506,7 @@ class DataManager {
 
     // 現在の地域IDを取得
     getCurrentRegionId() {
-        // URLパラメータから取得
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('region_id') || '000'; // デフォルトは全国
+        return RegionUtils.determineRegionId({ fallback: '000' });
     }
 
     // 地域IDをマッピング（存在しない地域を適切な地域にマッピング）
@@ -5214,7 +5349,7 @@ class RankingApp {
                 // URLが生成できなかった場合のフォールバック
                 if (!generatedUrl || generatedUrl === '#') {
                     // 直接redirect.htmlへのリンクを生成
-                    const regionId = new URLSearchParams(window.location.search).get('region_id') || '000';
+                    const regionId = RegionUtils.determineRegionId({ fallback: '000' });
                     if (clinic) {
                         generatedUrl = `./redirect.html?clinic_id=${clinic.id}&rank=1&region_id=${regionId}`;
                     }
@@ -5315,8 +5450,7 @@ function initializeDisclaimers() {
     
     // 方法2: 上記が取得できない場合はURLパラメータから直接取得
     if (!regionId) {
-        const urlParams = new URLSearchParams(window.location.search);
-        regionId = urlParams.get('region_id');
+        regionId = RegionUtils.determineRegionId();
     }
     
     // デフォルトは東京（13）- データと一致させる
