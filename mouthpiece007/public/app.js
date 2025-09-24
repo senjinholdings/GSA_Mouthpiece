@@ -190,7 +190,29 @@ function resolveAssetPath(resource) {
     return basePrefix ? `${basePrefix}${normalized}` : normalized;
 }
 
-// デプロイバリアント（mouthpiece001/002/...）を抽出
+function getImagesBasePath() {
+    if (typeof resolveAssetPath === 'function') {
+        const resolved = resolveAssetPath('/images');
+        if (typeof resolved === 'string') {
+            return resolved.replace(/\/+$/, '');
+        }
+        return resolved;
+    }
+    const configured = window.SITE_CONFIG?.imagesPath;
+    if (configured) {
+        return `${configured.replace(/\/+$/, '')}/images`;
+    }
+    return '/images';
+}
+
+function buildImagePath(relativePath = '') {
+    const base = getImagesBasePath();
+    if (!relativePath) {
+        return base;
+    }
+    const sanitized = String(relativePath).replace(/^\/+/, '');
+    return `${base}/${sanitized}`;
+}
 function getDeploymentVariantId() {
     try {
         const base = __BASE_PATH_RAW || window.location.pathname || '';
@@ -546,7 +568,7 @@ class DisplayManager {
             }
 
             // バナー画像をclinic-texts.jsonから取得
-            const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+            const imagesPath = getImagesBasePath();
             const clinicCodeForImage = window.dataManager.getClinicCodeById(clinic.id);
             let bannerImage = `/common_data/images/clinics/tcb/tcb-logo.webp`; // デフォルト
             
@@ -916,45 +938,46 @@ class DataManager {
                 const heroImage = document.querySelector('.hero-image');
                 const heroSource = document.querySelector('.hero-image-wrapper source');
                 if (heroImage) {
-                    heroImage.src = this.commonTexts['MV画像パス'];
+                    const mvPath = resolveAssetPath(this.commonTexts['MV画像パス']);
+                    heroImage.src = mvPath;
                 }
                 if (heroSource) {
-                    heroSource.srcset = this.commonTexts['MV画像パス'];
+                    heroSource.srcset = resolveAssetPath(this.commonTexts['MV画像パス']);
                 }
             }
 
             if (this.commonTexts['ランキングバナー画像パス']) {
                 const rankingBanners = document.querySelectorAll('.ranking-banner-image');
                 rankingBanners.forEach(img => {
-                    img.src = this.commonTexts['ランキングバナー画像パス'];
+                    img.src = resolveAssetPath(this.commonTexts['ランキングバナー画像パス']);
                 });
             }
 
             if (this.commonTexts['Tips1画像パス']) {
                 const tips1Img = document.querySelector('.tab-content[data-tab="0"] img');
                 if (tips1Img) {
-                    tips1Img.src = this.commonTexts['Tips1画像パス'];
+                    tips1Img.src = resolveAssetPath(this.commonTexts['Tips1画像パス']);
                 }
             }
 
             if (this.commonTexts['Tips2画像パス']) {
                 const tips2Img = document.querySelector('.tab-content[data-tab="1"] img');
                 if (tips2Img) {
-                    tips2Img.src = this.commonTexts['Tips2画像パス'];
+                    tips2Img.src = resolveAssetPath(this.commonTexts['Tips2画像パス']);
                 }
             }
 
             if (this.commonTexts['Tips3画像パス']) {
                 const tips3Img = document.querySelector('.tab-content[data-tab="2"] img');
                 if (tips3Img) {
-                    tips3Img.src = this.commonTexts['Tips3画像パス'];
+                    tips3Img.src = resolveAssetPath(this.commonTexts['Tips3画像パス']);
                 }
             }
 
             if (this.commonTexts['詳細バナー画像パス']) {
                 const detailsBanner = document.querySelector('.details-banner-image');
                 if (detailsBanner) {
-                    detailsBanner.src = this.commonTexts['詳細バナー画像パス'];
+                    detailsBanner.src = resolveAssetPath(this.commonTexts['詳細バナー画像パス']);
                 }
             }
         }, 100);
@@ -2922,37 +2945,6 @@ class RankingApp {
             });
         }
         
-        // ハンバーガーメニューのイベント
-        
-        if (this.displayManager.hamburgerMenu) {
-            this.displayManager.hamburgerMenu.addEventListener('click', (e) => {
-                e.stopPropagation(); // イベントの伝播を停止
-                
-                this.displayManager.hamburgerMenu.classList.toggle('active');
-                this.displayManager.sidebarMenu.classList.toggle('active');
-                this.displayManager.sidebarOverlay.classList.toggle('active');
-            });
-        } else {
-        }
-
-        // サイドバーを閉じる
-        if (this.displayManager.closeSidebar) {
-            this.displayManager.closeSidebar.addEventListener('click', () => {
-                this.displayManager.hamburgerMenu.classList.remove('active');
-                this.displayManager.sidebarMenu.classList.remove('active');
-                this.displayManager.sidebarOverlay.classList.remove('active');
-            });
-        }
-
-        // オーバーレイクリックで閉じる
-        if (this.displayManager.sidebarOverlay) {
-            this.displayManager.sidebarOverlay.addEventListener('click', () => {
-                this.displayManager.hamburgerMenu.classList.remove('active');
-                this.displayManager.sidebarMenu.classList.remove('active');
-                this.displayManager.sidebarOverlay.classList.remove('active');
-            });
-        }
-
     }
 
     changeRegion(regionId) {
@@ -3626,7 +3618,7 @@ class RankingApp {
                 
                 if (fieldName === 'クリニック名') {
                     // クリニック名とロゴ
-                    const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+                    const imagesPath = getImagesBasePath();
                     let logoPath = this.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '');
 
                     if (!logoPath) {
@@ -4044,7 +4036,7 @@ class RankingApp {
         if (!clinicCode) return;
         
         // 画像パスの設定
-        const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+        const imagesPath = getImagesBasePath();
         
         // クリニック名を更新
         const clinicNameElements = ['first-choice-clinic-name', 'first-choice-title-clinic-name'];
@@ -4635,7 +4627,7 @@ class RankingApp {
                     if (!sanitizedClinicCode) {
                         return '';
                     }
-                    const baseVideoPath = (window.SITE_CONFIG && window.SITE_CONFIG.imagesPath) ? window.SITE_CONFIG.imagesPath : './images';
+                    const baseVideoPath = getImagesBasePath();
                     const videoSrc = `${baseVideoPath}/${sanitizedClinicCode}_treatment.mp4`;
                     const videoHtml = `<div class=\"procedure-video-embed\" data-clinic-code=\"${sanitizedClinicCode}\" data-video-src=\"${videoSrc}\">\n                            <video class=\"procedure-video\" controls playsinline preload=\"auto\" tabindex=\"0\" aria-label=\"${clinic.name}の施術風景\">\n                                <source src=\"${videoSrc}\" type=\"video/mp4\">\n                                お使いのブラウザでは動画を再生できません。\n                            </video>\n                            <button type=\"button\" class=\"procedure-video-toggle\" aria-label=\"再生\">\n                                <span class=\"procedure-video-toggle-icon\"></span>\n                            </button>\n                        </div>`;
 
@@ -5120,7 +5112,7 @@ class RankingApp {
     getStoreImage(clinicName, storeNumber) {
         // 店舗番号を3桁の文字列に変換
         const paddedNumber = String(storeNumber).padStart(3, '0');
-        const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+        const imagesPath = getImagesBasePath();
         
         // 最初の拡張子でパスを返す（onerrorでフォールバックされる）
         const storeImagePath = `${imagesPath}/clinics/${clinicName}/${clinicName}_clinic/clinic_image_${paddedNumber}.webp`;
@@ -5131,7 +5123,7 @@ class RankingApp {
     // 画像フォールバック処理（複数拡張子対応）
     handleImageError(imgElement, clinicName, storeNumber) {
         const paddedNumber = String(storeNumber).padStart(3, '0');
-        const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+        const imagesPath = getImagesBasePath();
         const extensions = ['jpg', 'png'];
         
         // 現在の拡張子を取得

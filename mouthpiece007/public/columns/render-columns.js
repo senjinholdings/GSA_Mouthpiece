@@ -1,4 +1,31 @@
 // コラムセクションをレンダリングする関数
+const __COLUMN_BASE_PATH_RAW = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? '/';
+const __COLUMN_BASE_PREFIX = (__COLUMN_BASE_PATH_RAW === '/' || __COLUMN_BASE_PATH_RAW === '' ? '' : __COLUMN_BASE_PATH_RAW.replace(/\/+$/, ''));
+function resolveColumnAsset(resource) {
+    if (typeof resource !== 'string' || resource.length === 0) {
+        return resource;
+    }
+    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|data:|mailto:|tel:)/i.test(resource)) {
+        return resource;
+    }
+    if (typeof resolveAssetPath === 'function') {
+        return resolveAssetPath(resource);
+    }
+    if (typeof buildImagePath === 'function') {
+        if (resource.startsWith('images/')) {
+            return buildImagePath(resource.replace(/^images\//, ''));
+        }
+        if (resource.startsWith('/images/')) {
+            return buildImagePath(resource.replace(/^\/images\//, ''));
+        }
+    }
+    let normalized = resource.startsWith('./') ? resource.slice(2) : resource;
+    if (!normalized.startsWith('/')) {
+        normalized = `/${normalized}`;
+    }
+    return __COLUMN_BASE_PREFIX ? `${__COLUMN_BASE_PREFIX}${normalized}` : normalized;
+}
+
 (function() {
     // DOMが読み込まれてから実行
     document.addEventListener('DOMContentLoaded', function() {
@@ -20,7 +47,7 @@
                                 ${data.mainArticle.title}
                             </div>
                             <div class="header-image">
-                                <img src="${data.mainArticle.headerImage}" alt="${data.mainArticle.imageAlt}" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="${resolveColumnAsset(data.mainArticle.headerImage)}" alt="${data.mainArticle.imageAlt}" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
 
@@ -79,7 +106,7 @@
                 if (section.headerImage) {
                     html += `
                             <div class="header-image" style="margin: 16px 0;">
-                                <img src="${section.headerImage}" alt="${section.imageAlt || ''}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                <img src="${resolveColumnAsset(section.headerImage)}" alt="${section.imageAlt || ''}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                             </div>`;
                 }
                 
