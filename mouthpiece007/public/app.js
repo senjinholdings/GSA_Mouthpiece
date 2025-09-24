@@ -2844,6 +2844,9 @@ class RankingApp {
     }
 
     setupEventListeners() {
+        // サイドバーメニューの初期化と制御
+        this.initializeSidebar();
+
         // 地域選択の変更イベント（検索フィルター用）
         if (this.displayManager.regionSelect) {
             this.displayManager.regionSelect.addEventListener('change', () => {
@@ -3692,8 +3695,73 @@ class RankingApp {
         // 詳細を見るリンクのイベントリスナーを再設定
         this.setupDetailScrollLinks();
     }
-    
-    
+
+    // サイドバーメニューの初期化
+    initializeSidebar() {
+        const hamburgerMenu = this.displayManager.hamburgerMenu;
+        const sidebarMenu = this.displayManager.sidebarMenu;
+        const sidebarOverlay = this.displayManager.sidebarOverlay;
+        const closeSidebar = this.displayManager.closeSidebar;
+
+        console.log('[Sidebar] Initializing sidebar:', {
+            hamburgerMenu: !!hamburgerMenu,
+            sidebarMenu: !!sidebarMenu,
+            sidebarOverlay: !!sidebarOverlay,
+            closeSidebar: !!closeSidebar
+        });
+
+        // デフォルトで閉じた状態を確実にする
+        if (sidebarMenu) {
+            sidebarMenu.classList.remove('active');
+        }
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.remove('active');
+        }
+
+        // ハンバーガーメニュークリックでサイドバーを開く
+        if (hamburgerMenu) {
+            console.log('[Sidebar] Adding click listener to hamburger menu');
+            hamburgerMenu.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('[Sidebar] Hamburger menu clicked');
+                if (sidebarMenu) {
+                    sidebarMenu.classList.toggle('active');
+                    console.log('[Sidebar] Sidebar active:', sidebarMenu.classList.contains('active'));
+                }
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.toggle('active');
+                }
+            });
+        } else {
+            console.warn('[Sidebar] Hamburger menu not found!');
+        }
+
+        // 閉じるボタンクリックでサイドバーを閉じる
+        if (closeSidebar) {
+            closeSidebar.addEventListener('click', () => {
+                if (sidebarMenu) {
+                    sidebarMenu.classList.remove('active');
+                }
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        }
+
+        // オーバーレイクリックでサイドバーを閉じる
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                if (sidebarMenu) {
+                    sidebarMenu.classList.remove('active');
+                }
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        }
+    }
+
     // 現在表示されているクリニックのデータを取得
     getCurrentDisplayedClinics() {
         // 現在のランキングデータから表示中のクリニックを取得
