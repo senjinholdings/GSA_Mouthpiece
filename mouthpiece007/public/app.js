@@ -6,6 +6,7 @@ const __BASE_PATH_RAW = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? 
 const __BASE_PATH_PREFIX = (__BASE_PATH_RAW === '/' || __BASE_PATH_RAW === '' ? '' : __BASE_PATH_RAW.replace(/\/+$/, ''));
 
 
+
 const RegionUtils = (() => {
     const normalizeRegionId = (value) => {
         if (value == null) {
@@ -18,36 +19,34 @@ const RegionUtils = (() => {
         return match[0].padStart(3, '0');
     };
 
-    const stripBasePath = (pathname) => {
-        if (typeof pathname !== 'string' || pathname.length === 0) {
-            return '/';
+    const getPathSegments = (pathname) => {
+        if (typeof pathname !== 'string') {
+            return [];
         }
-        const base = __BASE_PATH_PREFIX || '';
-        if (base && pathname.startsWith(base)) {
-            const remainder = pathname.slice(base.length);
-            return remainder.startsWith('/') ? remainder : `/${remainder}`;
-        }
-        return pathname;
+        return pathname.split('/').filter(Boolean);
     };
 
     const detectRegionIdFromPath = (pathname) => {
-        if (typeof pathname !== 'string') {
-            return null;
-        }
-        const relative = stripBasePath(pathname).replace(/^\/+/, '');
-        if (!relative) {
-            return null;
-        }
-        const segments = relative.split('/').filter(Boolean);
+        const segments = getPathSegments(pathname);
         if (segments.length === 0) {
             return null;
         }
-        if (segments[0].toLowerCase() === 'r' && segments[1]) {
-            return normalizeRegionId(segments[1]);
+        const rIndex = segments.findIndex((segment) => segment.toLowerCase() === 'r');
+        if (rIndex !== -1 && segments[rIndex + 1]) {
+            return normalizeRegionId(segments[rIndex + 1]);
         }
-        const match = segments[0].match(/^r[-_]?(\d{1,3})$/i);
-        if (match) {
-            return normalizeRegionId(match[1]);
+        for (let i = segments.length - 1; i >= 0; i -= 1) {
+            const match = segments[i].match(/^r[-_]?(\d{1,3})$/i);
+            if (match) {
+                return normalizeRegionId(match[1]);
+            }
+        }
+        const last = segments[segments.length - 1];
+        if (last) {
+            const numeric = last.match(/^(\d{1,3})$/);
+            if (numeric) {
+                return normalizeRegionId(numeric[1]);
+            }
         }
         return null;
     };
@@ -100,9 +99,20 @@ const RegionUtils = (() => {
         if (!normalized) {
             return null;
         }
-        const base = __BASE_PATH_PREFIX || '';
-        return base ? `${base}/r/${normalized}/` : `/r/${normalized}/`;
+        if (!__BASE_ROOT_PREFIX) {
+            return `/r/${normalized}/`;
+        }
+        return `${__BASE_ROOT_PREFIX}/r/${normalized}/`;
     };
+
+    const redirectPath = (() => {
+        if (!__BASE_ROOT_PREFIX) {
+            return '/redirect.html';
+        }
+        return `${__BASE_ROOT_PREFIX}/redirect.html`;
+    })();
+
+    const buildRedirectPath = () => redirectPath;
 
     const navigateToRegion = (regionId, { replace = false } = {}) => {
         const target = buildRegionPath(regionId);
@@ -124,11 +134,14 @@ const RegionUtils = (() => {
         determineRegionId,
         rememberRegionId,
         buildRegionPath,
+        buildRedirectPath,
         navigateToRegion,
+        getBaseRootPrefix: () => __BASE_ROOT_PREFIX,
     };
 })();
 
-if (typeof window !== 'undefined' && !window.RegionUtils) {
+
+if (typeof window !== 'undefined') {
     window.RegionUtils = RegionUtils;
 }
 
@@ -158,11 +171,12 @@ function resolveAssetPath(resource) {
     if (!normalized.startsWith('/')) {
         normalized = `/${normalized}`;
     }
+    const basePrefix = RegionUtils.getBaseRootPrefix ? (RegionUtils.getBaseRootPrefix() || __BASE_PATH_PREFIX) : __BASE_PATH_PREFIX;
     // Avoid double-prefix if already includes base
-    if (__BASE_PATH_PREFIX && normalized.startsWith(`${__BASE_PATH_PREFIX}/`)) {
+    if (basePrefix && normalized.startsWith(`${basePrefix}/`)) {
         return normalized;
     }
-    return __BASE_PATH_PREFIX ? `${__BASE_PATH_PREFIX}${normalized}` : normalized;
+    return basePrefix ? `${basePrefix}${normalized}` : normalized;
 }
 
 // デプロイバリアント（mouthpiece001/002/...）を抽出
@@ -251,7 +265,7 @@ class UrlParamHandler {
         
         // クリックイベントでlocalStorageに保存するため、データ属性として埋め込む
         // 実際の保存はクリック時に行う
-        const redirectUrl = new URL('./redirect.html', window.location.origin + window.location.pathname);
+        const redirectUrl = new URL(RegionUtils.buildRedirectPath(), window.location.origin);
         
         // URLパラメータも念のため設定（サーバーが保持する場合に備えて）
         redirectUrl.searchParams.set('clinic_id', clinicId);
@@ -331,7 +345,8 @@ class UrlParamHandler {
         
         // redirect.htmlへのパスを生成
         const regionId = this.getRegionId();
-        let redirectUrl = `./redirect.html?clinic_id=${clinicId}&rank=${rank}`;
+        const redirectBasePath = RegionUtils.buildRedirectPath();
+        let redirectUrl = `${redirectBasePath}?clinic_id=${clinicId}&rank=${rank}`;
         if (regionId) {
             redirectUrl += `&region_id=${regionId}`;
         }
@@ -2250,7 +2265,7 @@ class DataManager {
             const storeAddress = store.address || '住所情報なし';
             
             // ハッシュフラグメントを使用（サーバーのURL書き換えに影響されない）
-            const redirectUrl = `./redirect.html#clinic_id=${clinicId}&rank=${rank}&region_id=${regionId}`;
+            const redirectUrl = `${RegionUtils.buildRedirectPath()}#clinic_id=${clinicId}&rank=${rank}&region_id=${regionId}`;
             
             // localStorageを先に設定してから開く（サーバーがパラメータを削除する場合の対策）
             const onclickHandler = targetUrl ? 
@@ -2283,7 +2298,7 @@ class DataManager {
             const storeAddress = store.address || '住所情報なし';
             
             // ハッシュフラグメントを使用（サーバーのURL書き換えに影響されない）
-            const redirectUrl = `./redirect.html#clinic_id=${clinicId}&rank=${rank}&region_id=${regionId}`;
+            const redirectUrl = `${RegionUtils.buildRedirectPath()}#clinic_id=${clinicId}&rank=${rank}&region_id=${regionId}`;
             
             // localStorageを先に設定してから開く（サーバーがパラメータを削除する場合の対策）
             const onclickHandler = targetUrl ? 
@@ -3617,7 +3632,7 @@ class RankingApp {
                         logoPath = (typeof resolveAssetPath === 'function') ? resolveAssetPath(logoPath) : logoPath;
                     }
                     
-                    const redirectUrl = `./redirect.html#clinic_id=${clinicId}&rank=${rankNum}&region_id=${regionId}`;
+                    const redirectUrl = `${RegionUtils.buildRedirectPath()}#clinic_id=${clinicId}&rank=${rankNum}&region_id=${regionId}`;
                     const clinicNameOnclick = `onclick="localStorage.setItem('redirectParams', JSON.stringify({clinic_id: '${clinicId}', rank: '${rankNum}', region_id: '${regionId}'})); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"`;
                     
                     td.className = 'ranking-table_td1';
@@ -3868,7 +3883,7 @@ class RankingApp {
                 : logoPath;
             
             // リダイレクトURL（ハッシュフラグメント使用）
-            const redirectUrl = `./redirect.html#clinic_id=${clinicId}&rank=${rankNum}&region_id=${regionId}`;
+            const redirectUrl = `${RegionUtils.buildRedirectPath()}#clinic_id=${clinicId}&rank=${rankNum}&region_id=${regionId}`;
             
             // クリニック名リンクにもlocalStorageとリダイレクトを適用
             const clinicNameOnclick = `onclick="localStorage.setItem('redirectParams', JSON.stringify({clinic_id: '${clinicId}', rank: '${rankNum}', region_id: '${regionId}'})); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"`;
@@ -5351,7 +5366,7 @@ class RankingApp {
                     // 直接redirect.htmlへのリンクを生成
                     const regionId = RegionUtils.determineRegionId({ fallback: '000' });
                     if (clinic) {
-                        generatedUrl = `./redirect.html?clinic_id=${clinic.id}&rank=1&region_id=${regionId}`;
+                        generatedUrl = `${RegionUtils.buildRedirectPath()}?clinic_id=${clinic.id}&rank=1&region_id=${regionId}`;
                     }
                 }
                 
