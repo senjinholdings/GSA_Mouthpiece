@@ -4,6 +4,17 @@
 
 const __BASE_PATH_RAW = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? '/';
 const __BASE_PATH_PREFIX = (__BASE_PATH_RAW === '/' || __BASE_PATH_RAW === '' ? '' : __BASE_PATH_RAW.replace(/\/+$/, ''));
+const __BASE_ROOT_PREFIX = (() => {
+    if (!__BASE_PATH_PREFIX) {
+        return '';
+    }
+    const trimmed = __BASE_PATH_PREFIX.replace(/\/+$/, '');
+    const withoutRegion = trimmed.replace(/\/r\/(\d{1,3})$/i, '');
+    if (!withoutRegion) {
+        return '';
+    }
+    return withoutRegion.startsWith('/') ? withoutRegion : `/${withoutRegion}`;
+})();
 
 
 
