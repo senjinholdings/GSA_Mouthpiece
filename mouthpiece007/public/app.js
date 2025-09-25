@@ -830,36 +830,6 @@ class DataManager {
         console.info(`[DataManager] clinicTexts loaded via ${sourceLabel}: ${total} entries`);
     }
 
-    setInitialLoadingState(state = 'success', message) {
-        const overlay = document.getElementById('initial-loading');
-        if (!overlay) return;
-        const spinner = overlay.querySelector('[data-loading-spinner]');
-        const messageNode = overlay.querySelector('[data-loading-message]');
-        const retryButton = overlay.querySelector('[data-loading-retry]');
-
-        if (state === 'error') {
-            overlay.classList.add('has-error');
-            overlay.classList.remove('is-hidden');
-            if (spinner) spinner.classList.add('is-hidden');
-            if (messageNode && message) {
-                messageNode.textContent = message;
-            }
-            if (retryButton) {
-                retryButton.hidden = false;
-                retryButton.addEventListener('click', () => window.location.reload(), { once: true });
-            }
-            return;
-        }
-
-        overlay.classList.remove('has-error');
-        overlay.classList.add('is-hidden');
-        setTimeout(() => {
-            if (overlay.parentElement) {
-                overlay.parentElement.removeChild(overlay);
-            }
-        }, 400);
-    }
-
     async init() {
         try {
             const loadedFromBundle = await this.loadFromBundle();
@@ -2836,6 +2806,39 @@ class RankingApp {
         this.dataManager = null;
         this.currentRegionId = null;
         this.textsInitialized = false;
+    }
+
+    setInitialLoadingState(state = 'success', message) {
+        const overlay = document.getElementById('initial-loading');
+        if (!overlay) return;
+        const spinner = overlay.querySelector('[data-loading-spinner]');
+        const messageNode = overlay.querySelector('[data-loading-message]');
+        const retryButton = overlay.querySelector('[data-loading-retry]');
+
+        if (state === 'error') {
+            overlay.classList.add('has-error');
+            overlay.classList.remove('is-hidden');
+            if (spinner) spinner.classList.add('is-hidden');
+            if (messageNode && message) {
+                messageNode.textContent = message;
+            }
+            if (retryButton) {
+                retryButton.hidden = false;
+                retryButton.addEventListener('click', () => window.location.reload(), { once: true });
+            }
+            return;
+        }
+
+        if (spinner) spinner.classList.remove('is-hidden');
+        if (retryButton) retryButton.hidden = true;
+
+        overlay.classList.remove('has-error');
+        overlay.classList.add('is-hidden');
+        setTimeout(() => {
+            if (overlay.parentElement) {
+                overlay.parentElement.removeChild(overlay);
+            }
+        }, 400);
     }
 
     normalizeRegionId(regionId) {
