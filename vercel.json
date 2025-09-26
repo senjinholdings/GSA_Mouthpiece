@@ -2,8 +2,8 @@
   "rewrites": [
     { "source": "/mouthpiece001", "destination": "/mouthpiece001/index.html" },
     { "source": "/mouthpiece001/", "destination": "/mouthpiece001/index.html" },
-    { "source": "/mouthpiece001/r/:region", "destination": "/mouthpiece001/r/:region.html" },
-    { "source": "/mouthpiece001/r/:region/", "destination": "/mouthpiece001/r/:region.html" },
+    { "source": "/mouthpiece001/r/:region", "destination": "/mouthpiece001/index.html" },
+    { "source": "/mouthpiece001/r/:region/", "destination": "/mouthpiece001/index.html" },
     { "source": "/mouthpiece001/(.*)", "destination": "/mouthpiece001/$1" },
     { "source": "/mouthpiece002", "destination": "/mouthpiece002/index.html" },
     { "source": "/mouthpiece002/", "destination": "/mouthpiece002/index.html" },

@@ -4,6 +4,158 @@
 
 const __BASE_PATH_RAW = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? '/';
 const __BASE_PATH_PREFIX = (__BASE_PATH_RAW === '/' || __BASE_PATH_RAW === '' ? '' : __BASE_PATH_RAW.replace(/\/+$/, ''));
+const __BASE_ROOT_PREFIX = (() => {
+    if (!__BASE_PATH_PREFIX) {
+        return '';
+    }
+    const trimmed = __BASE_PATH_PREFIX.replace(/\/+$/, '');
+    const withoutRegion = trimmed.replace(/\/r\/(\d{1,3})$/i, '');
+    if (!withoutRegion) {
+        return '';
+    }
+    return withoutRegion.startsWith('/') ? withoutRegion : `/${withoutRegion}`;
+})();
+
+
+
+const RegionUtils = (() => {
+    const normalizeRegionId = (value) => {
+        if (value == null) {
+            return null;
+        }
+        const match = String(value).match(/\d+/);
+        if (!match) {
+            return null;
+        }
+        return match[0].padStart(3, '0');
+    };
+
+    const getPathSegments = (pathname) => {
+        if (typeof pathname !== 'string') {
+            return [];
+        }
+        return pathname.split('/').filter(Boolean);
+    };
+
+    const detectRegionIdFromPath = (pathname) => {
+        const segments = getPathSegments(pathname);
+        if (segments.length === 0) {
+            return null;
+        }
+        const rIndex = segments.findIndex((segment) => segment.toLowerCase() === 'r');
+        if (rIndex !== -1 && segments[rIndex + 1]) {
+            return normalizeRegionId(segments[rIndex + 1]);
+        }
+        for (let i = segments.length - 1; i >= 0; i -= 1) {
+            const match = segments[i].match(/^r[-_]?(\d{1,3})$/i);
+            if (match) {
+                return normalizeRegionId(match[1]);
+            }
+        }
+        const last = segments[segments.length - 1];
+        if (last) {
+            const numeric = last.match(/^(\d{1,3})$/);
+            if (numeric) {
+                return normalizeRegionId(numeric[1]);
+            }
+        }
+        return null;
+    };
+
+    const detectRegionIdFromQuery = (search) => {
+        if (typeof search !== 'string') {
+            return null;
+        }
+        try {
+            const params = new URLSearchParams(search);
+            return normalizeRegionId(params.get('region_id'));
+        } catch (_) {
+            return null;
+        }
+    };
+
+    const rememberRegionId = (regionId) => {
+        const normalized = normalizeRegionId(regionId);
+        if (!normalized) {
+            return null;
+        }
+        if (typeof window !== 'undefined') {
+            window.__REGION_ID__ = normalized;
+        }
+        return normalized;
+    };
+
+    const determineRegionId = ({ fallback = '013', prefer = 'path' } = {}) => {
+        if (typeof window === 'undefined') {
+            return fallback;
+        }
+        const stored = normalizeRegionId(window.__REGION_ID__);
+        if (stored) {
+            return stored;
+        }
+        const fromPath = detectRegionIdFromPath(window.location.pathname || '');
+        const fromQuery = detectRegionIdFromQuery(window.location.search || '');
+        const candidate = prefer === 'query'
+            ? (fromQuery || fromPath)
+            : (fromPath || fromQuery);
+        if (candidate) {
+            rememberRegionId(candidate);
+            return candidate;
+        }
+        return fallback;
+    };
+
+    const buildRegionPath = (regionId) => {
+        const normalized = normalizeRegionId(regionId);
+        if (!normalized) {
+            return null;
+        }
+        if (!__BASE_ROOT_PREFIX) {
+            return `/r/${normalized}/`;
+        }
+        return `${__BASE_ROOT_PREFIX}/r/${normalized}/`;
+    };
+
+    const redirectPath = (() => {
+        if (!__BASE_ROOT_PREFIX) {
+            return '/redirect.html';
+        }
+        return `${__BASE_ROOT_PREFIX}/redirect.html`;
+    })();
+
+    const buildRedirectPath = () => redirectPath;
+
+    const navigateToRegion = (regionId, { replace = false } = {}) => {
+        const target = buildRegionPath(regionId);
+        if (!target || typeof window === 'undefined') {
+            return;
+        }
+        rememberRegionId(regionId);
+        if (replace) {
+            window.history.replaceState({}, '', target);
+        } else {
+            window.location.assign(target);
+        }
+    };
+
+    return {
+        normalizeRegionId,
+        detectRegionIdFromPath,
+        detectRegionIdFromQuery,
+        determineRegionId,
+        rememberRegionId,
+        buildRegionPath,
+        buildRedirectPath,
+        navigateToRegion,
+        getBaseRootPrefix: () => __BASE_ROOT_PREFIX,
+    };
+})();
+
+
+if (typeof window !== 'undefined') {
+    window.RegionUtils = RegionUtils;
+}
+
 
 /**
  * Resolve an asset/data path against the deployment base path while leaving absolute URLs untouched.
@@ -30,14 +182,37 @@ function resolveAssetPath(resource) {
     if (!normalized.startsWith('/')) {
         normalized = `/${normalized}`;
     }
+    const basePrefix = RegionUtils.getBaseRootPrefix ? (RegionUtils.getBaseRootPrefix() || __BASE_PATH_PREFIX) : __BASE_PATH_PREFIX;
     // Avoid double-prefix if already includes base
-    if (__BASE_PATH_PREFIX && normalized.startsWith(`${__BASE_PATH_PREFIX}/`)) {
+    if (basePrefix && normalized.startsWith(`${basePrefix}/`)) {
         return normalized;
     }
-    return __BASE_PATH_PREFIX ? `${__BASE_PATH_PREFIX}${normalized}` : normalized;
+    return basePrefix ? `${basePrefix}${normalized}` : normalized;
 }
 
-// デプロイバリアント（mouthpiece001/002/...）を抽出
+function getImagesBasePath() {
+    if (typeof resolveAssetPath === 'function') {
+        const resolved = resolveAssetPath('/images');
+        if (typeof resolved === 'string') {
+            return resolved.replace(/\/+$/, '');
+        }
+        return resolved;
+    }
+    const configured = window.SITE_CONFIG?.imagesPath;
+    if (configured) {
+        return `${configured.replace(/\/+$/, '')}/images`;
+    }
+    return '/images';
+}
+
+function buildImagePath(relativePath = '') {
+    const base = getImagesBasePath();
+    if (!relativePath) {
+        return base;
+    }
+    const sanitized = String(relativePath).replace(/^\/+/, '');
+    return `${base}/${sanitized}`;
+}
 function getDeploymentVariantId() {
     try {
         const base = __BASE_PATH_RAW || window.location.pathname || '';
@@ -90,57 +265,64 @@ class UrlParamHandler {
     }
 
     getRegionId() {
-        return this.getParam('region_id') || '013'; // デフォルトは東京
+        return RegionUtils.determineRegionId();
     }
 
-    updateRegionId(regionId) {
-        this.setParam('region_id', regionId);
+    updateRegionId(regionId, options = {}) {
+        const normalized = RegionUtils.normalizeRegionId(regionId);
+        if (!normalized) {
+            return;
+        }
+        RegionUtils.rememberRegionId(normalized);
+        if (options?.navigate) {
+            RegionUtils.navigateToRegion(normalized, { replace: options?.replace === true });
+            return;
+        }
+        this.setParam('region_id', normalized);
     }
 
     // クリニックURLを取得（CSVから直接URLを取得し、パラメータを適切に処理）
-    getClinicUrlWithRegionId(clinicId, rank = 1) {
-        // DataManagerが初期化されているか確認
+    getClinicUrlWithRegionId(clinicId, rank = 1, options = {}) {
         if (!window.dataManager) {
             return '#';
         }
-        
-        // パラメータをlocalStorageに保存（サーバーがURLパラメータを削除する対策）
+
+        const opts = options || {};
+        const ctaType = typeof opts.ctaType === 'string' && opts.ctaType.trim()
+            ? opts.ctaType.trim()
+            : null;
+
         const regionId = this.getRegionId();
         const redirectParams = {
             clinic_id: clinicId,
             rank: rank,
             region_id: regionId || '013'
         };
-        
-        // クリックイベントでlocalStorageに保存するため、データ属性として埋め込む
-        // 実際の保存はクリック時に行う
-        const redirectUrl = new URL('./redirect.html', window.location.origin + window.location.pathname);
-        
-        // URLパラメータも念のため設定（サーバーが保持する場合に備えて）
+        if (ctaType) {
+            redirectParams.cta_type = ctaType;
+        }
+
+        const redirectUrl = new URL(RegionUtils.buildRedirectPath(), window.location.origin);
         redirectUrl.searchParams.set('clinic_id', clinicId);
         redirectUrl.searchParams.set('rank', rank);
         if (regionId) {
             redirectUrl.searchParams.set('region_id', regionId);
         }
-        
-        // データ属性用のJSON文字列を作成
+        if (ctaType) {
+            redirectUrl.searchParams.set('cta_type', ctaType);
+        }
+
         const dataJson = JSON.stringify(redirectParams);
-        
-        // カスタムデータ属性として埋め込むため、特殊なハッシュを使用
         redirectUrl.hash = `params=${encodeURIComponent(dataJson)}`;
-        
+
         return redirectUrl.toString();
     }
 
+
     // クリニック名からURLを生成してregion_idパラメータを付与するヘルパー関数（リダイレクトページ経由）
-    getClinicUrlByNameWithRegionId(clinicName) {
-        // DataManagerから動的にクリニックコードを取得
+    getClinicUrlByNameWithRegionId(clinicName, options = {}) {
         let clinicCode = clinicName;
-        
-        // グローバルのdataManagerを使用
         const dataManager = window.dataManager;
-        
-        // clinicNameがクリニック名の場合、クリニックコードに変換
         if (dataManager) {
             const clinics = dataManager.clinics || [];
             const clinic = clinics.find(c => c.name === clinicName || c.code === clinicName);
@@ -148,20 +330,17 @@ class UrlParamHandler {
                 clinicCode = clinic.code;
             }
         }
-        
-        // redirect.htmlへのパスを生成
+
         if (!clinicCode) return '#';
-        
-        // DataManagerからクリニックIDを取得
+
         let clinicId = null;
-        let rank = 1; // デフォルトは1位
-        
+        let rank = 1;
+
         if (dataManager) {
             const clinics = dataManager.clinics || [];
             const clinic = clinics.find(c => c.code === clinicCode);
             if (clinic) {
                 clinicId = clinic.id;
-                // ランキングから順位を取得（getRankingsByRegionメソッドを直接使用）
                 try {
                     if (dataManager.getRankingsByRegion && typeof dataManager.getRankingsByRegion === 'function') {
                         const rankings = dataManager.getRankingsByRegion(this.getRegionId());
@@ -170,11 +349,9 @@ class UrlParamHandler {
                             rank = rankInfo.rank;
                         }
                     } else {
-                        // getRankingsByRegionが存在しない場合は、rankingsから直接取得
                         const regionId = this.getRegionId();
                         if (dataManager.rankings && dataManager.rankings[regionId]) {
                             const regionRankings = dataManager.rankings[regionId];
-                            // regionRankingsから該当するクリニックの順位を探す
                             const rankingEntries = Object.entries(regionRankings.ranks || {});
                             for (const [position, cId] of rankingEntries) {
                                 if (cId == clinicId) {
@@ -185,61 +362,71 @@ class UrlParamHandler {
                         }
                     }
                 } catch (e) {
-                    rank = 1; // エラー時はデフォルトで1位
+                    rank = 1;
                 }
             }
         }
-        
-        if (!clinicId) return '#';
-        
-        // redirect.htmlへのパスを生成
-        const regionId = this.getRegionId();
-        let redirectUrl = `./redirect.html?clinic_id=${clinicId}&rank=${rank}`;
-        if (regionId) {
-            redirectUrl += `&region_id=${regionId}`;
+
+        if (!clinicId) {
+            return '#';
         }
-        
-        // UTMパラメータなどを追加
+
+        const baseRedirect = this.getClinicUrlWithRegionId(clinicId, rank, options);
+        if (!baseRedirect || baseRedirect === '#') {
+            return '#';
+        }
+        const redirectUrl = new URL(baseRedirect, window.location.origin);
+
         const urlParams = new URLSearchParams(window.location.search);
         const utmCreative = urlParams.get('utm_creative');
         const gclid = urlParams.get('gclid');
-        
         if (utmCreative) {
-            redirectUrl += `&utm_creative=${encodeURIComponent(utmCreative)}`;
+            redirectUrl.searchParams.set('utm_creative', utmCreative);
         }
         if (gclid) {
-            redirectUrl += `&gclid=${encodeURIComponent(gclid)}`;
+            redirectUrl.searchParams.set('gclid', gclid);
         }
-        
-        return redirectUrl;
+
+        return redirectUrl.toString();
     }
 
     // 直フォームの遷移先URL（存在しない場合は通常のリダイレクトURLにフォールバック）
     getDirectFormUrl(clinicId, rank = 1) {
+        const redirectCandidate = this.getClinicUrlWithRegionId(clinicId, rank, { ctaType: 'direct' });
+        if (redirectCandidate && redirectCandidate !== '#') {
+            return redirectCandidate;
+        }
+
         try {
             const dm = window.dataManager;
-            if (!dm) return this.getClinicUrlWithRegionId(clinicId, rank);
+            if (!dm) return redirectCandidate;
             const clinicCode = dm.getClinicCodeById(clinicId);
-            if (!clinicCode) return this.getClinicUrlWithRegionId(clinicId, rank);
-            // ランク別キーを最優先で参照
+            if (!clinicCode) return redirectCandidate;
+            const getTrimmed = (fieldName) => {
+                const raw = dm.getClinicText(clinicCode, fieldName, '');
+                return typeof raw === 'string' ? raw.trim() : (raw || '');
+            };
             const rankKeys = [
                 `直フォームの遷移先URL（${rank}位）`,
                 `直フォーム遷移先URL（${rank}位）`,
                 `直フォームURL（${rank}位）`
             ];
-            for (let i=0;i<rankKeys.length;i++){
-                const v = dm.getClinicText(clinicCode, rankKeys[i], '').trim();
-                if (v) return v;
+            for (let i = 0; i < rankKeys.length; i++) {
+                const candidate = getTrimmed(rankKeys[i]);
+                if (candidate) {
+                    return candidate;
+                }
             }
-            // 共通キー
-            const candidates = ['直フォームURL','直フォーム遷移先URL','無料相談フォームURL','予約フォームURL','フォームURL','問い合わせフォームURL','CTA直リンクURL'];
-            for (let i = 0; i < candidates.length; i++) {
-                const val = dm.getClinicText(clinicCode, candidates[i], '').trim();
-                if (val) return val;
+            const commonKeys = ['直フォームURL', '直フォーム遷移先URL', '無料相談フォームURL', '予約フォームURL', 'フォームURL', '問い合わせフォームURL', 'CTA直リンクURL'];
+            for (let i = 0; i < commonKeys.length; i++) {
+                const candidate = getTrimmed(commonKeys[i]);
+                if (candidate) {
+                    return candidate;
+                }
             }
-            return this.getClinicUrlWithRegionId(clinicId, rank);
+            return redirectCandidate;
         } catch (_) {
-            return this.getClinicUrlWithRegionId(clinicId, rank);
+            return redirectCandidate;
         }
     }
 }
@@ -383,7 +570,7 @@ class DisplayManager {
             }
 
             // バナー画像をclinic-texts.jsonから取得
-            const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+            const imagesPath = getImagesBasePath();
             const clinicCodeForImage = window.dataManager.getClinicCodeById(clinic.id);
             let bannerImage = `/common_data/images/clinics/tcb/tcb-logo.webp`; // デフォルト
             
@@ -753,45 +940,46 @@ class DataManager {
                 const heroImage = document.querySelector('.hero-image');
                 const heroSource = document.querySelector('.hero-image-wrapper source');
                 if (heroImage) {
-                    heroImage.src = this.commonTexts['MV画像パス'];
+                    const mvPath = resolveAssetPath(this.commonTexts['MV画像パス']);
+                    heroImage.src = mvPath;
                 }
                 if (heroSource) {
-                    heroSource.srcset = this.commonTexts['MV画像パス'];
+                    heroSource.srcset = resolveAssetPath(this.commonTexts['MV画像パス']);
                 }
             }
 
             if (this.commonTexts['ランキングバナー画像パス']) {
                 const rankingBanners = document.querySelectorAll('.ranking-banner-image');
                 rankingBanners.forEach(img => {
-                    img.src = this.commonTexts['ランキングバナー画像パス'];
+                    img.src = resolveAssetPath(this.commonTexts['ランキングバナー画像パス']);
                 });
             }
 
             if (this.commonTexts['Tips1画像パス']) {
                 const tips1Img = document.querySelector('.tab-content[data-tab="0"] img');
                 if (tips1Img) {
-                    tips1Img.src = this.commonTexts['Tips1画像パス'];
+                    tips1Img.src = resolveAssetPath(this.commonTexts['Tips1画像パス']);
                 }
             }
 
             if (this.commonTexts['Tips2画像パス']) {
                 const tips2Img = document.querySelector('.tab-content[data-tab="1"] img');
                 if (tips2Img) {
-                    tips2Img.src = this.commonTexts['Tips2画像パス'];
+                    tips2Img.src = resolveAssetPath(this.commonTexts['Tips2画像パス']);
                 }
             }
 
             if (this.commonTexts['Tips3画像パス']) {
                 const tips3Img = document.querySelector('.tab-content[data-tab="2"] img');
                 if (tips3Img) {
-                    tips3Img.src = this.commonTexts['Tips3画像パス'];
+                    tips3Img.src = resolveAssetPath(this.commonTexts['Tips3画像パス']);
                 }
             }
 
             if (this.commonTexts['詳細バナー画像パス']) {
                 const detailsBanner = document.querySelector('.details-banner-image');
                 if (detailsBanner) {
-                    detailsBanner.src = this.commonTexts['詳細バナー画像パス'];
+                    detailsBanner.src = resolveAssetPath(this.commonTexts['詳細バナー画像パス']);
                 }
             }
         }, 100);
@@ -1005,8 +1193,71 @@ class DataManager {
     }
 
     async fetchJsonWithFallback(candidates = []) {
-        for (const url of candidates) {
-            if (!url) continue;
+        if (!Array.isArray(candidates) || candidates.length === 0) {
+            return null;
+        }
+
+        const unique = new Set();
+        const queue = [];
+        const baseCandidates = [];
+
+        try {
+            if (typeof RegionUtils?.getBaseRootPrefix === 'function') {
+                const rootPrefix = RegionUtils.getBaseRootPrefix();
+                if (rootPrefix) {
+                    baseCandidates.push(rootPrefix.replace(/\/+$/, ''));
+                }
+            }
+        } catch (_) {
+            // ignore
+        }
+
+        if (typeof __BASE_PATH_PREFIX === 'string' && __BASE_PATH_PREFIX) {
+            baseCandidates.push(__BASE_PATH_PREFIX.replace(/\/+$/, ''));
+        }
+
+        if (typeof __BASE_PATH_RAW === 'string' && __BASE_PATH_RAW && __BASE_PATH_RAW !== '/') {
+            baseCandidates.push(__BASE_PATH_RAW.replace(/\/+$/, ''));
+        }
+
+        const escapeRegex = (value) => value.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+
+        const register = (url) => {
+            if (!url || typeof url !== 'string') return;
+            const cleaned = url.replace(/\s+/g, match => encodeURIComponent(match));
+            if (unique.has(cleaned)) return;
+            unique.add(cleaned);
+            queue.push(cleaned);
+        };
+
+        const addVariants = (originalUrl) => {
+            if (!originalUrl) return;
+            register(originalUrl);
+
+            if (originalUrl.startsWith('/')) {
+                const withoutLeading = originalUrl.replace(/^\/+/, '');
+                register(`/${withoutLeading}`);
+                register(`./${withoutLeading}`);
+            }
+
+            baseCandidates.forEach((basePrefixRaw) => {
+                if (!basePrefixRaw) return;
+                const basePrefix = basePrefixRaw.startsWith('/') ? basePrefixRaw : `/${basePrefixRaw}`;
+                const regex = new RegExp(`^${escapeRegex(basePrefix)}(?=/|$)`);
+                if (regex.test(originalUrl)) {
+                    const stripped = originalUrl.replace(regex, '') || '/';
+                    register(stripped);
+                    if (stripped.startsWith('/')) {
+                        register(`.${stripped}`);
+                        register(`./${stripped.replace(/^\/+/, '')}`);
+                    }
+                }
+            });
+        };
+
+        candidates.forEach(addVariants);
+
+        for (const url of queue) {
             try {
                 const res = await fetch(url);
                 if (!res || !res.ok) continue;
@@ -1016,7 +1267,7 @@ class DataManager {
                 if (!text) continue;
                 return JSON.parse(text);
             } catch (_) {
-                // 次の候補を試す
+                // Try next variant
             }
         }
         return null;
@@ -2100,9 +2351,13 @@ class DataManager {
         if (!storeData || storeData.length === 0) {
             return '<div class="shops"><p class="no-stores">この地域には店舗がありません</p></div>';
         }
-        
+
+        const urlHandler = new UrlParamHandler();
+
         const visibleStores = storeData.slice(0, 3);
         const hiddenStores = storeData.slice(3);
+        const officialRedirectUrl = urlHandler.getClinicUrlWithRegionId(clinicId, rank, { ctaType: 'official' });
+        const officialRedirectPayload = `JSON.stringify({clinic_id: '${clinicId}', rank: '${rank}', region_id: '${regionId}', cta_type: 'official'})`;
         const storeId = `shops-${Date.now()}`; // ユニークなIDを生成
         
         let html = `<div class="shops" id="${storeId}">`;
@@ -2112,13 +2367,10 @@ class DataManager {
             const storeName = store.name || store.storeName || '店舗名不明';
             const storeAddress = store.address || '住所情報なし';
             
-            // ハッシュフラグメントを使用（サーバーのURL書き換えに影響されない）
-            const redirectUrl = `./redirect.html#clinic_id=${clinicId}&rank=${rank}&region_id=${regionId}`;
-            
-            // localStorageを先に設定してから開く（サーバーがパラメータを削除する場合の対策）
+            const redirectUrl = officialRedirectUrl;
             const onclickHandler = targetUrl ? 
-                `onclick="localStorage.setItem('redirectParams', JSON.stringify({clinic_id: '${clinicId}', rank: '${rank}', region_id: '${regionId}'})); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"` : '';
-            
+                `onclick="localStorage.setItem('redirectParams', ${officialRedirectPayload}); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"` : '';
+
             html += `
                 <div class='shop'>
                     <div class='shop-image'>
@@ -2145,13 +2397,10 @@ class DataManager {
             const storeName = store.name || store.storeName || '店舗名不明';
             const storeAddress = store.address || '住所情報なし';
             
-            // ハッシュフラグメントを使用（サーバーのURL書き換えに影響されない）
-            const redirectUrl = `./redirect.html#clinic_id=${clinicId}&rank=${rank}&region_id=${regionId}`;
-            
-            // localStorageを先に設定してから開く（サーバーがパラメータを削除する場合の対策）
+            const redirectUrl = officialRedirectUrl;
             const onclickHandler = targetUrl ? 
-                `onclick="localStorage.setItem('redirectParams', JSON.stringify({clinic_id: '${clinicId}', rank: '${rank}', region_id: '${regionId}'})); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"` : '';
-            
+                `onclick="localStorage.setItem('redirectParams', ${officialRedirectPayload}); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"` : '';
+
             html += `
                 <div class='shop hidden-content hidden'>
                     <div class='shop-image'>
@@ -2369,9 +2618,7 @@ class DataManager {
 
     // 現在の地域IDを取得
     getCurrentRegionId() {
-        // URLパラメータから取得
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('region_id') || '000'; // デフォルトは全国
+        return RegionUtils.determineRegionId({ fallback: '000' });
     }
 
     // 地域IDをマッピング（存在しない地域を適切な地域にマッピング）
@@ -2720,6 +2967,9 @@ class RankingApp {
     }
 
     setupEventListeners() {
+        // サイドバーメニューの初期化と制御
+        this.initializeSidebar();
+
         // 地域選択の変更イベント（検索フィルター用）
         if (this.displayManager.regionSelect) {
             this.displayManager.regionSelect.addEventListener('change', () => {
@@ -2795,37 +3045,6 @@ class RankingApp {
             });
         }
         
-        // ハンバーガーメニューのイベント
-        
-        if (this.displayManager.hamburgerMenu) {
-            this.displayManager.hamburgerMenu.addEventListener('click', (e) => {
-                e.stopPropagation(); // イベントの伝播を停止
-                
-                this.displayManager.hamburgerMenu.classList.toggle('active');
-                this.displayManager.sidebarMenu.classList.toggle('active');
-                this.displayManager.sidebarOverlay.classList.toggle('active');
-            });
-        } else {
-        }
-
-        // サイドバーを閉じる
-        if (this.displayManager.closeSidebar) {
-            this.displayManager.closeSidebar.addEventListener('click', () => {
-                this.displayManager.hamburgerMenu.classList.remove('active');
-                this.displayManager.sidebarMenu.classList.remove('active');
-                this.displayManager.sidebarOverlay.classList.remove('active');
-            });
-        }
-
-        // オーバーレイクリックで閉じる
-        if (this.displayManager.sidebarOverlay) {
-            this.displayManager.sidebarOverlay.addEventListener('click', () => {
-                this.displayManager.hamburgerMenu.classList.remove('active');
-                this.displayManager.sidebarMenu.classList.remove('active');
-                this.displayManager.sidebarOverlay.classList.remove('active');
-            });
-        }
-
     }
 
     changeRegion(regionId) {
@@ -3499,7 +3718,7 @@ class RankingApp {
                 
                 if (fieldName === 'クリニック名') {
                     // クリニック名とロゴ
-                    const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+                    const imagesPath = getImagesBasePath();
                     let logoPath = this.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '');
 
                     if (!logoPath) {
@@ -3519,8 +3738,9 @@ class RankingApp {
                         logoPath = (typeof resolveAssetPath === 'function') ? resolveAssetPath(logoPath) : logoPath;
                     }
                     
-                    const redirectUrl = `./redirect.html#clinic_id=${clinicId}&rank=${rankNum}&region_id=${regionId}`;
-                    const clinicNameOnclick = `onclick="localStorage.setItem('redirectParams', JSON.stringify({clinic_id: '${clinicId}', rank: '${rankNum}', region_id: '${regionId}'})); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"`;
+                    const redirectUrl = this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank || rankNum, { ctaType: 'official' });
+                    const redirectPayload = `JSON.stringify({clinic_id: '${clinicId}', rank: '${rankNum}', region_id: '${regionId}', cta_type: 'official'})`;
+                    const clinicNameOnclick = `onclick="localStorage.setItem('redirectParams', ${redirectPayload}); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"`;
                     
                     td.className = 'ranking-table_td1';
                     td.innerHTML = `
@@ -3568,8 +3788,73 @@ class RankingApp {
         // 詳細を見るリンクのイベントリスナーを再設定
         this.setupDetailScrollLinks();
     }
-    
-    
+
+    // サイドバーメニューの初期化
+    initializeSidebar() {
+        const hamburgerMenu = this.displayManager.hamburgerMenu;
+        const sidebarMenu = this.displayManager.sidebarMenu;
+        const sidebarOverlay = this.displayManager.sidebarOverlay;
+        const closeSidebar = this.displayManager.closeSidebar;
+
+        console.log('[Sidebar] Initializing sidebar:', {
+            hamburgerMenu: !!hamburgerMenu,
+            sidebarMenu: !!sidebarMenu,
+            sidebarOverlay: !!sidebarOverlay,
+            closeSidebar: !!closeSidebar
+        });
+
+        // デフォルトで閉じた状態を確実にする
+        if (sidebarMenu) {
+            sidebarMenu.classList.remove('active');
+        }
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.remove('active');
+        }
+
+        // ハンバーガーメニュークリックでサイドバーを開く
+        if (hamburgerMenu) {
+            console.log('[Sidebar] Adding click listener to hamburger menu');
+            hamburgerMenu.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('[Sidebar] Hamburger menu clicked');
+                if (sidebarMenu) {
+                    sidebarMenu.classList.toggle('active');
+                    console.log('[Sidebar] Sidebar active:', sidebarMenu.classList.contains('active'));
+                }
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.toggle('active');
+                }
+            });
+        } else {
+            console.warn('[Sidebar] Hamburger menu not found!');
+        }
+
+        // 閉じるボタンクリックでサイドバーを閉じる
+        if (closeSidebar) {
+            closeSidebar.addEventListener('click', () => {
+                if (sidebarMenu) {
+                    sidebarMenu.classList.remove('active');
+                }
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        }
+
+        // オーバーレイクリックでサイドバーを閉じる
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                if (sidebarMenu) {
+                    sidebarMenu.classList.remove('active');
+                }
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        }
+    }
+
     // 現在表示されているクリニックのデータを取得
     getCurrentDisplayedClinics() {
         // 現在のランキングデータから表示中のクリニックを取得
@@ -3769,12 +4054,11 @@ class RankingApp {
                 ? resolveAssetPath(logoPath)
                 : logoPath;
             
-            // リダイレクトURL（ハッシュフラグメント使用）
-            const redirectUrl = `./redirect.html#clinic_id=${clinicId}&rank=${rankNum}&region_id=${regionId}`;
-            
-            // クリニック名リンクにもlocalStorageとリダイレクトを適用
-            const clinicNameOnclick = `onclick="localStorage.setItem('redirectParams', JSON.stringify({clinic_id: '${clinicId}', rank: '${rankNum}', region_id: '${regionId}'})); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"`;
-            
+            const redirectUrl = this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank || rankNum, { ctaType: 'official' });
+
+            const redirectPayload = `JSON.stringify({clinic_id: '${clinicId}', rank: '${rankNum}', region_id: '${regionId}', cta_type: 'official'})`;
+            const clinicNameOnclick = `onclick="localStorage.setItem('redirectParams', ${redirectPayload}); setTimeout(() => { window.open('${redirectUrl}', '_blank'); }, 10); return false;"`;
+
             tr.innerHTML = `
                 <td class="ranking-table_td1">
                     <img src="${resolvedLogoPath}" alt="${clinic.name}" width="80">
@@ -3852,7 +4136,7 @@ class RankingApp {
         if (!clinicCode) return;
         
         // 画像パスの設定
-        const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+        const imagesPath = getImagesBasePath();
         
         // クリニック名を更新
         const clinicNameElements = ['first-choice-clinic-name', 'first-choice-title-clinic-name'];
@@ -4443,7 +4727,7 @@ class RankingApp {
                     if (!sanitizedClinicCode) {
                         return '';
                     }
-                    const baseVideoPath = (window.SITE_CONFIG && window.SITE_CONFIG.imagesPath) ? window.SITE_CONFIG.imagesPath : './images';
+                    const baseVideoPath = getImagesBasePath();
                     const videoSrc = `${baseVideoPath}/${sanitizedClinicCode}_treatment.mp4`;
                     const videoHtml = `<div class=\"procedure-video-embed\" data-clinic-code=\"${sanitizedClinicCode}\" data-video-src=\"${videoSrc}\">\n                            <video class=\"procedure-video\" controls playsinline preload=\"auto\" tabindex=\"0\" aria-label=\"${clinic.name}の施術風景\">\n                                <source src=\"${videoSrc}\" type=\"video/mp4\">\n                                お使いのブラウザでは動画を再生できません。\n                            </video>\n                            <button type=\"button\" class=\"procedure-video-toggle\" aria-label=\"再生\">\n                                <span class=\"procedure-video-toggle-icon\"></span>\n                            </button>\n                        </div>`;
 
@@ -4928,7 +5212,7 @@ class RankingApp {
     getStoreImage(clinicName, storeNumber) {
         // 店舗番号を3桁の文字列に変換
         const paddedNumber = String(storeNumber).padStart(3, '0');
-        const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+        const imagesPath = getImagesBasePath();
         
         // 最初の拡張子でパスを返す（onerrorでフォールバックされる）
         const storeImagePath = `${imagesPath}/clinics/${clinicName}/${clinicName}_clinic/clinic_image_${paddedNumber}.webp`;
@@ -4939,7 +5223,7 @@ class RankingApp {
     // 画像フォールバック処理（複数拡張子対応）
     handleImageError(imgElement, clinicName, storeNumber) {
         const paddedNumber = String(storeNumber).padStart(3, '0');
-        const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
+        const imagesPath = getImagesBasePath();
         const extensions = ['jpg', 'png'];
         
         // 現在の拡張子を取得
@@ -5251,9 +5535,9 @@ class RankingApp {
                 // URLが生成できなかった場合のフォールバック
                 if (!generatedUrl || generatedUrl === '#') {
                     // 直接redirect.htmlへのリンクを生成
-                    const regionId = new URLSearchParams(window.location.search).get('region_id') || '000';
+                    const regionId = RegionUtils.determineRegionId({ fallback: '000' });
                     if (clinic) {
-                        generatedUrl = `./redirect.html?clinic_id=${clinic.id}&rank=1&region_id=${regionId}`;
+                        generatedUrl = `${RegionUtils.buildRedirectPath()}?clinic_id=${clinic.id}&rank=1&region_id=${regionId}`;
                     }
                 }
                 
@@ -5352,8 +5636,7 @@ function initializeDisclaimers() {
     
     // 方法2: 上記が取得できない場合はURLパラメータから直接取得
     if (!regionId) {
-        const urlParams = new URLSearchParams(window.location.search);
-        regionId = urlParams.get('region_id');
+        regionId = RegionUtils.determineRegionId();
     }
     
     // デフォルトは東京（13）- データと一致させる

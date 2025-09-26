@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>大阪の医療脱毛クリニック｜TOP3</title>
+  <!-- お好みで：ウェブフォント（なくても動作します） -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;900&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #fff6fb;
+      --ink: #3b3b3b;
+      --muted: #8a8a8a;
+
+      --pink-100: #ffe0ef;
+      --pink-500: #ff8fb8;
+      --pink-600: #ff79ad;
+
+      --violet-100:#efe6ff;
+      --violet-500:#b99af8;
+      --violet-600:#a483ff;
+
+      --blue-100:#e6f5ff;
+      --blue-500:#88cfff;
+      --blue-600:#63baf8;
+
+      --card: #ffffff;
+      --card-shadow: 0 14px 30px rgba(35, 28, 45, 0.08);
+
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+      --maxw: 960px;
+    }
+
+    /* Reset-ish */
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 800px at 70% -10%, #ffeef7 20%, transparent 70%) no-repeat,
+        radial-gradient(1000px 700px at -10% -10%, #f7fbff 10%, transparent 70%) no-repeat,
+        var(--bg);
+    }
+    .wrap{
+      max-width:var(--maxw);
+      margin:auto;
+      padding:28px 18px 60px;
+    }
+
+    /* ── ヒーロー ─────────────────────────── */
+    .hero{
+      text-align:center;
+      position:relative;
+      padding:8px 0 22px;
+    }
+    .hero .pickup{
+      display:inline-block;
+      font-size:12px;
+      font-weight:700;
+      color:#ff3f88;
+      background:#fff;
+      border:2px dashed #ffc2dc;
+      border-radius:999px;
+      padding:6px 12px;
+      letter-spacing:.05em;
+    }
+    .hero h1{
+      margin:10px 0 0;
+      font-weight:900;
+      line-height:1.15;
+      font-size: clamp(22px, 4.8vw, 40px);
+      letter-spacing: .03em;
+      background: linear-gradient(90deg, #ff6aa3 0%, #ff94c3 35%, #ff6aa3 70%, #ff94c3 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 1px 0 rgba(255,255,255,.7);
+    }
+    /* きらきら装飾 */
+    .hero::before,
+    .hero::after{
+      content:"✦ ✧ ✦";
+      position:absolute;
+      font-size:20px;
+      color:#ff9ec8;
+      opacity:.7;
+    }
+    .hero::before{ left:6px; top:8px; transform:rotate(-8deg) }
+    .hero::after{ right:6px; top:4px; transform:rotate(8deg) }
+
+    /* ── セクション（共通） ────────────────── */
+    .section{
+      position:relative;
+      margin-top:28px;
+      padding-top:16px;
+    }
+    /* 左の金メダル（CSSのみ） */
+    .section .medal{
+      position:absolute;
+      left:-6px;
+      top:-6px;
+      width:64px; height:64px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 30% 30%, #fff9d7 0 42%, transparent 43%),
+        conic-gradient(from 210deg, #ffd15e, #ffbd3c 40%, #f3a824 70%, #ffd15e 100%);
+      box-shadow: 0 6px 14px rgba(243,168,36,.35), inset 0 3px 6px rgba(255,255,255,.7);
+      display:grid;
+      place-items:center;
+      font-family: Poppins, system-ui, sans-serif;
+      font-weight:800;
+      color:#9b5d00;
+      border:4px solid #ffe9a3;
+      z-index:1;
+    }
+    .medal::after{
+      /* 赤いリボン（下） */
+      content:"";
+      position:absolute;
+      bottom:-14px; left:50%;
+      width:0; height:0;
+      transform:translateX(-50%);
+      border-left:14px solid transparent;
+      border-right:14px solid transparent;
+      border-top:18px solid #ff6b6b;
+      filter:drop-shadow(0 3px 0 rgba(0,0,0,.05));
+    }
+
+    /* ピル型のセクション見出し */
+    .ribbon{
+      display:block;
+      margin:0 auto 14px;
+      width:max-content;
+      padding:10px 18px;
+      border-radius:999px;
+      font-weight:700;
+      color:#fff;
+      letter-spacing:.04em;
+      box-shadow: 0 6px 18px rgba(0,0,0,.06), inset 0 -2px 0 rgba(255,255,255,.25);
+    }
+    .ribbon.pink{   background:linear-gradient(90deg, var(--pink-600), var(--pink-500)); }
+    .ribbon.violet{ background:linear-gradient(90deg, var(--violet-600), var(--violet-500)); }
+    .ribbon.blue{   background:linear-gradient(90deg, var(--blue-600), var(--blue-500)); }
+
+    /* カードのグリッド */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+      padding-left:56px; /* メダル分の空き */
+    }
+    @media (max-width: 880px){
+      /* SPでも添付イメージのように3カラムを維持 */
+      .grid{ grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 620px){
+      /* 3カラム維持 + メダル分の余白を確保 */
+      .grid{ grid-template-columns: repeat(3, 1fr); padding-left:56px }
+      .section .medal{ left:8px; top:-10px; transform:scale(.9) }
+      /* カードとロゴの縮小で視認性を確保 */
+      .card{ min-height:110px; padding:12px }
+      .logo-eminal .jp{ font-size: clamp(18px, 6.5vw, 28px) }
+      .logo-sbc .lat{ font-size: clamp(24px, 8.5vw, 48px) }
+      .logo-rize .box{ width:56px; height:56px; font-size:24px }
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius-xl);
+      border:1px solid rgba(28,28,28,.06);
+      min-height:130px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:18px;
+      box-shadow:var(--card-shadow);
+    }
+    .card small{ color:var(--muted) }
+
+    /* ── ロゴ風スタイル ───────────────────── */
+    /* REGINA */
+    .logo-regina{
+      display:grid;
+      gap:8px;
+      place-items:center;
+      font-weight:700;
+      letter-spacing:.12em;
+    }
+    .logo-regina svg{ width:58px; height:30px; display:block }
+    .logo-regina .name{ font-family:Poppins, system-ui, sans-serif }
+    /* エミナル */
+    .logo-eminal .jp{
+      font-weight:900;
+      font-size:28px;
+      line-height:.9;
+      color:#ff6aa3;
+      letter-spacing:.06em;
+    }
+    .logo-eminal .sub{
+      margin-top:2px;
+      font-weight:700;
+      color:#ff6aa3;
+      letter-spacing:.2em;
+    }
+    /* SBS（湘南美容クリニック） */
+    .logo-sbc .lat{
+      font-family:Poppins, system-ui, sans-serif;
+      font-size:48px;
+      font-weight:800;
+      letter-spacing:.12em;
+      color:#ff9ab9;
+    }
+    .logo-sbc .jp{
+      font-weight:700;
+      color:#ff9ab9;
+      letter-spacing:.12em;
+    }
+    /* リゼ */
+    .logo-rize{
+      display:grid;
+      gap:8px;
+      place-items:center;
+    }
+    .logo-rize .box{
+      display:inline-grid;
+      place-items:center;
+      width:70px; height:70px;
+      border-radius:10px;
+      background:#c19f63;
+      color:#fff;
+      font-weight:900;
+      font-size:28px;
+      letter-spacing:.06em;
+      box-shadow: inset 0 -4px 0 rgba(0,0,0,.15);
+    }
+    .logo-rize .sub{ color:#a38a5e; font-weight:700; line-height:1.2 }
+
+    /* セクション背景の淡色 */
+    .section.pinkish { background:
+      linear-gradient(180deg, var(--pink-100), transparent 60%); border-radius:14px; padding:16px 12px 20px; }
+    .section.violetish { background:
+      linear-gradient(180deg, var(--violet-100), transparent 60%); border-radius:14px; padding:16px 12px 20px; }
+    .section.blueish { background:
+      linear-gradient(180deg, var(--blue-100), transparent 60%); border-radius:14px; padding:16px 12px 20px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero" aria-labelledby="ttl">
+      <span class="pickup">＼ 今月のピックアップ ／</span>
+      <h1 id="ttl">大阪の医療脱毛クリニック</h1>
+    </header>
+
+    <!-- 1. 全身のみ -->
+    <section class="section pinkish">
+      <div class="medal" aria-hidden="true">1</div>
+      <div class="ribbon pink">全身のみがおすすめTOP3</div>
+      <div class="grid">
+        <div class="card">
+          <div class="logo-regina" aria-label="REGINA CLINIC">
+            <!-- 簡易王冠SVG -->
+            <svg viewBox="0 0 64 32" role="img" aria-hidden="true">
+              <path d="M6 27h52v3H6z" fill="#b88a2c"/>
+              <path d="M8 25L16 9l16 12L48 8l8 17z" fill="#d4af37"/>
+              <circle cx="16" cy="9" r="3" fill="#f8d778"/>
+              <circle cx="32" cy="21" r="3" fill="#f8d778"/>
+              <circle cx="48" cy="8" r="3" fill="#f8d778"/>
+            </svg>
+            <div class="name">REGINA CLINIC</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="logo-eminal" aria-label="エミナルクリニック">
+            <div class="jp">エミナル</div>
+            <div class="sub">クリニック</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="logo-sbc" aria-label="SBC 湘南美容クリニック">
+            <div class="lat">SBC</div>
+            <div class="jp">湘南美容クリニック</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 全身＋VIO -->
+    <section class="section violetish">
+      <div class="medal" aria-hidden="true">1</div>
+      <div class="ribbon violet">全身＋VIO がおすすめTOP3</div>
+      <div class="grid">
+        <div class="card">
+          <div class="logo-regina" aria-label="REGINA CLINIC">
+            <svg viewBox="0 0 64 32" role="img" aria-hidden="true">
+              <path d="M6 27h52v3H6z" fill="#b88a2c"/>
+              <path d="M8 25L16 9l16 12L48 8l8 17z" fill="#d4af37"/>
+              <circle cx="16" cy="9" r="3" fill="#f8d778"/>
+              <circle cx="32" cy="21" r="3" fill="#f8d778"/>
+              <circle cx="48" cy="8" r="3" fill="#f8d778"/>
+            </svg>
+            <div class="name">REGINA CLINIC</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="logo-eminal" aria-label="エミナルクリニック">
+            <div class="jp">エミナル</div>
+            <div class="sub">クリニック</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="logo-rize" aria-label="リゼクリニック">
+            <div class="box">リゼ</div>
+            <div class="sub">医療脱毛の<br>リゼクリニック</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 全身＋顔＋VIO -->
+    <section class="section blueish">
+      <div class="medal" aria-hidden="true">1</div>
+      <div class="ribbon blue">全身＋顔＋VIO がおすすめTOP3</div>
+      <div class="grid">
+        <div class="card">
+          <div class="logo-eminal" aria-label="エミナルクリニック">
+            <div class="jp">エミナル</div>
+            <div class="sub">クリニック</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="logo-rize" aria-label="リゼクリニック">
+            <div class="box">リゼ</div>
+            <div class="sub">医療脱毛の<br>リゼクリニック</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="logo-sbc" aria-label="SBC 湘南美容クリニック">
+            <div class="lat">SBC</div>
+            <div class="jp">湘南美容クリニック</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

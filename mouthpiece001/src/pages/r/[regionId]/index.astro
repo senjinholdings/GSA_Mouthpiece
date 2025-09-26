@@ -1,0 +1,66 @@
+---
+import { readFile } from 'node:fs/promises';
+import IndexPage from '../../index.astro';
+
+export async function getStaticPaths() {
+  const normalize = (value) => {
+    if (value === undefined || value === null) {
+      return null;
+    }
+    const digits = String(value).match(/\d+/);
+    if (!digits || !digits[0]) {
+      return null;
+    }
+    return digits[0].padStart(3, '0');
+  };
+
+  const regionIds = new Set();
+  const addRegion = (value) => {
+    const normalized = normalize(value);
+    if (normalized) {
+      regionIds.add(normalized);
+    }
+  };
+
+  try {
+    const dataUrl = new URL('../../../../public/data/compiled-data.json', import.meta.url);
+    const raw = await readFile(dataUrl, 'utf-8');
+    const json = JSON.parse(raw);
+
+    if (Array.isArray(json?.regions)) {
+      json.regions.forEach((region) => {
+        addRegion(region?.id ?? region?.regionId ?? region?.parameter_no ?? region?.parameterNo);
+      });
+    }
+
+    if (Array.isArray(json?.rankings)) {
+      json.rankings.forEach((entry) => {
+        addRegion(entry?.regionId ?? entry?.region_id ?? entry?.parameter_no ?? entry?.parameterNo);
+      });
+    }
+
+    if (Array.isArray(json?.storeViews)) {
+      json.storeViews.forEach((entry) => {
+        addRegion(entry?.regionId ?? entry?.region_id ?? entry?.parameter_no ?? entry?.parameterNo);
+      });
+    }
+  } catch (error) {
+    console.warn('[r/[regionId]] getStaticPaths: compiled-data.json unavailable or invalid', error);
+  }
+
+  regionIds.add('013');
+  regionIds.add('000');
+
+  const ids = Array.from(regionIds).sort();
+  return ids.map((regionId) => ({
+    params: { regionId }
+  }));
+}
+---
+<IndexPage />
+
+<style is:global>
+  [data-astro-cid-j7pv25f6] {
+    box-sizing: border-box;
+  }
+</style>
