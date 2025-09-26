@@ -2561,6 +2561,39 @@ class RankingApp {
         this.textsInitialized = false;
     }
 
+    setInitialLoadingState(state = 'success', message) {
+        const overlay = document.getElementById('initial-loading');
+        if (!overlay) return;
+        const spinner = overlay.querySelector('[data-loading-spinner]');
+        const messageNode = overlay.querySelector('[data-loading-message]');
+        const retryButton = overlay.querySelector('[data-loading-retry]');
+
+        if (state === 'error') {
+            overlay.classList.add('has-error');
+            overlay.classList.remove('is-hidden');
+            if (spinner) spinner.classList.add('is-hidden');
+            if (messageNode && message) {
+                messageNode.textContent = message;
+            }
+            if (retryButton) {
+                retryButton.hidden = false;
+                retryButton.addEventListener('click', () => window.location.reload(), { once: true });
+            }
+            return;
+        }
+
+        if (spinner) spinner.classList.remove('is-hidden');
+        if (retryButton) retryButton.hidden = true;
+
+        overlay.classList.remove('has-error');
+        overlay.classList.add('is-hidden');
+        setTimeout(() => {
+            if (overlay.parentElement) {
+                overlay.parentElement.removeChild(overlay);
+            }
+        }, 400);
+    }
+
     normalizeRegionId(regionId) {
         if (regionId === undefined || regionId === null) return '';
         const raw = String(regionId).trim();
@@ -2672,13 +2705,17 @@ class RankingApp {
             this.updatePageContent(this.currentRegionId);
             // PR行の再描画（データ準備完了後に一度実行）
             try { if (typeof window.__renderPrLine === 'function') window.__renderPrLine(); } catch (_) {}
-            
+
+            this.setInitialLoadingState('success');
+            window.dispatchEvent(new CustomEvent('rankingAppReady', { detail: { regionId: this.currentRegionId } }));
+
             // 地図モーダルの設定
             setTimeout(() => {
                 this.setupMapAccordions();
             }, 100);
         } catch (error) {
             this.displayManager.showError('データの読み込みに失敗しました。ページを再読み込みしてください。');
+            this.setInitialLoadingState('error', 'データの読み込みに失敗しました。再読み込みしてください。');
         }
     }
 

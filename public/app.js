@@ -98,12 +98,14 @@ class UrlParamHandler {
     }
 
     // クリニックURLを取得（CSVから直接URLを取得し、パラメータを適切に処理）
-    getClinicUrlWithRegionId(clinicId, rank = 1) {
+    getClinicUrlWithRegionId(clinicId, rank = 1, options = {}) {
         // DataManagerが初期化されているか確認
         if (!window.dataManager) {
             return '#';
         }
-        
+
+        const { ctaType } = options || {};
+
         // パラメータをlocalStorageに保存（サーバーがURLパラメータを削除する対策）
         const regionId = this.getRegionId();
         const redirectParams = {
@@ -111,24 +113,30 @@ class UrlParamHandler {
             rank: rank,
             region_id: regionId || '013'
         };
-        
+        if (ctaType) {
+            redirectParams.cta_type = ctaType;
+        }
+
         // クリックイベントでlocalStorageに保存するため、データ属性として埋め込む
         // 実際の保存はクリック時に行う
         const redirectUrl = new URL('./redirect.html', window.location.origin + window.location.pathname);
-        
+
         // URLパラメータも念のため設定（サーバーが保持する場合に備えて）
         redirectUrl.searchParams.set('clinic_id', clinicId);
         redirectUrl.searchParams.set('rank', rank);
         if (regionId) {
             redirectUrl.searchParams.set('region_id', regionId);
         }
-        
+        if (ctaType) {
+            redirectUrl.searchParams.set('cta_type', ctaType);
+        }
+
         // データ属性用のJSON文字列を作成
         const dataJson = JSON.stringify(redirectParams);
-        
+
         // カスタムデータ属性として埋め込むため、特殊なハッシュを使用
         redirectUrl.hash = `params=${encodeURIComponent(dataJson)}`;
-        
+
         return redirectUrl.toString();
     }
 
@@ -216,30 +224,35 @@ class UrlParamHandler {
 
     // 直フォームの遷移先URL（存在しない場合は通常のリダイレクトURLにフォールバック）
     getDirectFormUrl(clinicId, rank = 1) {
+        const redirectCandidate = this.getClinicUrlWithRegionId(clinicId, rank, { ctaType: 'direct' });
+        if (redirectCandidate && redirectCandidate !== '#') {
+            return redirectCandidate;
+        }
+
         try {
             const dm = window.dataManager;
-            if (!dm) return this.getClinicUrlWithRegionId(clinicId, rank);
+            if (!dm) return redirectCandidate;
             const clinicCode = dm.getClinicCodeById(clinicId);
-            if (!clinicCode) return this.getClinicUrlWithRegionId(clinicId, rank);
+            if (!clinicCode) return redirectCandidate;
             // ランク別キーを最優先で参照
             const rankKeys = [
                 `直フォームの遷移先URL（${rank}位）`,
                 `直フォーム遷移先URL（${rank}位）`,
                 `直フォームURL（${rank}位）`
             ];
-            for (let i=0;i<rankKeys.length;i++){
+            for (let i = 0; i < rankKeys.length; i++) {
                 const v = dm.getClinicText(clinicCode, rankKeys[i], '').trim();
                 if (v) return v;
             }
             // 共通キー
-            const candidates = ['直フォームURL','直フォーム遷移先URL','無料相談フォームURL','予約フォームURL','フォームURL','問い合わせフォームURL','CTA直リンクURL'];
+            const candidates = ['直フォームURL', '直フォーム遷移先URL', '無料相談フォームURL', '予約フォームURL', 'フォームURL', '問い合わせフォームURL', 'CTA直リンクURL'];
             for (let i = 0; i < candidates.length; i++) {
                 const val = dm.getClinicText(clinicCode, candidates[i], '').trim();
                 if (val) return val;
             }
-            return this.getClinicUrlWithRegionId(clinicId, rank);
+            return redirectCandidate;
         } catch (_) {
-            return this.getClinicUrlWithRegionId(clinicId, rank);
+            return redirectCandidate;
         }
     }
 }

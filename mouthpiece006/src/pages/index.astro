@@ -114,7 +114,7 @@ const asset = (resource: string) => {
                 background: none;
                 border: none;
                 cursor: pointer;
-                display: flex;
+                display: flex !important;
                 flex-direction: column;
                 position: absolute;
                 right: 20px;
@@ -256,6 +256,122 @@ const asset = (resource: string) => {
                 .container { padding: 0 0px; }
                 .header-content { padding: 12px; }
                 .site-logo { font-size: 1rem; }
+            }
+
+            /* サイドバー関連のスタイル */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.35);
+                display: none;
+                z-index: 9997;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .sidebar-menu {
+                position: fixed;
+                top: 0;
+                right: -320px;
+                width: min(86vw, 320px);
+                height: 100vh;
+                background: #fff;
+                box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+                transition: right .25s ease;
+                z-index: 9998;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .sidebar-menu.active {
+                right: 0;
+            }
+
+            .sidebar-header {
+                padding: 20px;
+                border-bottom: 1px solid #e0e0e0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .sidebar-title {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #333;
+                margin: 0;
+            }
+
+            .close-sidebar {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #666;
+            }
+
+            .sidebar-content {
+                padding: 20px;
+            }
+
+            .sidebar-filter-group {
+                margin-bottom: 20px;
+            }
+
+            .sidebar-filter-label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .sidebar-search-input,
+            .sidebar-select {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #e0e0e0;
+                border-radius: 4px;
+                font-size: 1rem;
+            }
+
+            .sidebar-select {
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 10px center;
+                background-size: 20px;
+                padding-right: 40px;
+            }
+
+            .sidebar-search-button {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #e9ecef;
+            }
+
+            .sidebar-search-link {
+                display: block;
+                width: 100%;
+                padding: 12px 20px;
+                background-color: #ff6b35;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                border-radius: 6px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-search-link:hover {
+                background-color: #e5522a;
+                transform: translateY(-1px);
             }
         </style>
         <!-- 重要なリソースのpreload -->
@@ -903,6 +1019,22 @@ const asset = (resource: string) => {
 
       <!-- 1位クリニック動的表示機能 -->
       <script is:inline>
+          (function manageSidebarScrollLock(){
+              const menu = document.getElementById('sidebar-menu');
+              if (!menu) return;
+              const root = document.documentElement;
+              const sync = () => {
+                  root.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+              };
+              const observer = new MutationObserver(sync);
+              observer.observe(menu, { attributes: true, attributeFilter: ['class'] });
+              sync();
+              const updateOnGlobalEvent = () => sync();
+              window.addEventListener('pageshow', updateOnGlobalEvent);
+              window.addEventListener('visibilitychange', updateOnGlobalEvent);
+              window.addEventListener('pagehide', () => observer.disconnect());
+          })();
+
           // DataManagerReady時にDOM更新を実行
           window.addEventListener('dataManagerReady', function() {
               console.log('[index] dataManagerReady fired', {

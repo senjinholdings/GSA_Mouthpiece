@@ -1,4 +1,31 @@
 // コラムセクションのデータ
+const __COLUMN_BASE_PATH_RAW = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? '/';
+const __COLUMN_BASE_PREFIX = (__COLUMN_BASE_PATH_RAW === '/' || __COLUMN_BASE_PATH_RAW === '' ? '' : __COLUMN_BASE_PATH_RAW.replace(/\/+$/, ''));
+function resolveColumnAsset(resource) {
+    if (typeof resource !== 'string' || resource.length === 0) {
+        return resource;
+    }
+    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|data:|mailto:|tel:)/i.test(resource)) {
+        return resource;
+    }
+    if (typeof resolveAssetPath === 'function') {
+        return resolveAssetPath(resource);
+    }
+    if (typeof buildImagePath === 'function') {
+        if (resource.startsWith('images/')) {
+            return buildImagePath(resource.replace(/^images\//, ''));
+        }
+        if (resource.startsWith('/images/')) {
+            return buildImagePath(resource.replace(/^\/images\//, ''));
+        }
+    }
+    let normalized = resource.startsWith('./') ? resource.slice(2) : resource;
+    if (!normalized.startsWith('/')) {
+        normalized = `/${normalized}`;
+    }
+    return __COLUMN_BASE_PREFIX ? `${__COLUMN_BASE_PREFIX}${normalized}` : normalized;
+}
+
 const columnsData = {
   mainArticle: {
     title: "マウスピース矯正を始める前に知っておくべきこと",
@@ -351,7 +378,7 @@ if (typeof module !== 'undefined' && module.exports) {
           const additionalContentHtml = (Array.isArray(section.additionalContent) ? section.additionalContent.map(p => `<div class="section-content">${p}</div>`).join('') : (section.additionalContent ? `<div class="section-content">${section.additionalContent}</div>` : '')) || '';
           const headerImageHtml = section.headerImage ? `
               <div class="header-image" style="margin-top: 10px;">
-                  <img src="${section.headerImage}" alt="${section.imageAlt}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                  <img src="${resolveColumnAsset(section.headerImage)}" alt="${section.imageAlt}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
               </div>` : '';
           const tableHtml = generateTable(section.table);
           const listHtml = section.list ? `<ul class="fee-list">${section.list.map(item => `<li class="fee-item">${item}</li>`).join('')}</ul>` : '';
@@ -405,7 +432,7 @@ if (typeof module !== 'undefined' && module.exports) {
           <div class="article-header">
               <div class="article-title">${data.mainArticle.title}</div>
               <div class="header-image">
-                  <img src="${data.mainArticle.headerImage}" alt="${data.mainArticle.imageAlt}" style="width: 100%; height: 100%; object-fit: cover;">
+                  <img src="${resolveColumnAsset(data.mainArticle.headerImage)}" alt="${data.mainArticle.imageAlt}" style="width: 100%; height: 100%; object-fit: cover;">
               </div>
           </div>
           <div class="article-subtitle" style="margin: 8px 0 0; font-size: 0.95em; color: #666;"></div>

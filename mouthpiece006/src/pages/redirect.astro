@@ -105,6 +105,20 @@ const asset = (resource: string) => {
       </div>
 
       <script>
+          // base-path aware resolver
+          function resolveAsset(path) {
+              try {
+                  if (typeof path !== 'string' || path.length === 0) return path;
+                  if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|data:|mailto:|tel:)/i.test(path)) return path;
+                  const base = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? '/';
+                  const prefix = (base === '/' || base === '') ? '' : base.replace(/\/+$/, '');
+                  let normalized = path.startsWith('./') ? path.slice(2) : path;
+                  if (!normalized.startsWith('/')) normalized = `/${normalized}`;
+                  return `${prefix}${normalized}`;
+              } catch (_) {
+                  return path;
+              }
+          }
           // DataManager のロード
           function loadScript(src) {
               return new Promise((resolve, reject) => {
@@ -120,7 +134,7 @@ const asset = (resource: string) => {
           async function initializeDataManager() {
               try {
                   // config.jsを読み込み
-                  await loadScript('/config.js');
+                  await loadScript(resolveAsset('/config.js'));
 
                   // DataManagerクラスを作成（app.jsの一部を抽出）
                   class SimpleDataManager {
@@ -133,8 +147,8 @@ const asset = (resource: string) => {
                       async loadClinicTexts() {
                           try {
                               const jsonData = await this.fetchJsonWithFallback([
-                                  '/data/clinic-texts.json',
-                                  '/data/clinic_text/clinic-texts.json'
+                                  resolveAsset('/data/clinic-texts.json'),
+                                  resolveAsset('/data/clinic_text/clinic-texts.json')
                               ]);
                               if (jsonData && typeof jsonData === 'object' && !Array.isArray(jsonData)) {
                                   this.clinicTexts = jsonData;
@@ -147,8 +161,8 @@ const asset = (resource: string) => {
 
                           // JSONが取得できなかった場合は従来のCSVを読み込む
                           try {
-                              let resp = await fetch('/data/clinic-texts.csv');
-                              if (!resp.ok) resp = await fetch('/data/clinic_text/clinic-texts.csv');
+                              let resp = await fetch(resolveAsset('/data/clinic-texts.csv'));
+                              if (!resp.ok) resp = await fetch(resolveAsset('/data/clinic_text/clinic-texts.csv'));
                               if (!resp.ok) throw new Error(`Failed to load clinic-texts.csv: ${resp.status}`);
 
                               const buffer = await resp.arrayBuffer();
@@ -238,8 +252,8 @@ const asset = (resource: string) => {
 
                           try {
                               const bundle = await this.fetchJsonWithFallback([
-                                  '/data/compiled-data.json',
-                                  '/data/data-bundle.json'
+                                  resolveAsset('/data/compiled-data.json'),
+                                  resolveAsset('/data/data-bundle.json')
                               ]);
                               if (bundle && bundle.clinicTexts && typeof bundle.clinicTexts === 'object') {
                                   this.clinicTexts = bundle.clinicTexts;
@@ -288,8 +302,8 @@ const asset = (resource: string) => {
                           console.log('📊 クリニック一覧データを読み込み中...');
                           try {
                               const jsonClinics = await this.fetchJsonWithFallback([
-                                  '/common_data/data/出しわけSS - items.json',
-                                  '/data/出しわけSS - items.json'
+                                  resolveAsset('/common_data/data/出しわけSS - items.json'),
+                                  resolveAsset('/data/出しわけSS - items.json')
                               ]);
                               if (Array.isArray(jsonClinics) && jsonClinics.length > 0) {
                                   this.clinics = jsonClinics.map(row => ({
@@ -333,7 +347,7 @@ const asset = (resource: string) => {
                       }
 
                       async loadCsv(path) {
-                          const resp = await fetch(path);
+                          const resp = await fetch(resolveAsset(path));
                           const buf = await resp.arrayBuffer();
                           let text = new TextDecoder('utf-8').decode(buf);
                           if ((text.match(/\uFFFD|�/g) || []).length > 10) {
@@ -541,8 +555,8 @@ const asset = (resource: string) => {
               const initialized = await initializeDataManager();
               if (!initialized) {
                   console.error('❌ データマネージャーの初期化に失敗');
-                  // フォールバック：メインページに戻る
-                  window.location.href = './index.html';
+                  // フォールバック：メインページに戻る（base対応）
+                  window.location.href = resolveAsset('/index.html');
                   return;
               }
               console.log('✅ データマネージャー初期化完了');
@@ -557,7 +571,7 @@ const asset = (resource: string) => {
 
               if (!clinic || !clinicCode) {
                   console.error('❌ クリニック情報が見つかりません');
-                  window.location.href = './index.html';
+                  window.location.href = resolveAsset('/index.html');
                   return;
               }
 
@@ -590,7 +604,7 @@ const asset = (resource: string) => {
                   }
                   console.log('❌ 利用可能なURL:', availableUrls);
 
-                  window.location.href = './index.html';
+                  window.location.href = resolveAsset('/index.html');
                   return;
               }
 
@@ -768,16 +782,16 @@ const asset = (resource: string) => {
               // ロゴの設定（meta13優先 -> 既定パス）
               try {
                   const metaLogo = window.dataManager && window.dataManager.getClinicText(clinicCode, 'meta13', '');
-                  clinicLogo.src = metaLogo || `/images/clinics/${clinicCode}/${clinicCode}-logo.webp`;
+                  clinicLogo.src = metaLogo || resolveAsset(`/images/clinics/${clinicCode}/${clinicCode}-logo.webp`);
               } catch (_) {
-                  clinicLogo.src = `/images/clinics/${clinicCode}/${clinicCode}-logo.webp`;
+                  clinicLogo.src = resolveAsset(`/images/clinics/${clinicCode}/${clinicCode}-logo.webp`);
               }
               clinicLogo.alt = clinic.name;
               clinicLogo.style.display = 'block';
 
               // ロゴのエラー処理
               clinicLogo.onerror = function() {
-                  const jpgPath = `/images/clinics/${clinicCode}/${clinicCode}-logo.jpg`;
+                  const jpgPath = resolveAsset(`/images/clinics/${clinicCode}/${clinicCode}-logo.jpg`);
                   this.src = jpgPath;
                   this.onerror = function() {
                       this.style.display = 'none';

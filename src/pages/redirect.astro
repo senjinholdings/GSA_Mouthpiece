@@ -425,6 +425,39 @@ const asset = (resource: string) => {
               let rank = null;
               let regionId = null;
               let cachedRedirectParams = null;
+              let ctaType = null;
+              function normalizeCtaType(value) {
+                  if (value == null) return 'official';
+                  const normalized = String(value).trim().toLowerCase();
+                  if (!normalized) return 'official';
+                  if (normalized.includes('direct') || normalized.includes('form')) {
+                      return 'direct';
+                  }
+                  if (normalized.includes('official')) {
+                      return 'official';
+                  }
+                  return 'official';
+              }
+
+              function getTrimmedClinicText(code, field, fallback = '') {
+                  if (!code || !window.dataManager || typeof window.dataManager.getClinicText !== 'function') {
+                      return fallback;
+                  }
+                  try {
+                      const raw = window.dataManager.getClinicText(code, field, fallback);
+                      if (raw == null) return fallback;
+                      return String(raw).trim();
+                  } catch (_) {
+                      return fallback;
+                  }
+              }
+
+              function collectCandidate(list, field, code) {
+                  const value = getTrimmedClinicText(code, field, '');
+                  list.push({ field, value });
+                  return value;
+              }
+
 
               // 方法1: localStorageを最優先で確認（サーバーがパラメータを削除する場合の対策）
               const storedParams = localStorage.getItem('redirectParams');
@@ -434,6 +467,9 @@ const asset = (resource: string) => {
                       clinicId = params.clinic_id;
                       rank = params.rank;
                       regionId = params.region_id;
+                      if (!ctaType && (params.cta_type || params.ctaType)) {
+                          ctaType = params.cta_type || params.ctaType;
+                      }
                       cachedRedirectParams = params;
                       console.log('方法1 localStorage（優先）:', { clinicId, rank, regionId });
                       // 使用後は削除
@@ -453,6 +489,9 @@ const asset = (resource: string) => {
                           clinicId = params.clinic_id;
                           rank = params.rank;
                           regionId = params.region_id;
+                          if (!ctaType && (params.cta_type || params.ctaType)) {
+                              ctaType = params.cta_type || params.ctaType;
+                          }
                           console.log('方法2 ハッシュ（新形式）:', { clinicId, rank, regionId });
                       } catch (e) {
                           console.error('ハッシュ解析エラー:', e);
@@ -463,6 +502,10 @@ const asset = (resource: string) => {
                       clinicId = hashParams.get('clinic_id');
                       rank = hashParams.get('rank');
                       regionId = hashParams.get('region_id');
+                      if (!ctaType) {
+                          const hashCta = hashParams.get('cta_type');
+                          if (hashCta) ctaType = hashCta;
+                      }
                       console.log('方法2 ハッシュ（旧形式）:', { clinicId, rank, regionId });
                   }
               }
@@ -473,6 +516,10 @@ const asset = (resource: string) => {
                   clinicId = searchParams.get('clinic_id');
                   rank = searchParams.get('rank');
                   regionId = searchParams.get('region_id');
+                  if (!ctaType) {
+                      const searchCta = searchParams.get('cta_type');
+                      if (searchCta) ctaType = searchCta;
+                  }
                   console.log('方法3 URLSearchParams:', { clinicId, rank, regionId });
               }
 
@@ -484,8 +531,16 @@ const asset = (resource: string) => {
                       clinicId = match[1];
                       const rankMatch = fullUrl.match(/[?&#]rank=([^&#]+)/);
                       const regionMatch = fullUrl.match(/[?&#]region_id=([^&#]+)/);
+                      const ctaMatch = fullUrl.match(/[?&#]cta_type=([^&#]+)/);
                       rank = rankMatch ? rankMatch[1] : null;
                       regionId = regionMatch ? regionMatch[1] : null;
+                      if (!ctaType && ctaMatch) {
+                          try {
+                              ctaType = decodeURIComponent(ctaMatch[1]);
+                          } catch (_) {
+                              ctaType = ctaMatch[1];
+                          }
+                      }
                       console.log('方法3 正規表現:', { clinicId, rank, regionId });
                   }
               }
@@ -499,6 +554,9 @@ const asset = (resource: string) => {
                           clinicId = params.clinic_id;
                           rank = params.rank;
                           regionId = params.region_id;
+                          if (!ctaType && (params.cta_type || params.ctaType)) {
+                              ctaType = params.cta_type || params.ctaType;
+                          }
                           if (!cachedRedirectParams) cachedRedirectParams = params;
                           console.log('方法4 localStorage:', { clinicId, rank, regionId });
                           localStorage.removeItem('redirectParams');
@@ -517,6 +575,9 @@ const asset = (resource: string) => {
                           clinicId = params.clinic_id;
                           rank = params.rank;
                           regionId = params.region_id;
+                          if (!ctaType && (params.cta_type || params.ctaType)) {
+                              ctaType = params.cta_type || params.ctaType;
+                          }
                           if (!cachedRedirectParams) cachedRedirectParams = params;
                           console.log('方法5 sessionStorage:', { clinicId, rank, regionId });
                           sessionStorage.removeItem('redirectParams');
@@ -532,12 +593,15 @@ const asset = (resource: string) => {
               console.log('📍 location.hash:', window.location.hash);
 
               rank = parseInt(rank) || 1;
+              const normalizedCtaType = normalizeCtaType(ctaType);
 
               console.log('📋 受け取ったパラメータ:');
               console.log(`  clinic_id: ${clinicId}`);
               console.log(`  rank: ${rank}`);
               console.log(`  region_id: ${regionId}`);
               console.log(`  現在のURL: ${window.location.href}`);
+              console.log(`  cta_type(raw): ${ctaType ?? 'N/A'}`);
+              console.log(`  cta_type(normalized): ${normalizedCtaType}`);
 
               if (!clinicId) {
                   console.error('❌ clinic_idが見つかりません');
@@ -576,37 +640,105 @@ const asset = (resource: string) => {
               }
 
               // 遷移先URLを取得
-              const urlFieldName = `遷移先URL（${rank}位）`;
-              let targetUrl = window.dataManager.getClinicText(clinicCode, urlFieldName, '');
-
               console.log('🔍 URL取得情報:');
               console.log(`  クリニックコード: ${clinicCode}`);
               console.log(`  ランキング順位: ${rank}`);
-              console.log(`  URLフィールド名: ${urlFieldName}`);
-              console.log(`  取得したURL: ${targetUrl}`);
+
+              const directRankFields = [
+                  `直フォームの遷移先URL（${rank}位）`,
+                  `直フォーム遷移先URL（${rank}位）`,
+                  `直フォームURL（${rank}位）`
+              ];
+              const directCommonFields = [
+                  '直フォームURL',
+                  '直フォーム遷移先URL',
+                  '無料相談フォームURL',
+                  '予約フォームURL',
+                  'フォームURL',
+                  '問い合わせフォームURL',
+                  'CTA直リンクURL'
+              ];
+              const officialRankFields = [
+                  `遷移先URL（${rank}位）`,
+                  `遷移先URL（1位）`
+              ];
+              const officialCommonFields = [
+                  '遷移先URL',
+                  '公式サイトURL'
+              ];
+
+              const directCandidates = [];
+              const officialCandidates = [];
+
+              let targetUrl = '';
+              let usedDirectCandidate = false;
+
+              if (normalizedCtaType === 'direct') {
+                  console.log('🔄 直フォームURL探索を開始');
+                  for (const field of directRankFields) {
+                      const value = collectCandidate(directCandidates, field, clinicCode);
+                      if (value) {
+                          targetUrl = value;
+                          usedDirectCandidate = true;
+                          break;
+                      }
+                  }
+                  if (!targetUrl) {
+                      for (const field of directCommonFields) {
+                          const value = collectCandidate(directCandidates, field, clinicCode);
+                          if (value) {
+                              targetUrl = value;
+                              usedDirectCandidate = true;
+                              break;
+                          }
+                      }
+                  }
+                  if (usedDirectCandidate) {
+                      console.log('✅ 直フォームURLを取得:', targetUrl);
+                  } else {
+                      console.warn('⚠️ 直フォームURLが見つからないため通常URLにフォールバックします');
+                  }
+              }
 
               if (!targetUrl) {
-                  // フォールバック：1位のURLを使用
-                  console.log('⚠️ フォールバック: 1位のURLを使用');
-                  targetUrl = window.dataManager.getClinicText(clinicCode, '遷移先URL（1位）', '');
-                  console.log(`  フォールバックURL: ${targetUrl}`);
+                  console.log('🔄 通常URL探索を開始');
+                  for (const field of officialRankFields) {
+                      const value = collectCandidate(officialCandidates, field, clinicCode);
+                      if (value) {
+                          targetUrl = value;
+                          break;
+                      }
+                  }
+              }
+
+              if (!targetUrl) {
+                  for (const field of officialCommonFields) {
+                      const value = collectCandidate(officialCandidates, field, clinicCode);
+                      if (value) {
+                          targetUrl = value;
+                          break;
+                      }
+                  }
               }
 
               if (!targetUrl) {
                   console.error('❌ URLが見つかりません');
-                  console.error('❌ 利用可能なURLフィールド:', Object.keys(window.dataManager.clinicTexts));
-                  // 最後の手段：直接URLを確認
-                  const availableUrls = {};
-                  for (let i = 1; i <= 5; i++) {
-                      const field = `遷移先URL（${i}位）`;
-                      const url = window.dataManager.getClinicText(clinicCode, field, '');
-                      if (url) availableUrls[field] = url;
+                  if (console && console.groupCollapsed) {
+                      console.groupCollapsed('候補URL一覧');
+                      console.log('直フォーム候補:', directCandidates);
+                      console.log('通常URL候補:', officialCandidates);
+                      console.groupEnd();
+                  } else {
+                      console.log('直フォーム候補:', directCandidates);
+                      console.log('通常URL候補:', officialCandidates);
                   }
-                  console.log('❌ 利用可能なURL:', availableUrls);
-
                   window.location.href = resolveAsset('/index.html');
                   return;
               }
+
+              console.log(`🎯 最終的に使用するURL (${usedDirectCandidate ? 'direct' : 'official'}):`, targetUrl);
+
+              const finalDestinationType = usedDirectCandidate ? 'direct' : 'official';
 
               // URLパラメータを処理
               const url = new URL(targetUrl);
@@ -622,7 +754,9 @@ const asset = (resource: string) => {
                   source_page: currentUrl.searchParams.get('source_page') || 'potenza',
                   region_id: regionId || '013',
                   referrer_url: baseReferrerUrl,  // パラメータを除いたベースURLのみ
-                  timestamp: new Date().toISOString()
+                  timestamp: new Date().toISOString(),
+                  cta_type: normalizedCtaType,
+                  resolved_cta_type: finalDestinationType
               };
 
               // 元のページのURLパラメータを取得（複数の方法を試行）
@@ -772,10 +906,11 @@ const asset = (resource: string) => {
               const redirectMessage = document.getElementById('redirect-message');
               const redirectDescription = document.getElementById('redirect-description');
               const manualLink = document.getElementById('manual-link');
+              const destinationLabel = finalDestinationType === 'direct' ? '無料相談フォーム' : '公式サイト';
 
-              redirectMessage.textContent = `${clinic.name}公式サイトへ移動中...`;
-              redirectDescription.innerHTML = `まもなく自動的に${clinic.name}の公式サイトへリダイレクトします。<br>移動しない場合は下のボタンをクリックしてください。`;
-              manualLink.textContent = `${clinic.name}公式サイトへ`;
+              redirectMessage.textContent = `${clinic.name}の${destinationLabel}へ移動中...`;
+              redirectDescription.innerHTML = `まもなく自動的に${clinic.name}の${destinationLabel}へリダイレクトします。<br>移動しない場合は下のボタンをクリックしてください。`;
+              manualLink.textContent = `${clinic.name}の${destinationLabel}へ`;
               manualLink.href = finalUrl;
               manualLink.style.display = 'inline-block';
 
@@ -799,7 +934,7 @@ const asset = (resource: string) => {
               };
 
               // タイトルも更新
-              document.title = `${clinic.name}公式サイトへ移動中...`;
+              document.title = `${clinic.name}の${destinationLabel}へ移動中...`;
 
               // カウントダウン開始（2秒）
               let countdown = 2;
