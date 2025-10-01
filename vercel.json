@@ -34,6 +34,9 @@
     { "source": "/mouthpiece007/", "destination": "/mouthpiece007/index.html" },
     { "source": "/mouthpiece007/r/:region", "destination": "/mouthpiece007/r/:region.html" },
     { "source": "/mouthpiece007/r/:region/", "destination": "/mouthpiece007/r/:region.html" },
-    { "source": "/mouthpiece007/(.*)", "destination": "/mouthpiece007/$1" }
+    { "source": "/mouthpiece007/(.*)", "destination": "/mouthpiece007/$1" },
+    { "source": "/mouthpiece_section002", "destination": "/mouthpiece_section002/index.html" },
+    { "source": "/mouthpiece_section002/", "destination": "/mouthpiece_section002/index.html" },
+    { "source": "/mouthpiece_section002/(.*)", "destination": "/mouthpiece_section002/$1" }
   ]
 }

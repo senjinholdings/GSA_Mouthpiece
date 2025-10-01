@@ -22,6 +22,9 @@ for n in 001 002 003 004 005 006 007; do
   build_dir "mouthpiece${n}"
 done
 
+# Build section projects (Astro)
+build_dir "mouthpiece_section002"
+
 echo "\n✅ All builds completed. Output: $ROOT_DIR/dist"
 
 
