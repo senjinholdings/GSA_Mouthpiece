@@ -271,8 +271,8 @@ a {
     position: absolute;
     inset: 0;
     background-image:
-        linear-gradient(to right, rgba(44, 199, 197, 0.1) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(44, 199, 197, 0.1) 1px, transparent 1px);
+        linear-gradient(to right, rgba(44, 199, 197, 0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(44, 199, 197, 0.15) 1px, transparent 1px);
     background-size: 24px 24px;
     opacity: 0.55;
     pointer-events: none;
@@ -285,11 +285,11 @@ a {
 }
 
 [data-lead-variant="B"] .tips-layout-b .tips-step {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(44, 199, 197, 0.12);
-    border-radius: 12px;
-    padding: 16px 18px 22px;
-    box-shadow: 0 6px 18px rgba(44, 199, 197, 0.08);
+    /* background: rgba(255, 255, 255, 0.95); */
+    /* border: 1px solid rgba(44, 199, 197, 0.12); */
+    /* border-radius: 12px; */
+    /* padding: 16px 18px 22px; */
+    /* box-shadow: 0 6px 18px rgba(44, 199, 197, 0.08); */
 }
 
 [data-lead-variant="B"] .tips-layout-b .tips-step:not(:last-of-type)::after {
