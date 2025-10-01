@@ -1,0 +1,2126 @@
+---
+import '../styles/styles.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = '2025年最新版｜おすすめ比較ランキング';
+const pageDescription = '全国の人気クリニックを徹底比較！料金・特徴・口コミ・アクセス情報などをわかりやすく一覧でご紹介。あなたにぴったりのクリニック選びをサポートします。';
+
+// Asset path helper function
+const basePath = import.meta.env.BASE_URL ?? '/';
+const normalizedBasePath = basePath.endsWith('/') ? basePath : `${basePath}/`;
+const asset = (path: string) => {
+  if (!path) return normalizedBasePath;
+  return `${normalizedBasePath}${path.replace(/^\/+/, '')}`;
+};
+---
+<BaseLayout title={pageTitle} description={pageDescription} bodyClass="is-loading">
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+    <script is:inline>
+      'fonts' in document && document.fonts.ready.then(function(){document.documentElement.classList.add('fonts-loaded')})
+    </script>
+  </Fragment>
+
+
+    <div id="initial-loader" aria-live="polite">
+        <p class="loader-text">読み込み中…</p>
+    </div>
+    
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="site-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <a href="/" class="logo-link">
+                        <div class="logo-main">
+                            <span class="logo-icon"><img src={import.meta.env.BASE_URL + 'common_data/images/favicon.png'} alt="医療ダイエット比較.com" id="header-logo-icon"></span>
+                            <h1 class="site-logo" id="site-logo">おすすめ比較.com</h1>
+                        </div>
+                    </a>
+                </div>
+                <nav class="header-nav">
+                    <button class="hamburger-menu" id="hamburger-menu" aria-label="メニュー">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- メインビジュアル -->
+        <section class="hero-section">
+            <div class="hero-image-wrapper">
+                <picture>
+                    <img src={import.meta.env.BASE_URL + 'images/mv.webp'} alt="おすすめ比較ランキング - 2025年最新版" class="hero-image" loading="eager" fetchpriority="high" decoding="async" width="1500" height="928">
+                </picture>
+                <svg id="mv-main-svg-text">
+                    <text id="mv-region-text" x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#4c4c4c" stroke="white" stroke-width="6px" paint-order="stroke"></text>
+                </svg>
+                <svg id="mv-appeal1-text">
+                    <text id="mv-service-text" x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#4c4c4c" stroke="white" stroke-width="6px" paint-order="stroke"></text>
+                </svg>
+            </div>
+            <div id="pr-line"></div>
+        </section>
+
+        <main>
+
+            <!-- ランキング表示セクション -->
+            <section class="clinic-rankings ranking-section">
+                <div class="ranking-header-banner">
+                    <img src={import.meta.env.BASE_URL + 'images/ranking_header_banner.webp'} alt="" class="ranking-banner-image" loading="lazy" decoding="async">
+                </div>
+                <div id="rank-region-name"></div>
+                <div id="ranking-list" class="ranking-container ranking-loading">
+                    <!-- ランキングはJavaScriptで動的に生成 -->
+                </div>
+            </section>
+
+            <!-- ランキング表示セクション下の注意事項 -->
+            <section id="ranking-disclaimers-section" class="disclaimers-section">
+                <div class="container">
+                    <!-- 注意事項アコーディオン -->
+                    <div class="disclaimer-accordion">
+                        <!-- 第1段階: 各クリニックの注意事項 -->
+                        <div class="main-disclaimer">
+                            <button id="ranking-disclaimer-button" class="main-disclaimer-header ranking-disclaimer-header">
+                                <span class="disclaimer-button-label">各クリニックの注意事項</span>
+                                <span id="ranking-main-arrow" class="disclaimer-arrow">▼</span>
+                            </button>
+                            <div id="ranking-disclaimers-content" class="main-disclaimer-content ranking-disclaimer-content">
+                                <!-- 動的に生成される注釈コンテンツ -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>        <!-- ユーザーの悩みを解消するためのTips -->
+        <div class="container tips-container" data-lead-variant="A">
+            <div class="tips-layout tips-layout-a" data-tips-variant="A">
+                <div class="tips-section">
+                    <div class="tips-inner">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="0">
+                                <span class="tab-text"></span>
+                            </div>
+                            <div class="tab" data-tab="1">
+                                <span class="tab-text"></span>
+                            </div>
+                            <div class="tab" data-tab="2">
+                                <span class="tab-text"></span>
+                            </div>
+                        </div>
+
+                        <div class="tab-contents">
+                            <div class="tab-content active" data-tab="0">
+                                <div class="tab-figure">
+                                    <img src={import.meta.env.BASE_URL + 'images/Tips1.webp'} alt="効果" class="tab-image" loading="lazy" decoding="async">
+                                </div>
+                                <p class="tab-description"></p>
+                            </div>
+
+                            <div class="tab-content" data-tab="1">
+                                <div class="tab-figure">
+                                    <img src={import.meta.env.BASE_URL + 'images/Tips2.webp'} alt="クリニック選びのポイント" class="tab-image" loading="lazy" decoding="async">
+                                </div>
+                                <p class="tab-description"></p>
+                            </div>
+
+                            <div class="tab-content" data-tab="2">
+                                <div class="tab-figure">
+                                    <img src={import.meta.env.BASE_URL + 'images/Tips3.webp'} alt="今がおすすめの理由" class="tab-image" loading="lazy" decoding="async">
+                                </div>
+                                <p class="tab-description"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-layout tips-layout-b" data-tips-variant="B" hidden>
+                <section class="tips-flow" aria-label="マウスピース矯正を検討中の方向けTips">
+                    <article class="tips-step" aria-label="マウスピース矯正への不安に寄り添うメッセージ">
+                        <div class="tips-step-content">
+                            <div class="tips-quotes" aria-hidden="false">
+                                <p class="tips-quote">「マウスピース矯正って本当に効果があるの？」</p>
+                                <p class="tips-quote">「始めてみたいけど、自分に合うのか不安…」</p>
+                            </div>
+                            <p>
+                                そんな迷いを抱える方は少なくありません。<br><br><span class="tips-highlight">マウスピース矯正は、従来のワイヤー矯正と違い目立たず</span>、日常生活への影響を最小限に抑えながら理想の歯並びを目指せる最新の矯正方法です。<br><br>諦めかけていた歯並びの悩みにも"取り外しできる透明なマウスピース"で挑める、新しい選択肢として注目されています。
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="tips-step" aria-label="マウスピース矯正の特徴と効果">
+                        <div class="tips-step-content">
+                            <figure class="tips-step-figure">
+                                <img src={import.meta.env.BASE_URL + 'images/Tips1.webp'} alt="マウスピース矯正の特徴" loading="lazy" decoding="async">
+                            </figure>
+                            <p>
+                                専門の歯科医師が歯並びや咬合を確認しながら、<span class="tips-highlight">透明なマウスピースを段階的に交換して歯を移動</span>。装着中も目立ちにくく、食事や歯磨きの際は取り外せるのが魅力です。<br><br>軽度〜中等度の歯列不正であれば、最短2ヶ月（平均9ヶ月）で効果を実感できる方も多く、ワイヤー矯正と遜色ない結果が期待できます。<br><br>（※効果には個人差があり、すべての方に同様の結果を保証するものではありません）
+                            </p>
+                            <figure class="tips-ba-figure">
+                                <img src={import.meta.env.BASE_URL + 'images/tips-ba.webp'} alt="マウスピース矯正のビフォーアフター" loading="lazy" decoding="async">
+                            </figure>
+                        </div>
+                    </article>
+
+                    <article class="tips-step" aria-label="従来手法との違いと種類">
+                        <div class="tips-step-content">
+                            <p>
+                                ワイヤー矯正は金属ブラケットを歯に固定して力をかけますが、マウスピース矯正は<span class="tips-highlight">透明なマウスピースを段階的に交換して徐々に歯を移動</span>させるアプローチ。<br><br>取り外し式なので衛生的で、痛みや違和感も比較的少ないのがメリットです。また、矯正していることが周囲に気づかれにくいため、仕事や学校でも安心して続けられます。
+                            </p>
+                            <figure class="tips-type-figure">
+                                <img src={import.meta.env.BASE_URL + 'images/tips-type-chart.webp'} alt="マウスピース矯正ブランド比較" loading="lazy" decoding="async">
+                            </figure>
+                        </div>
+                    </article>
+
+                    <article class="tips-step" aria-label="クリニック選びのポイント">
+                        <div class="tips-step-content">
+                            <p>
+                                「どのクリニックを選べばいいの？」と迷う方のために、編集部が厳選したクリニックを紹介！一目でわかる早見表でチェックしてみてください。
+                            </p>
+                            <figure class="tips-step-figure">
+                                <img src={import.meta.env.BASE_URL + 'images/tips-matrix.webp'} alt="クリニック比較マトリクス" loading="lazy" decoding="async">
+                            </figure>
+                            <p>
+                                さらに詳しく知りたい方は、<span class="tips-highlight">料金・矯正ブランド・サポート体制・追加費用</span>まで比較した表をご用意しました。<br><br>気になるクリニックをチェックして、自分に合った1院を見つけましょう。初回カウンセリングで気になる点を相談し、納得してからスタートすれば安心です。
+                            </p>
+                        </div>
+                    </article>
+                </section>
+            </div>
+        </div>
+
+        <script>
+        // 詳細情報を表示する関数
+        function showDisclaimerInfo(type) {
+            const modal = document.getElementById('disclaimer-modal');
+            const modalBody = document.getElementById('disclaimer-modal-body');
+            
+            const disclaimers = {
+                'dio-success-rate': {
+                    title: 'ダイエット成功率99％について',
+                    content: '※最終体重測定2023/2/1～2023/7/31で薬なし、食事指導なしを除く、3ヶ月コース（ビューティー/リピート除く）の契約終了者が対象。効果には個人差があります。初回体重50kg以上or初回BMI25以上の方限定。'
+                }
+            };
+            
+            const info = disclaimers[type];
+            if (info) {
+                modalBody.innerHTML = `
+                    <h3 style="margin-top: 0; color: #333;">${info.title}</h3>
+                    <p style="font-size: 14px; line-height: 1.6; color: #666;">${info.content}</p>
+                `;
+                modal.style.display = 'block';
+            }
+        }
+        
+        // モーダルを閉じる関数
+        function closeDisclaimerInfo() {
+            document.getElementById('disclaimer-modal').style.display = 'none';
+        }
+        
+        // モーダルの外側をクリックしたら閉じる
+        window.onclick = function(event) {
+            const modal = document.getElementById('disclaimer-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        </script>
+
+            <!-- 比較表セクション -->
+            <section class="comparison-section">
+                <div class="comparison-header">
+                    <div class="comparison-headline">
+                        <img src={import.meta.env.BASE_URL + 'images/comparison_header_banner.webp'} alt="比較見出し" class="comparison-headline-image" loading="lazy" decoding="async">
+                        <h2 class="comparison-title">ー<span id="comparison-region-name">地域</span>で人気の脂肪冷却ー</h2>
+                    </div>
+                </div>
+                <p class="comparison-scroll-hint">← 横スクロールできます →</p>
+                
+                <div class="comparison-table comparison-table--matrix ranking-loading" id="comparison-table-container">
+                    <div class="comparison-table-wrapper">
+                        <table id="comparison-table">
+                            <thead>
+                                <tr id="comparison-header-row"></tr>
+                            </thead>
+                            <tbody id="comparison-tbody">
+                                <!-- 動的に生成される比較表の内容がここに表示されます -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 注意事項アコーディオン -->
+                    <div class="disclaimer-accordion" style="margin-top: 15px;">
+                        <!-- 第1段階: 各クリニックの注意事項 -->
+                        <div class="main-disclaimer">
+                            <button id="comparison-disclaimer-button" class="main-disclaimer-header comparison-disclaimer-header" style="width: 100%; text-align: left; padding: 8px 12px; background-color: #fafafa; border: 1px solid #f0f0f0; border-radius: 3px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <span style="font-size: 10px; font-weight: 500; color: #666;">各クリニックの注意事項</span>
+                                <span id="main-arrow" style="font-size: 8px; color: rgb(153, 153, 153); transition: transform 0.2s; transform: rotate(0deg);">▼</span>
+                            </button>
+                            <div id="main-content" class="main-disclaimer-content" style="display: none; padding: 5px; background-color: rgb(252, 252, 252); border-right: 1px solid rgb(240, 240, 240); border-bottom: 1px solid rgb(240, 240, 240); border-left: 1px solid rgb(240, 240, 240); border-image: initial; border-top: none; border-radius: 0px 0px 3px 3px; margin-top: -5px;">
+                                <!-- 動的に生成される注釈コンテンツ -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 案件詳細セクション -->
+            <section class="clinic-details-section">
+                <div class="details-header-banner">
+                    <img src={import.meta.env.BASE_URL + 'images/details_header_bannar3.webp'} alt="コスパ×効果×通いやすさで選ぶ医療痩身クリニックBEST3" class="details-banner-image" loading="lazy" decoding="async">
+                    <div id="detail-region-name">地域で人気のクリニック</div>
+                    <div id="detail-rank-best">3<span style="font-size: 0.6em;"> 選！</span></div>
+                </div>
+                
+                <div id="clinic-details-list" class="clinic-details-container ranking-loading">
+                    <!-- 詳細コンテンツはJavaScriptで動的に生成 -->
+                </div>
+            </section>
+
+            <!-- 医療情報コラムセクション（外部JSで挿入） -->
+            <div id="medical-columns-root"></div>
+            <script src={import.meta.env.BASE_URL + 'columns/columns.js?v=2025091701'} defer></script>
+
+            <!-- 医療情報コラムセクション（旧：非表示） -->
+            <!-- 医療情報コラムセクション -->
+            
+
+
+
+   <!-- 迷ったら1位クリニックセクション -->
+            <div id="first-choice-recommendation-section">
+                <div style="position: relative; display: inline-block; width: 100%;">
+                    <img src={import.meta.env.BASE_URL + 'images/ranking_header_banner.webp'} alt="" class="ranking-banner-image" loading="lazy" decoding="async">
+                    <div id="first-choice-region-text" style="position: absolute;bottom: 44%;left: 6%;text-align: center;color: rgb(255, 255, 255);font-size: clamp(16px, 5vw, 38px);font-weight: 600;z-index: 10;pointer-events: none;">迷ったら<span id="first-choice-clinic-name"></span>がおすすめ</div>
+                </div><section class="first-choice-recommendation-section" style="border: 5px solid rgb(253 208 124);border-radius: -5px;padding: 5px 5px 10px 5px;margin: 0px 20px;background-color: #fffef8;">
+                                
+            
+            <!-- バナー -->
+            <div class="first-choice-banner" style="text-align: center;/* margin-bottom: 30px; */">
+                <img id="first-choice-banner-image" src="" alt="" style="max-width: 100%; height: auto;">
+            </div>
+            
+            <!-- クリニックがおすすめの3つの理由 -->
+            <div class="section-title" style="
+margin: 2%;
+text-align: center;
+">
+                <h3><span id="first-choice-title-clinic-name"></span>がおすすめの<span style="color: #2CC7C5;">3つの理由</span></h3>
+            </div>
+            
+            <!-- ポイント -->
+            <div class="ribbon_point_box_no" id="first-choice-points">
+                
+                    <div class="ribbon_point_title2_s">
+                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <strong id="point1-title"></strong>
+                    </div>
+                    <div class="ribbon_point_txt">
+                        <p id="point1-description" style="font-size:14px;"></p>
+                    </div>
+                    
+                    <div class="ribbon_point_title2_s">
+                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <strong id="point2-title"></strong>
+                    </div>
+                    <div class="ribbon_point_txt">
+                        <p id="point2-description" style="font-size:14px;"></p>
+                    </div>
+                    
+                    <div class="ribbon_point_title2_s">
+                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <strong id="point3-title"></strong>
+                    </div>
+                    <div class="ribbon_point_txt">
+                        <p id="point3-description" style="font-size:14px;"></p>
+                    </div>
+                    
+                <div class="ribbon_point_link" id="first-choice-official-link">
+                    【公式】<a href="https://www.xn--ecki4eoz3204ct89aepry34c.com/draft/go/dio/?max_scroll=100&amp;region_id=013" target="_blank" rel="noopener"><strong>https://dioclinic.jp/</strong></a>
+                </div>
+            </div>
+            
+            <!-- Information -->
+            <div class="campaign-container">
+                <div class="campaign-header">INFORMATION!</div>
+                <div class="campaign-content">
+                    <div class="camp_header3">
+                        <div class="info_logo">
+                            <img id="first-choice-info-logo" src="" alt="">
+                        </div>
+                        <div class="camp_txt" id="first-choice-campaign-text">
+                        </div>
+                    </div>
+                    
+                    <div class="cv_box_img">
+                        <div class="cta-microcopy" aria-hidden="true"><span class="cta-microcopy-label">タイムセール</span></div>
+                        <span id="first-choice-achievement-text"></span>
+                        <p class="btn btn_second_primary" style="margin-top: 10px;">
+                            <a id="first-choice-cta-link" href="https://www.xn--ecki4eoz3204ct89aepry34c.com/draft/go/dio/?max_scroll=100&amp;region_id=013" target="_blank" rel="noopener">
+                                <span class="bt_s" id="first-choice-cta-text"></span>
+                                <span class="btn-arrow">▶</span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <!-- ディオクリニックの確認事項アコーディオン -->
+            <div class="disclaimer-accordion" style="margin-top: 15px;">
+                <button class="disclaimer-header" onclick="toggleDisclaimer('dio-campaign-first-choice')" style="width: 100%; text-align: left; padding: 8px 12px; background-color: #fafafa; border: 1px solid #f0f0f0; border-radius: 3px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="first-choice-disclaimer-title" style="font-size: 10px; font-weight: 500; color: #666;"></span>
+                    <span id="dio-campaign-first-choice-arrow" style="font-size: 8px; color: rgb(153, 153, 153); transition: transform 0.2s;">▼</span>
+                </button>
+                <div id="dio-campaign-first-choice-content" class="disclaimer-content" style="display: none; padding: 8px 12px; background-color: rgb(252, 252, 252); border-right: 1px solid rgb(240, 240, 240); border-bottom: 1px solid rgb(240, 240, 240); border-left: 1px solid rgb(240, 240, 240); border-image: initial; border-top: none; border-radius: 0px 0px 3px 3px; margin-top: -1px;">
+                    <div style="font-size: 9px; color: #777; line-height: 1.4;">
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+            </div>
+
+        </main>
+
+        <!-- 詳細情報モーダル -->
+        <div id="disclaimer-modal" class="disclaimer-modal" style="display: none;">
+            <div class="disclaimer-modal-content">
+                <span class="disclaimer-modal-close" onclick="closeDisclaimerInfo()">&times;</span>
+                <div id="disclaimer-modal-body"></div>
+            </div>
+    </div>
+
+    <!-- トップに戻るボタン -->
+    <button id="back-to-top" aria-label="トップに戻る" title="トップに戻る" style="display:none">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+            <polyline points="6,14 12,8 18,14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+    </button>
+
+    <!-- フッター -->
+        <div id="footer">
+            <div class="footer_contents">
+                <h4><a href="/">医療ダイエット比較.com</a></h4>
+                
+                <ul>
+                    <h5>人気クリニック</h5>
+                    <li><a href="#clinic1"></a></li>
+                    <li><a href="#clinic2"></a></li>
+                    <li><a href="#clinic3"></a></li>
+                </ul>
+                                
+                <ul>
+                    <h5>運営</h5>
+                    <li><a href="/common_page/company/" class="footer-page-link">運営者情報</a></li>
+                    <li><a href="/common_page/privacy/" class="footer-page-link">プライバシーポリシー</a></li>
+                    <li><a href="/common_page/disclaimer/" class="footer-page-link">免責事項</a></li>
+                    <li><a href="mailto:clinic.hikaku.review@gmail.com">お問い合わせ</a></li>
+                </ul>
+                
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright"></div></p>
+                <p class="disclaimer">※本サイトの情報は参考程度に留め、必ず各クリニックにご相談ください。</p>
+            </div>
+        </div>
+
+        <!-- サイドバーメニュー -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <div class="sidebar-menu" id="sidebar-menu">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">絞り込み検索</h3>
+                <button class="close-sidebar" id="close-sidebar" aria-label="閉じる">×</button>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-filter-group">
+                    <label for="sidebar-region-select" class="sidebar-filter-label">地域選択</label>
+                    <select id="sidebar-region-select" class="sidebar-select">
+                        <!-- 地域オプションはJavaScriptで動的に生成 -->
+                    </select>
+                </div>
+                <div class="sidebar-filter-group">
+                    <label for="sidebar-clinic-search" class="sidebar-filter-label">クリニック名検索</label>
+                    <input type="text" id="sidebar-clinic-search" class="sidebar-search-input" placeholder="クリニック名を入力">
+                </div>
+                <div class="sidebar-filter-group">
+                    <label for="sidebar-specialty-filter" class="sidebar-filter-label">対応部位</label>
+                    <select id="sidebar-specialty-filter" class="sidebar-select">
+                        <option value="">すべての部位</option>
+                        <option value="face">顔</option>
+                        <option value="upperarm">二の腕</option>
+                        <option value="stomach">お腹</option>
+                        <option value="buttocks">お尻</option>
+                        <option value="thigh">太もも</option>
+                        <option value="other">その他</option>
+                    </select>
+                </div>
+                <div class="sidebar-filter-group">
+                    <label for="sidebar-hours-filter" class="sidebar-filter-label">店舗数</label>
+                    <select id="sidebar-hours-filter" class="sidebar-select">
+                        <option value="">店舗数指定なし</option>
+                        <option value="small">0〜5店舗</option>
+                        <option value="medium">6〜10店舗</option>
+                        <option value="large">10〜20店舗</option>
+                        <option value="xlarge">それ以上</option>
+                    </select>
+                </div>
+                <div class="sidebar-search-button">
+                    <a href="search-results/" class="sidebar-search-link">詳細検索ページへ</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="error-message" class="error-message" style="display: none;">
+            <p id="error-text"></p>
+        </div>
+        
+        <!-- 地図モーダル -->
+        <div id="map-modal" class="map-modal" style="display: none;">
+            <div class="map-modal-overlay"></div>
+            <div class="map-modal-content">
+                <div class="map-modal-header">
+                    <h3 class="map-modal-title" id="map-modal-clinic-name">クリニック名</h3>
+                    <button class="map-modal-close" id="map-modal-close" aria-label="閉じる">&times;</button>
+                </div>
+                <div class="map-modal-body">
+                    <div class="map-modal-map" id="map-modal-map-container">
+                        <!-- Google Maps iframe will be inserted here -->
+                    </div>
+                    <table class="map-modal-info-table">
+                        <tbody>
+                            <tr>
+                                <th>住所</th>
+                                <td id="map-modal-address"></td>
+                            </tr>
+                            <tr>
+                                <th>アクセス</th>
+                                <td id="map-modal-access"></td>
+                            </tr>
+                            <tr>
+                                <th>営業時間</th>
+                                <td id="map-modal-hours">11:00〜21:00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="map-modal-footer">
+                        <p class="btn btn_second_primary" style="margin-top: 20px;">
+                            <a id="map-modal-button" href="#" target="_blank" rel="noopener">
+                                <span class="bt_s" id="map-modal-button-text">公式サイトから申し込む</span>
+                                <span class="btn-arrow">▶</span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slick Carousel JS -->
+    <!-- Slick.js削除済み／jQueryは未使用のため読み込み削除 -->
+    <script src={import.meta.env.BASE_URL + 'app.js?v=2025081417'} defer></script>
+    
+
+    <!-- 1位クリニック動的表示機能 -->
+    <script>
+        function shouldHandleClinicLink(link) {
+            if (!link) return false;
+            if (link.hasAttribute('data-handle-clinic-click')) return true;
+            if (link.dataset && (link.dataset.clinicId || link.dataset.rank || link.dataset.ctaType)) return true;
+            try {
+                const href = link.getAttribute('href') || '';
+                if (href.includes('/redirect.html')) {
+                    return true;
+                }
+            } catch (_) {}
+            return false;
+        }
+
+        function getDataAttr(element, key) {
+            let el = element || null;
+            while (el) {
+                if (el.dataset && el.dataset[key] !== undefined) {
+                    return el.dataset[key];
+                }
+                el = el.parentElement;
+            }
+            return undefined;
+        }
+
+        function detectClickSection(link) {
+            if (!link || typeof link.closest !== 'function') {
+                return '';
+            }
+
+            const sectionMap = [
+                { selector: '.ranking-item, .ranking__card, .ranking_box, [data-rank="1"], [data-rank="2"], [data-rank="3"]', value: 'ranking' },
+                { selector: '.clinic-detail-card, .clinic-card, .clinic-detail-modal', value: 'details' },
+                { selector: '.comparison-table, .ranking-table, .comparison-section', value: 'comparison' },
+                { selector: '.map-modal', value: 'map_modal' },
+                { selector: '.shop', value: 'shop_list' },
+                { selector: '.scroll-bottom-modal', value: 'scroll_modal' },
+                { selector: '.first-choice-section, #first-choice-cta-link', value: 'first_choice' }
+            ];
+
+            for (const { selector, value } of sectionMap) {
+                try {
+                    if (link.closest(selector)) {
+                        return value;
+                    }
+                } catch (_) {
+                    // 無効なセレクタは無視
+                }
+            }
+
+            return '';
+        }
+
+        function normalizeRegionId(value, fallback = '013') {
+            if (value === undefined || value === null) return fallback;
+            const raw = String(value).trim();
+            if (!raw) return fallback;
+            if (/^\d+$/.test(raw)) {
+                return raw.padStart(3, '0');
+            }
+            return raw;
+        }
+
+        function buildClickContext(link, overrides = {}) {
+            const context = { ...overrides };
+            if (!context.target && link && link.getAttribute) {
+                const targetAttr = link.getAttribute('target');
+                if (targetAttr) {
+                    context.target = targetAttr;
+                }
+            }
+
+            const datasetKeys = ['clinicId', 'rank', 'regionId', 'ctaType', 'clickSection', 'clickClinic', 'sourcePage'];
+            datasetKeys.forEach((key) => {
+                if (context[key] === undefined || context[key] === null) {
+                    const value = getDataAttr(link, key);
+                    if (value !== undefined) {
+                        context[key] = value;
+                    }
+                }
+            });
+
+            if (!context.clickSection) {
+                const detectedSection = detectClickSection(link);
+                if (detectedSection) {
+                    context.clickSection = detectedSection;
+                }
+            }
+
+            let parsedUrl = null;
+            const linkHref = (link && link.getAttribute && link.getAttribute('href')) || '';
+            try {
+                parsedUrl = new URL(linkHref, window.location.href);
+            } catch (_) {
+                parsedUrl = null;
+            }
+            context.linkUrl = parsedUrl;
+
+            const linkParams = {};
+            if (parsedUrl) {
+                parsedUrl.searchParams.forEach((value, key) => {
+                    linkParams[key] = value;
+                });
+            }
+            context.linkParams = linkParams;
+
+            if (!context.clinicId && linkParams.clinic_id) context.clinicId = linkParams.clinic_id;
+            if (!context.rank && linkParams.rank) context.rank = linkParams.rank;
+            if (!context.regionId && linkParams.region_id) context.regionId = linkParams.region_id;
+            if (!context.ctaType && linkParams.cta_type) context.ctaType = linkParams.cta_type;
+            if (!context.clickSection && linkParams.click_section) context.clickSection = linkParams.click_section;
+            if (!context.clickClinic && linkParams.click_clinic) context.clickClinic = linkParams.click_clinic;
+            if (!context.sourcePage && linkParams.source_page) context.sourcePage = linkParams.source_page;
+
+            const hashValues = {};
+            if (parsedUrl && parsedUrl.hash) {
+                const hash = parsedUrl.hash.substring(1);
+                if (hash.startsWith('params=')) {
+                    try {
+                        const paramsJson = decodeURIComponent(hash.substring(7));
+                        const paramsObj = JSON.parse(paramsJson);
+                        Object.assign(hashValues, paramsObj);
+                        if (!context.originalParams && paramsObj.original_params && typeof paramsObj.original_params === 'object') {
+                            context.originalParams = { ...paramsObj.original_params };
+                        }
+                    } catch (error) {
+                        console.warn('Failed to parse hash params:', error);
+                    }
+                } else {
+                    const hashSearch = new URLSearchParams(hash);
+                    hashSearch.forEach((value, key) => {
+                        hashValues[key] = value;
+                    });
+                }
+            }
+            context.hashParams = hashValues;
+
+            if (!context.clinicId && hashValues.clinic_id) context.clinicId = hashValues.clinic_id;
+            if (!context.rank && hashValues.rank) context.rank = hashValues.rank;
+            if (!context.regionId && hashValues.region_id) context.regionId = hashValues.region_id;
+            if (!context.ctaType && hashValues.cta_type) context.ctaType = hashValues.cta_type;
+            if (!context.clickSection && hashValues.click_section) context.clickSection = hashValues.click_section;
+            if (!context.clickClinic && hashValues.click_clinic) context.clickClinic = hashValues.click_clinic;
+            if (!context.sourcePage && hashValues.source_page) context.sourcePage = hashValues.source_page;
+
+            const originalParams = { ...(context.originalParams || {}) };
+            const currentSearch = new URLSearchParams(window.location.search || '');
+            currentSearch.forEach((value, key) => {
+                if (originalParams[key] === undefined) {
+                    originalParams[key] = value;
+                }
+            });
+            Object.entries(linkParams).forEach(([key, value]) => {
+                if (originalParams[key] === undefined) {
+                    originalParams[key] = value;
+                }
+            });
+            Object.entries(hashValues).forEach(([key, value]) => {
+                if (typeof value === 'string' && originalParams[key] === undefined) {
+                    originalParams[key] = value;
+                }
+            });
+
+            context.originalParams = originalParams;
+            context.regionId = normalizeRegionId(context.regionId);
+            context.rank = context.rank !== undefined ? context.rank : '1';
+            context.ctaType = (context.ctaType || 'official');
+            if (!context.clickSection && context.ctaType === 'direct') {
+                context.clickSection = 'direct';
+            }
+            if (!context.sourcePage) {
+                context.sourcePage = window.location.pathname || '';
+            }
+
+            if (!context.referrerUrl && document.referrer) {
+                try {
+                    context.referrerUrl = new URL(document.referrer);
+                } catch (_) {
+                    context.referrerUrl = null;
+                }
+            }
+
+            return context;
+        }
+
+        function resolveClinicTargetUrl(clinicId, rank, ctaType) {
+            if (!clinicId) return null;
+            const dataManager = window.dataManager;
+            if (!dataManager || typeof dataManager.getClinicText !== 'function') {
+                return null;
+            }
+
+            const clinic = typeof dataManager.getClinicById === 'function' ? dataManager.getClinicById(clinicId) : null;
+            const clinicCode = (typeof dataManager.getClinicCodeById === 'function' && dataManager.getClinicCodeById(clinicId)) || clinic?.code || null;
+            if (!clinicCode) {
+                return null;
+            }
+
+            const getField = (field) => {
+                const value = dataManager.getClinicText(clinicCode, field, '');
+                if (value === undefined || value === null) return '';
+                return String(value).trim();
+            };
+
+            const numericRank = Number.parseInt(rank, 10);
+            const finalRank = Number.isFinite(numericRank) && numericRank > 0 ? numericRank : 1;
+            const normalizedCtaType = String(ctaType || 'official').toLowerCase() === 'direct' ? 'direct' : 'official';
+
+            let targetUrl = '';
+
+            if (normalizedCtaType === 'direct') {
+                const directRankFields = [
+                    `直フォームの遷移先URL（${finalRank}位）`,
+                    `直フォーム遷移先URL（${finalRank}位）`,
+                    `直フォームURL（${finalRank}位）`
+                ];
+                for (const field of directRankFields) {
+                    const value = getField(field);
+                    if (value) {
+                        targetUrl = value;
+                        break;
+                    }
+                }
+                if (!targetUrl) {
+                    const directFallbackFields = ['直フォームURL','直フォーム遷移先URL','無料相談フォームURL','予約フォームURL','フォームURL','問い合わせフォームURL','CTA直リンクURL'];
+                    for (const field of directFallbackFields) {
+                        const value = getField(field);
+                        if (value) {
+                            targetUrl = value;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!targetUrl) {
+                targetUrl = getField(`遷移先URL（${finalRank}位）`);
+                if (!targetUrl) {
+                    targetUrl = getField('遷移先URL（1位）');
+                }
+            }
+
+            if (!targetUrl) {
+                return null;
+            }
+
+            let resolvedUrl;
+            try {
+                resolvedUrl = new URL(targetUrl);
+            } catch (_) {
+                try {
+                    resolvedUrl = new URL(targetUrl, window.location.origin);
+                } catch (error) {
+                    console.error('Failed to resolve clinic target URL:', error);
+                    return null;
+                }
+            }
+
+            return {
+                url: resolvedUrl,
+                clinicCode,
+                clinic
+            };
+        }
+
+        function buildTrackedUrl(context, targetInfo) {
+            if (!targetInfo || !targetInfo.url) return null;
+            const destination = new URL(targetInfo.url.toString());
+            const normalizedCtaType = String(context.ctaType || 'official').toLowerCase() === 'direct' ? 'direct' : 'official';
+            const regionId = normalizeRegionId(context.regionId);
+            const currentUrl = new URL(window.location.href);
+            const baseReferrer = `${currentUrl.origin}${currentUrl.pathname}`;
+            const fallbackSourcePage = window.location.pathname || window.SITE_CONFIG?.sourcePage || 'potenza';
+            const sourcePage = context.sourcePage || context.linkParams?.source_page || context.hashParams?.source_page || fallbackSourcePage;
+
+            const trackingParams = {
+                click_section: context.clickSection || context.linkParams?.click_section || context.hashParams?.click_section || currentUrl.searchParams.get('click_section') || '',
+                click_clinic: context.clickClinic || context.linkParams?.click_clinic || context.hashParams?.click_clinic || targetInfo.clinicCode || '',
+                source_page: sourcePage,
+                region_id: regionId || '013',
+                cta_type: normalizedCtaType,
+                referrer_url: baseReferrer,
+                timestamp: new Date().toISOString()
+            };
+
+            const originalParams = context.originalParams || {};
+            const referrerUrl = context.referrerUrl instanceof URL ? context.referrerUrl : null;
+
+            function getOriginalParam(paramName) {
+                if (originalParams && originalParams[paramName]) {
+                    return originalParams[paramName];
+                }
+                if (context.linkParams && context.linkParams[paramName]) {
+                    return context.linkParams[paramName];
+                }
+                if (context.hashParams && context.hashParams[paramName]) {
+                    return context.hashParams[paramName];
+                }
+                if (referrerUrl && referrerUrl.searchParams) {
+                    const value = referrerUrl.searchParams.get(paramName);
+                    if (value) return value;
+                }
+                return '';
+            }
+
+            const maxScrollValue = (() => {
+                const fromOriginal = getOriginalParam('max_scroll');
+                if (fromOriginal !== '') {
+                    return fromOriginal;
+                }
+                const fromCurrent = currentUrl.searchParams.get('max_scroll');
+                return fromCurrent !== null ? fromCurrent : '';
+            })();
+            if (maxScrollValue !== null && maxScrollValue !== undefined && maxScrollValue !== '') {
+                const parsed = parseInt(maxScrollValue, 10);
+                if (!Number.isNaN(parsed)) {
+                    const clamped = Math.max(0, Math.min(100, parsed));
+                    trackingParams.max_scroll = String(clamped);
+                } else {
+                    trackingParams.max_scroll = String(maxScrollValue);
+                }
+            }
+
+            const utmCreative = getOriginalParam('utm_creative');
+            if (utmCreative) {
+                destination.searchParams.set('param2', utmCreative);
+            }
+
+            const gclid = getOriginalParam('gclid');
+            if (gclid) {
+                destination.searchParams.set('param3', gclid);
+                destination.searchParams.set('gclid', gclid);
+            }
+
+            destination.searchParams.set('param4', encodeURIComponent(JSON.stringify(trackingParams)));
+
+            if (regionId) {
+                destination.searchParams.set('region_id', regionId);
+            }
+
+            const userAgent = navigator.userAgent.toLowerCase();
+            const deviceType = userAgent.includes('mobile') || userAgent.includes('android') || userAgent.includes('iphone')
+                ? 'm'
+                : (userAgent.includes('tablet') || userAgent.includes('ipad')) ? 't' : 'c';
+            destination.searchParams.set('device', deviceType);
+
+            const utmDefaults = {
+                utm_source: 'google',
+                utm_medium: 'cpc',
+                utm_campaign: '{campaignid}',
+                utm_term: '{keyword}'
+            };
+
+            Object.entries(utmDefaults).forEach(([param, defaultValue]) => {
+                const value = getOriginalParam(param) || defaultValue;
+                destination.searchParams.set(param, value);
+            });
+
+            if (utmCreative) {
+                destination.searchParams.set('utm_creative', utmCreative);
+            } else {
+                destination.searchParams.set('utm_creative', '{creative}');
+            }
+
+            const utmContent = getOriginalParam('utm_content');
+            if (utmContent) {
+                destination.searchParams.set('utm_content', utmContent);
+            }
+
+            return destination.toString();
+        }
+
+        window.handleClinicClick = function(event, link, overrides = {}) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            try {
+                const context = buildClickContext(link, overrides || {});
+                const targetInfo = resolveClinicTargetUrl(context.clinicId, context.rank, context.ctaType);
+                if (!targetInfo) {
+                    if (link && link.href) {
+                        window.open(link.href, context.target || '_blank', 'noopener');
+                    }
+                    return false;
+                }
+
+                const finalUrl = buildTrackedUrl(context, targetInfo);
+                if (!finalUrl) {
+                    if (link && link.href) {
+                        window.open(link.href, context.target || '_blank', 'noopener');
+                    }
+                    return false;
+                }
+
+                const target = context.target || '_blank';
+                if (target === '_self') {
+                    window.location.href = finalUrl;
+                } else {
+                    window.open(finalUrl, target, 'noopener');
+                }
+            } catch (error) {
+                console.error('handleClinicClick failed:', error);
+                if (link && link.href) {
+                    const fallbackTarget = (overrides && overrides.target) || link.getAttribute('target') || '_blank';
+                    window.open(link.href, fallbackTarget, 'noopener');
+                }
+            }
+
+            return false;
+        };
+
+        document.addEventListener('click', function(e) {
+            const link = e.target && e.target.closest ? e.target.closest('a') : null;
+            if (!link || !shouldHandleClinicLink(link)) {
+                return;
+            }
+            if (window.handleClinicClick) {
+                window.handleClinicClick(e, link);
+            }
+        }, true);
+        
+                // ランキングセクション用のアコーディオン関数
+        function toggleRankingDisclaimer(event) {
+            console.log('>>> toggleRankingDisclaimer called');
+
+            // イベント伝播を防ぐ
+            if (event) {
+                event.stopPropagation();
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+
+            // イベントターゲットがランキングセクション内かどうかをチェック
+            if (event && event.target) {
+                const isRankingSection = event.target.closest('.ranking-disclaimer-header') ||
+                                        event.target.closest('#ranking-disclaimers-content') ||
+                                        event.target.id === 'ranking-main-arrow';
+                if (!isRankingSection) {
+                    console.log('>>> Event target is not in ranking section, ignoring');
+                    return false;
+                }
+            }
+
+            const content = document.getElementById('ranking-disclaimers-content');
+            const arrow = document.getElementById('ranking-main-arrow');
+
+            if (content) {
+                const currentDisplay = window.getComputedStyle(content).display;
+                console.log('>>> Ranking current display:', currentDisplay);
+
+                if (content.style.display === 'none' || currentDisplay === 'none') {
+                    content.style.display = 'block';
+                    if (arrow) arrow.style.transform = 'rotate(180deg)';
+                    console.log('>>> Opened ranking disclaimer');
+                } else {
+                    content.style.display = 'none';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                    console.log('>>> Closed ranking disclaimer');
+                }
+            } else {
+                console.error('>>> Ranking disclaimer content not found!');
+            }
+
+            return false;
+        }
+
+                // 比較表セクション用のアコーディオン関数（第一段階）
+        function toggleComparisonDisclaimer(eventOrSlug) {
+            console.log('>>> toggleComparisonDisclaimer called with:', eventOrSlug);
+
+            // 引数がイベントオブジェクトの場合（第一段階）
+            if (eventOrSlug && typeof eventOrSlug === 'object' && eventOrSlug.target) {
+                const event = eventOrSlug;
+                // イベント伝播を防ぐ
+                if (event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                }
+
+                const content = document.getElementById('main-content');
+                const arrow = document.getElementById('main-arrow');
+
+                if (content) {
+                    const currentDisplay = window.getComputedStyle(content).display;
+                    if (content.style.display === 'none' || currentDisplay === 'none') {
+                        content.style.display = 'block';
+                        if (arrow) arrow.style.transform = 'rotate(180deg)';
+                    } else {
+                        content.style.display = 'none';
+                        if (arrow) arrow.style.transform = 'rotate(0deg)';
+                    }
+                }
+                return false;
+            }
+        }
+
+        // 各クリニック個別のアコーディオン用の汎用関数
+        function toggleClinicDisclaimer(uniqueSlug, event) {
+            console.log('>>> toggleClinicDisclaimer called for:', uniqueSlug);
+            if (event) {
+                event.stopPropagation();
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+
+            const content = document.getElementById(`${uniqueSlug}-content`);
+            const arrow = document.getElementById(`${uniqueSlug}-arrow`);
+
+            if (content && arrow) {
+                const currentDisplay = window.getComputedStyle(content).display;
+                if (currentDisplay === 'none' || content.style.display === 'none') {
+                    content.style.display = 'block';
+                    if (arrow) arrow.style.transform = 'rotate(180deg)';
+                } else {
+                    content.style.display = 'none';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                }
+            } else {
+                console.error('>>> disclaimer content/arrow not found for:', uniqueSlug);
+            }
+            return false;
+        }
+        
+        // 元のtoggleDisclaimer関数（キャンペーンセクション用）
+        function toggleDisclaimer(clinicSlug) {
+            console.log('>>> toggleDisclaimer called with clinicSlug:', clinicSlug);
+            
+            const content = document.getElementById(`${clinicSlug}-content`);
+            const arrow = document.getElementById(`${clinicSlug}-arrow`);
+            
+            console.log('>>> Found content element:', !!content);
+            console.log('>>> Found arrow element:', !!arrow);
+            
+            if (content) {
+                // 計算されたスタイルも確認
+                const currentDisplay = window.getComputedStyle(content).display;
+                console.log('>>> Current display style:', currentDisplay);
+                console.log('>>> Content style.display:', content.style.display);
+                
+                if (currentDisplay === 'none' || content.style.display === 'none') {
+                    content.style.display = 'block';
+                    if (arrow) arrow.style.transform = 'rotate(180deg)';
+                    console.log('>>> Opened accordion for:', clinicSlug);
+                } else {
+                    content.style.display = 'none';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                    console.log('>>> Closed accordion for:', clinicSlug);
+                }
+            } else {
+                console.error('>>> Content element not found for:', clinicSlug);
+            }
+        }
+        
+        // 1位クリニックの情報を設定
+        function setFirstChoiceClinic(clinicData) {
+            if (!clinicData) return;
+            
+            // クリニック名を動的に取得
+            const clinicCode = clinicData.code 
+                || window.app?.dataManager?.getClinicCodeById?.(clinicData.id)
+                || window.dataManager?.getClinicCodeById?.(clinicData.id);
+            const dmForText = window.app?.dataManager || window.dataManager;
+            const clinicName = (dmForText && typeof dmForText.getClinicText === 'function' 
+                ? dmForText.getClinicText(clinicCode, 'ブランド名', clinicData.name)
+                : null) || clinicData.name || 'Oh my teeth';
+
+            
+            const clinicSlug = clinicData.code || clinicIdToSlugMap[clinicData.id] || clinicNameToSlugMap[clinicName] || clinicNameToSlugMap[clinicData.name] || 'omt';
+            if (window.__DEBUG__) console.log('[DEBUG] setFirstChoiceClinic: clinicSlug', clinicSlug, 'clinicName', clinicName, 'clinicData', clinicData);
+            
+            
+            // テキスト要素を更新
+            const regionText = document.getElementById('first-choice-region-text');
+            const clinicNameSpan = document.getElementById('first-choice-clinic-name');
+            const titleClinicName = document.getElementById('first-choice-title-clinic-name');
+            const bannerImage = document.getElementById('first-choice-banner-image');
+            const infoLogo = document.getElementById('first-choice-info-logo');
+            const campaignText = document.getElementById('first-choice-campaign-text');
+            const achievementText = document.getElementById('first-choice-achievement-text');
+            const ctaLink = document.getElementById('first-choice-cta-link');
+            const ctaText = document.getElementById('first-choice-cta-text');
+            
+            if (clinicNameSpan) clinicNameSpan.textContent = clinicName;
+            if (titleClinicName) titleClinicName.textContent = clinicName;
+    
+            if (ctaText) ctaText.textContent = `${clinicName}の公式サイト`;
+            
+            // クリニック別の内容設定（DataManagerから動的に取得）
+            const dm = window.app?.dataManager || window.dataManager;
+            if (dm && typeof dm.getClinicText === 'function') {
+                const clinicCode = clinicData.code || clinicSlug;
+                
+                // キャンペーンテキストを動的に取得
+                const campaignInfo = dm.getClinicText(clinicCode, 'INFORMATIONキャンペーンテキスト', '期間限定キャンペーン<br>実施中');
+                if (campaignText) campaignText.innerHTML = campaignInfo;
+
+                // INFORMATIONサブテキストを動的に取得
+                const achievementInfo = dm.getClinicText(clinicCode, 'INFORMATIONサブテキスト', '＼月額・総額がリーズナブルなクリニック／');
+                if (achievementText) achievementText.textContent = achievementInfo;
+
+                // URLを動的に生成
+                const regionId = new URLSearchParams(window.location.search).get('region_id') || '013';
+                const ctaUrl = window.app && window.app.urlHandler ? 
+                    window.app.urlHandler.getClinicUrlWithRegionId(clinicData.id) : 
+                    `/injection-lipolysis001/go/${clinicSlug}/?region_id=${regionId}`;
+                if (ctaLink) ctaLink.href = ctaUrl;
+            } else {
+                // フォールバック（DataManagerが利用できない場合）
+                const clinicInfo = getClinicInfo(clinicSlug);
+                if (campaignText) campaignText.innerHTML = clinicInfo.campaign;
+                if (achievementText) achievementText.textContent = clinicInfo.achievement;
+                if (ctaLink) ctaLink.href = clinicInfo.ctaUrl;
+            }
+            
+            // 3つの理由を設定
+            setThreeReasons(clinicSlug);
+            
+            // アコーディオンの確認事項を更新
+            updateFirstChoiceDisclaimer(clinicData);
+            
+            // CASEセクションを設定（1位クリニックのみ）
+            if (window.dataManager && window.dataManager.getClinicText) {
+                const clinicCode = clinicData.code || clinicSlug;
+                if (window.__DEBUG__) console.log('[DEBUG] setFirstChoiceClinic: calling setCaseSection with clinicSlug', clinicSlug);
+                setCaseSection(clinicSlug, null);
+            } else {
+                const clinicInfo = getClinicInfo(clinicSlug);
+                if (window.__DEBUG__) console.log('[DEBUG] setFirstChoiceClinic: calling setCaseSection (fallback) with clinicSlug', clinicSlug);
+                setCaseSection(clinicSlug, clinicInfo.points);
+            }
+        }
+
+        // 症例写真セクションを設定（常に表示）
+        function setCaseSection(clinicSlug, points) {
+            const caseSection = document.getElementById('case-section');
+            if (!caseSection) {
+                if (window.__DEBUG__) console.log('[DEBUG] setCaseSection: #case-section not found');
+                return;
+            }
+            // 案件詳細セクション（1位）に表示するため、上部のCASEセクションは常に非表示にする
+            caseSection.style.display = 'none';
+            if (window.__DEBUG__) console.log('[DEBUG] setCaseSection: hidden top case-section to avoid duplication');
+        }
+
+        // 症例写真カルーセルの初期化
+        function initCaseCarousel() {
+            const container = document.querySelector('.case-carousel-container');
+            const slides = document.querySelectorAll('.case-slide');
+            const dots = document.querySelectorAll('.case-dot');
+            const prevBtn = document.querySelector('.case-nav-prev');
+            const nextBtn = document.querySelector('.case-nav-next');
+            
+            if (window.__DEBUG__) console.log('[DEBUG] initCaseCarousel: elements', { hasContainer: !!container, slides: slides.length, dots: dots.length, hasPrev: !!prevBtn, hasNext: !!nextBtn });
+            if (!container || slides.length === 0) {
+                if (window.__DEBUG__) console.log('[DEBUG] initCaseCarousel: container missing or no slides');
+                return;
+            }
+            
+            let currentIndex = 0;
+            
+            // スライドを表示する関数
+            function showSlide(index) {
+                // インデックスの範囲チェック
+                if (index < 0) index = slides.length - 1;
+                if (index >= slides.length) index = 0;
+                currentIndex = index;
+                
+                // スライドの位置を変更（scroll-snapを活用）
+                const slideWidth = container.clientWidth;
+                container.scrollTo({
+                    left: slideWidth * currentIndex,
+                    behavior: 'smooth'
+                });
+                
+                // ドットの状態を更新
+                dots.forEach((dot, i) => {
+                    if (i === currentIndex) {
+                        dot.classList.add('active');
+                        dot.style.background = '#2CC7C5';
+                    } else {
+                        dot.classList.remove('active');
+                        dot.style.background = '#ccc';
+                    }
+                });
+            }
+            
+            // 前のスライドへ
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    showSlide(currentIndex - 1);
+                });
+            }
+            
+            // 次のスライドへ
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    showSlide(currentIndex + 1);
+                });
+            }
+            
+            // ドットクリックでスライド移動
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    showSlide(index);
+                });
+            });
+            
+            // スクロールイベントでドット状態を更新
+            container.addEventListener('scroll', () => {
+                const scrollLeft = container.scrollLeft;
+                const slideWidth = container.clientWidth;
+                const newIndex = Math.round(scrollLeft / slideWidth);
+                if (newIndex !== currentIndex) {
+                    currentIndex = newIndex;
+                    dots.forEach((dot, i) => {
+                        if (i === currentIndex) {
+                            dot.classList.add('active');
+                            dot.style.background = '#2CC7C5';
+                        } else {
+                            dot.classList.remove('active');
+                            dot.style.background = '#ccc';
+                        }
+                    });
+                }
+            });
+            
+            // 初期表示
+            if (window.__DEBUG__) console.log('[DEBUG] initCaseCarousel: showSlide(0)');
+            showSlide(0);
+        }
+
+        // アコーディオンの確認事項を更新
+        function updateFirstChoiceDisclaimer(clinicData) {
+            const disclaimerHeader = document.getElementById('first-choice-disclaimer-title');
+            const disclaimerArrow = document.getElementById('dio-campaign-first-choice-arrow');
+            const disclaimerContentDiv = document.getElementById('dio-campaign-first-choice-content');
+            const disclaimerButton = disclaimerArrow ? disclaimerArrow.closest('button.disclaimer-header') : null;
+            const disclaimerContent = disclaimerContentDiv ? disclaimerContentDiv.querySelector('div') : null;
+            
+            if (!clinicData) return;
+            
+            const clinicName = clinicData.name || 'ディオクリニック';
+            const clinicCode = clinicData.code || 'dio';
+            
+            // ヘッダーテキストを更新
+            if (disclaimerHeader) {
+                disclaimerHeader.textContent = `${clinicName}の確認事項`;
+            }
+            
+            // ボタンのonclick属性/IDは固定のまま。初期状態のみ明示
+            if (disclaimerArrow) {
+                disclaimerArrow.style.transform = 'rotate(0deg)';
+            }
+            if (disclaimerContentDiv) {
+                disclaimerContentDiv.style.display = 'none';
+                disclaimerContentDiv.classList.remove('force-show');
+                disclaimerContentDiv.style.visibility = '';
+                disclaimerContentDiv.style.opacity = '';
+            }
+            
+            // 確認事項の内容を動的に取得
+            const dm2 = window.app?.dataManager || window.dataManager;
+            if (dm2 && typeof dm2.getClinicText === 'function' && disclaimerContent) {
+                const disclaimerText = dm2.getClinicText(clinicCode, 'INFORMATION確認事項', '');
+                if (disclaimerText) {
+                    const disclaimerHtml = disclaimerText.split('<br>')
+                        .map(text => text.trim())
+                        .filter(text => text)
+                        .map(text => `<p>${text}</p>`)
+                        .join('\n                        ');
+                    disclaimerContent.innerHTML = disclaimerHtml;
+                }
+            }
+        }
+        
+        // クリニックコードから名前を取得するヘルパー関数
+        function getClinicNameFromCode(clinicCode) {
+            const dm = window.app?.dataManager || window.dataManager;
+            if (dm && dm.clinics) {
+                const clinic = dm.clinics.find(c => c.code === clinicCode);
+                if (clinic) return clinic.name;
+            }
+            // フォールバック：コードをそのまま返す
+            return clinicCode;
+        }
+
+        // 動的にクリニック情報を取得（clinic-texts.jsonから）
+        function getClinicInfo(clinicSlug) {
+            // DataManagerが利用可能な場合は動的に取得
+            const dm3 = window.app?.dataManager || window.dataManager;
+            if (dm3 && typeof dm3.getClinicText === 'function') {
+                const clinicCode = clinicSlug;
+                const clinicName = getClinicNameFromCode(clinicCode);
+                return {
+                    campaign: clinicInfo['INFORMATIONキャンペーンテキスト'] || '期間限定キャンペーン<br>実施中',
+                    achievement: '＼' + (clinicInfo['実績/症例数'] || '実績多数') + '／',
+                    ctaUrl: clinicInfo['公式サイトURL'] || `https://www.example.com/go/${clinicSlug}/`
+                };
+            }
+            
+            // フォールバック（DataManagerが利用できない場合）
+            return {
+                campaign: '期間限定キャンペーン<br>実施中',
+                achievement: '＼実績多数／',
+                ctaUrl: `https://www.example.com/go/${clinicSlug}/`
+            };
+        }
+
+        // クリニックURLを取得（CSVデータベースから動的に）
+        function getClinicUrl(clinicSlug, rank = 1) {
+            // DataManagerから動的に取得
+            const dm4 = window.app?.dataManager || window.dataManager;
+            if (dm4 && typeof dm4.getClinicText === 'function') {
+                const urlKey = `遷移先URL（${rank}位）`;
+                const url = dm4.getClinicText(clinicSlug, urlKey, '');
+                if (url) {
+                    return url;
+                }
+            }
+            // フォールバック（念のため）
+            return 'https://sss.ac01.l-ad.net/cl/p1a64143O61e70f7/?bid=a6640dkh37648h88&param2=[ADID_PLACEHOLDER]&param3=[GCLID_PLACEHOLDER]';
+        }
+
+        // 3つの理由を設定
+        function setThreeReasons(clinicSlug) {
+            const pointsContainer = document.getElementById('first-choice-points');
+            if (!pointsContainer) return;
+            
+            // DataManagerを使用して動的にPOINTタイトルと内容を取得
+            const dm = window.app?.dataManager || window.dataManager;
+            if (!dm) {
+                console.error('DataManager not found');
+                return;
+            }
+
+            
+            const clinicKeyForTexts = (window.slugToNameMap && window.slugToNameMap[clinicSlug]) || clinicSlug;
+            
+            // DataManagerを使ってPOINT情報を取得（正しいキーを使用）
+            const point1Title = dm.getClinicText(clinicKeyForTexts, 'POINT1タイトル', '');
+            const point1Content = dm.getClinicText(clinicKeyForTexts, 'POINT1内容', '');
+            const point2Title = dm.getClinicText(clinicKeyForTexts, 'POINT2タイトル', '');
+            const point2Content = dm.getClinicText(clinicKeyForTexts, 'POINT2内容', '');
+            const point3Title = dm.getClinicText(clinicKeyForTexts, 'POINT3タイトル', '');
+            const point3Content = dm.getClinicText(clinicKeyForTexts, 'POINT3内容', '');
+            
+            
+            const reasons = [
+                {
+                    title: point1Title,
+                    description: point1Content
+                },
+                {
+                    title: point2Title,
+                    description: point2Content
+                },
+                {
+                    title: point3Title,
+                    description: point3Content
+                }
+            ];
+            
+            const officialUrl = `https://www.xn--ecki4eoz3204ct89aepry34c.com/go/${clinicSlug}/?max_scroll=100&region_id=013`;
+            
+            let html = '';
+            reasons.forEach((reason, idx) => {
+                html += `
+                    <div class="ribbon_point_title2_s">
+                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <strong>${dm.processDecoTags ? dm.processDecoTags(reason.title) : reason.title}</strong>
+                    </div>
+                    <div class="ribbon_point_txt">
+                        <p style="font-size:14px;">${dm.processDecoTags ? dm.processDecoTags(reason.description) : reason.description}</p>
+                    </div>
+                `;
+            });
+            
+            // 公式リンクも更新
+            const officialLink = document.getElementById('first-choice-official-link');
+            if (officialLink) {
+                const clinicUrl = dm.getClinicText(clinicKeyForTexts, '公式サイトURL', 'https://omt.jp/');
+                officialLink.innerHTML = `【公式】<a href="${officialUrl}" target="_blank" rel="noopener"><strong>${clinicUrl}</strong></a>`;
+            }
+            
+            pointsContainer.innerHTML = html + (pointsContainer.innerHTML.match(/<div class="ribbon_point_link"[\s\S]*?<\/div>/)?.[0] || '');
+        }
+
+        
+
+
+        // 1位クリニック情報の更新を実行
+        function updateFirstChoiceClinic() {
+            if (!window.app || !window.app.dataManager) {
+                if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: app/dataManager not ready');
+                return;
+            }
+            
+            // 現在の地域IDを取得
+            const regionId = window.app.urlHandler ? window.app.urlHandler.getRegionId() : '013';
+            if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: regionId', regionId);
+            
+            // ランキングデータを取得
+            const ranking = window.app.dataManager.getRankingByRegionId(regionId);
+            
+            if (!ranking || !ranking.ranks) {
+                if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: no ranking for region', regionId, ranking);
+                console.log('No ranking data found for region:', regionId);
+                return;
+            }
+            
+            // 1位のクリニックIDを取得
+            const firstPlaceClinicId = ranking.ranks.no1;
+            if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: firstPlaceClinicId', firstPlaceClinicId);
+            
+            if (!firstPlaceClinicId) {
+                console.log('No first place clinic found');
+                return;
+            }
+            
+            // クリニック情報を取得
+            const allClinics = window.app.dataManager.getAllClinics();
+            const firstClinic = allClinics.find(clinic => clinic.id === firstPlaceClinicId);
+            if (window.__DEBUG__) console.log('[DEBUG] updateFirstChoiceClinic: firstClinic resolved', firstClinic);
+            
+            if (firstClinic) {
+                setFirstChoiceClinic(firstClinic);
+                // GTMイベントの発火
+                if (firstClinic.code === 'dio') {
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        'event': 'first_clinic_is_dio'
+                    });
+                    console.log('GTM Event: first_clinic_is_dio');
+                }
+            }
+        }
+
+        // 初期化時に実行
+        document.addEventListener('DOMContentLoaded', function() {
+            updateFirstChoiceClinic();
+        });
+
+        // app.jsが読み込まれた後にも実行（タイマーで複数回試行）
+        let retryCount = 0;
+        const maxRetries = 10;
+        
+        function tryUpdateFirstChoice() {
+            if (window.app && window.app.dataManager && window.app.dataManager.getAllClinics().length > 0) {
+                updateFirstChoiceClinic();
+                return;
+            }
+            
+            retryCount++;
+            if (retryCount < maxRetries) {
+                // console.log(`App not ready yet, retry ${retryCount}/${maxRetries}`);
+                setTimeout(tryUpdateFirstChoice, 500);
+            } else {
+                // console.log('Max retries reached, app may not be loaded');
+            }
+        }
+        
+        // 少し遅延してから開始
+        setTimeout(tryUpdateFirstChoice, 100);
+
+        // 地域変更時のイベントリスナーも追加
+        function setupRegionChangeWatcher() {
+            if (!window.app || !window.app.urlHandler) {
+                setTimeout(setupRegionChangeWatcher, 500);
+                return;
+            }
+            
+            let currentRegionId = window.app.urlHandler.getRegionId();
+            
+            // URLパラメータ変更の監視
+            setInterval(() => {
+                const newRegionId = window.app.urlHandler ? window.app.urlHandler.getRegionId() : '013';
+                if (newRegionId !== currentRegionId) {
+                    currentRegionId = newRegionId;
+                    console.log('Region changed to:', newRegionId);
+                    setTimeout(() => updateFirstChoiceClinic(), 100); // 少し遅延を入れる
+                }
+            }, 1000);
+        }
+        
+        // 地域監視を開始
+        setupRegionChangeWatcher();
+        
+        // ページ読み込み完了時にもう一度実行
+        window.addEventListener('load', function() {
+            setTimeout(() => updateFirstChoiceClinic(), 1000);
+        });
+        </script>
+
+        <script>
+        // PR行（CSVのpr列を各クリニック分並べる）
+        (function renderPrLineWhenReady(){
+            const target = document.getElementById('pr-line');
+            if (!target) return;
+            const tryRender = () => {
+                const dm = window.app?.dataManager || window.dataManager;
+                if (!dm || !dm.clinicTexts || !dm.clinics || dm.clinics.length === 0) return false;
+                const items = [];
+                dm.clinics.forEach(c => {
+                    const val = dm.getClinicText(c.code || c.name, 'pr', '').trim();
+                    if (val) items.push(val);
+                });
+                if (items.length === 0) return false;
+                let html = 'PR ' + items[0];
+                for (let i = 1; i < items.length; i++) html += '<br>' + items[i];
+                target.innerHTML = html;
+                return true;
+            };
+            if (!tryRender()) {
+                let count = 0;
+                const timer = setInterval(() => {
+                    if (tryRender() || ++count > 60) clearInterval(timer);
+                }, 250);
+            }
+        })();
+        </script>
+        <script>
+        // トップに戻るボタン（6.5%スクロールで表示）
+        (function() {
+            const THRESHOLD = 6.5; // %
+            const btn = document.getElementById('back-to-top');
+            if (!btn) return;
+            function updateVisibility() {
+                const doc = document.documentElement;
+                const scrollTop = window.pageYOffset || doc.scrollTop || 0;
+                const maxScroll = (doc.scrollHeight - doc.clientHeight) || 1;
+                const percent = (scrollTop / maxScroll) * 100;
+                if (percent >= THRESHOLD) {
+                    btn.style.display = 'flex';
+                } else {
+                    btn.style.display = 'none';
+                }
+            }
+            function updatePosition() {
+                const cta = document.querySelector('.scroll-bottom-modal');
+                let bottomPx = 20;
+                if (cta && cta.classList && cta.classList.contains('show')) {
+                    const rect = cta.getBoundingClientRect();
+                    const gap = 16; // CTAとボタンの間隔
+                    if (rect && rect.height) {
+                        bottomPx = Math.max(20, Math.round(rect.height) + gap);
+                    } else {
+                        // フォールバック（CSSのmin-heightに近い値）
+                        bottomPx = 96;
+                    }
+                }
+                btn.style.bottom = bottomPx + 'px';
+            }
+            window.addEventListener('scroll', () => { updateVisibility(); updatePosition(); }, { passive: true });
+            window.addEventListener('resize', () => { updateVisibility(); updatePosition(); });
+            updateVisibility();
+            updatePosition();
+            // 追従CTAの状態変化を監視
+            const observer = new MutationObserver(() => { updatePosition(); });
+            observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+            // 閉じるボタンのクリックでも調整
+            document.addEventListener('click', (e) => {
+                if (e.target && (e.target.closest && e.target.closest('.scroll-modal-close'))) {
+                    setTimeout(updatePosition, 50);
+                }
+            });
+            btn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+        </script>
+
+    <!-- Debug panel: enable with ?debug=1 -->
+    <script>
+        (function(){
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const debugOn = params.get('debug') === '1';
+                window.__DEBUG__ = debugOn;
+                if (!debugOn) return;
+                const panel = document.createElement('div');
+                panel.id = 'debug-log-panel';
+                panel.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:35vh;overflow:auto;background:#111;color:#0f0;font:12px/1.4 monospace;z-index:99999;border-top:1px solid #333;padding:6px;opacity:0.95;';
+                const ctrl = document.createElement('div');
+                ctrl.innerHTML = '<strong style="color:#fff">DEBUG LOG</strong> <button id="dbg-clear" style="margin-left:8px;">clear</button> <button id="dbg-hide" style="margin-left:4px;">hide</button>';
+                ctrl.style.cssText = 'margin-bottom:4px;';
+                const pre = document.createElement('pre');
+                pre.id = 'debug-log';
+                pre.style.margin = '0';
+                panel.appendChild(ctrl);
+                panel.appendChild(pre);
+                document.body.appendChild(panel);
+                const orig = { log: console.log, error: console.error, warn: console.warn, info: console.info };
+                function appendLine(level, args){
+                    const msg = Array.from(args).map(a=>{
+                        try { return typeof a==='string'?a:JSON.stringify(a); } catch(e){ return String(a); }
+                    }).join(' ');
+                    const line = '['+level+'] '+msg+'\n';
+                    pre.textContent += line;
+                }
+                console.log = function(){ appendLine('LOG', arguments); orig.log.apply(console, arguments); };
+                console.error = function(){ appendLine('ERR', arguments); orig.error.apply(console, arguments); };
+                console.warn = function(){ appendLine('WRN', arguments); orig.warn.apply(console, arguments); };
+                console.info = function(){ appendLine('INF', arguments); orig.info.apply(console, arguments); };
+                document.getElementById('dbg-clear').onclick = function(){ pre.textContent=''; };
+                document.getElementById('dbg-hide').onclick = function(){ panel.style.display='none'; };
+                console.log('[DEBUG] panel ready');
+                document.addEventListener('DOMContentLoaded', function(){ console.log('[DEBUG] DOMContentLoaded fired'); });
+                window.addEventListener('load', function(){ console.log('[DEBUG] window load fired'); });
+                setTimeout(function(){
+                    console.log('[DEBUG] runtime check', {
+                        hasApp: !!window.app,
+                        hasDataManager: !!(window.app && window.app.dataManager),
+                        caseSection: !!document.getElementById('case-section'),
+                        caseSlides: document.querySelectorAll('.case-slide').length
+                    });
+                }, 500);
+            } catch(e) {}
+        })();
+    </script>
+
+    <script>
+        // 比較表のタブ切り替え機能
+        // 全てのパラメータを引き継ぐ共通処理
+        function preserveAllParams() {
+            const currentParams = new URLSearchParams(window.location.search);
+            if (currentParams.toString()) {
+                // すべての内部リンクにパラメータを追加
+                const links = document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"], a[href]:not([href^="http"]):not([href^="#"])');
+                links.forEach(link => {
+                    try {
+                        const url = new URL(link.href, window.location.origin);
+                        // 既存のパラメータを保持しつつ、現在のパラメータを追加
+                        for (const [key, value] of currentParams) {
+                            if (!url.searchParams.has(key)) {
+                                url.searchParams.set(key, value);
+                            }
+                        }
+                        link.href = url.toString();
+                    } catch (e) {
+                        // 相対URLの場合
+                        const separator = link.href.includes('?') ? '&' : '?';
+                        link.href = link.href + separator + currentParams.toString();
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // パラメータを引き継ぐ
+            preserveAllParams();
+            
+        });
+
+        // アコーディオン機能（2段階）
+        // この関数は958行目で既に定義されているため、ここでの再定義は削除
+        // window.toggleMainDisclaimer関数は958行目の実装を使用
+        
+        window.toggleDisclaimer = function(clinicId) {
+            console.log('>>> toggleDisclaimer called:', clinicId);
+            
+            // 特別な処理: dio-campaign-first-choiceの場合
+            if (clinicId === 'dio-campaign-first-choice') {
+                // シンプルなトグル処理
+                const content = document.getElementById('dio-campaign-first-choice-content');
+                const arrow = document.getElementById('dio-campaign-first-choice-arrow');
+                
+                if (content && arrow) {
+                    if (content.style.display === 'none' || !content.style.display) {
+                        content.style.display = 'block';
+                        arrow.style.transform = 'rotate(180deg)';
+                    } else {
+                        content.style.display = 'none';
+                        arrow.style.transform = 'rotate(0deg)';
+                    }
+                    return; // 処理完了
+                }
+                
+                // 元の複雑な処理に続く
+                const contentOriginal = document.getElementById('dio-campaign-first-choice-content');
+                const arrowOriginal = document.getElementById('dio-campaign-first-choice-arrow');
+                
+                if (!(content && arrow)) {
+                    // フォールバック: 比較表下の第二段階（idが 'dio-content' / 'dio-arrow'）に対応
+                    const baseCode = (clinicId.split('-')[0] || 'dio');
+                    const fbContent = document.getElementById(baseCode + '-content');
+                    const fbArrow = document.getElementById(baseCode + '-arrow');
+                    if (fbContent && fbArrow) {
+                        const isHidden = window.getComputedStyle(fbContent).display === 'none';
+                        if (isHidden) {
+                            fbContent.style.display = 'block';
+                            fbArrow.style.transform = 'rotate(180deg)';
+                            console.log('→ Fallback general accordion opened:', baseCode);
+                        } else {
+                            fbContent.style.display = 'none';
+                            fbArrow.style.transform = 'rotate(0deg)';
+                            console.log('→ Fallback general accordion closed:', baseCode);
+                        }
+                        return; // フォールバックで処理完了
+                    }
+                }
+
+                if (content && arrow) {
+                    // 常に所定位置へ退避（念のため）
+                    try {
+                        const mainContent = document.getElementById('main-content');
+                        const accordion = content.closest('.disclaimer-accordion');
+                        const containerAnchor = document.getElementById('first-choice-recommendation-section');
+                        const sectionAnchor = document.querySelector('#first-choice-recommendation-section .first-choice-recommendation-section');
+                        const targetAnchor = sectionAnchor || containerAnchor;
+                        const isInMain = (() => {
+                            let n = accordion;
+                            while (n && n !== document.body) { if (n.id === 'main-content') return true; n = n.parentElement; }
+                            return false;
+                        })();
+                        const needsMove = targetAnchor && accordion && accordion.parentElement !== targetAnchor;
+                        console.log('Relocation check:', { hasAnchor: !!targetAnchor, isInMain, needsMove });
+                        if (needsMove) {
+                            targetAnchor.appendChild(accordion);
+                            console.log('Relocated first-choice accordion under .first-choice-recommendation-section');
+                        }
+                    } catch (e) { console.warn('Relocation error:', e); }
+
+                    const computed = window.getComputedStyle(content);
+                    const currentDisplay = computed.display;
+                    console.log('First choice accordion - current display:', currentDisplay, '| visibility:', computed.visibility, '| opacity:', computed.opacity);
+                    
+                    const accordion = content.closest('.disclaimer-accordion');
+                    const section = content.closest('section');
+                    const ancestors = [];
+                    let node = content.parentElement;
+                    while (node && node !== document.body) {
+                        const cs = window.getComputedStyle(node);
+                        const isHidden = cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0' || cs.maxHeight === '0px' || cs.height === '0px';
+                        if (isHidden) {
+                            const info = { tag: node.tagName, cls: node.className, id: node.id, display: cs.display, visibility: cs.visibility, opacity: cs.opacity, height: cs.height, maxHeight: cs.maxHeight };
+                            ancestors.push(info);
+                            // 一時的に可視化
+                            node.classList.add('force-ancestor-show');
+                            if (node.classList.contains('hidden')) {
+                                node.classList.remove('hidden');
+                                node.setAttribute('data-removed-hidden', '1');
+                            }
+                            if (node.hasAttribute('hidden')) {
+                                node.removeAttribute('hidden');
+                                node.setAttribute('data-removed-hidden-attr', '1');
+                            }
+                            if (node.getAttribute('aria-hidden') === 'true') {
+                                node.setAttribute('aria-hidden', 'false');
+                                node.setAttribute('data-changed-aria-hidden', '1');
+                            }
+                        }
+                        node = node.parentElement;
+                    }
+                    if (ancestors.length) {
+                        try {
+                            console.log('Ancestors with potential hidden styles (text):\n' + JSON.stringify(ancestors, null, 2));
+                        } catch (e) {
+                            console.log('Ancestors with potential hidden styles:', ancestors);
+                        }
+                    }
+                    
+                    if (currentDisplay === 'none') {
+                        // 表示 - 強制的に見える状態へ
+                        if (accordion) {
+                            accordion.style.display = 'block';
+                            accordion.style.visibility = 'visible';
+                            accordion.style.opacity = '1';
+                            accordion.style.position = 'relative';
+                            accordion.style.zIndex = '9999';
+                        }
+                        if (section) {
+                            section.style.display = section.style.display || 'block';
+                        }
+                        content.classList.add('force-show');
+                        content.style.display = 'block';
+                        content.style.visibility = 'visible';
+                        content.style.opacity = '1';
+                        content.style.maxHeight = 'none';
+                        content.style.height = 'auto';
+                        arrow.style.transform = 'rotate(180deg)';
+                        console.log('→ First choice accordion opened (applied force-show + inline styles)');
+                        try {
+                            const rect = content.getBoundingClientRect();
+                            console.log('First choice content rect after open:', { top: rect.top, left: rect.left, width: rect.width, height: rect.height });
+                        } catch (e) {}
+                        
+                        // main-disclaimer-contentが親要素として影響している場合の対処
+                        const mainContent = document.getElementById('main-content');
+                        if (mainContent && window.getComputedStyle(mainContent).display === 'none') {
+                            const acc = content.closest('.disclaimer-accordion');
+                            const sectionAnchor = document.querySelector('#first-choice-recommendation-section .first-choice-recommendation-section');
+                            if (acc && mainContent.contains(acc)) {
+                                if (sectionAnchor) {
+                                    sectionAnchor.appendChild(acc);
+                                    console.log('Relocated first-choice accordion (during open) under .first-choice-recommendation-section');
+                                } else {
+                                    mainContent.parentNode.insertBefore(acc, mainContent.nextSibling);
+                                    console.log('Relocated first-choice accordion (during open) outside main-content');
+                                }
+                            }
+                        }
+                        
+                        // スクロールして表示を確認（ヘッダー分オフセット）
+                        try {
+                            const doScroll = () => {
+                                const rect2 = content.getBoundingClientRect();
+                                const targetTop = rect2.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - 80;
+                                window.scrollTo({ top: targetTop, behavior: 'auto' });
+                                setTimeout(() => {
+                                    const rect3 = content.getBoundingClientRect();
+                                    console.log('After scroll check:', { pageYOffset: window.pageYOffset, rectTop: rect3.top, rectHeight: rect3.height });
+                                    // まだ見えていなければもう一度
+                                    if (rect3.top < -10 || rect3.top > window.innerHeight) {
+                                        const targetTop2 = rect3.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - 80;
+                                        window.scrollTo({ top: targetTop2, behavior: 'auto' });
+                                    }
+                                }, 120);
+                            };
+                            doScroll();
+                        } catch (e) {}
+                    } else {
+                        // 非表示 - 強制表示状態を解除
+                        content.classList.remove('force-show');
+                        content.style.display = 'none';
+                        content.style.visibility = '';
+                        content.style.opacity = '';
+                        content.style.maxHeight = '';
+                        content.style.height = '';
+                        arrow.style.transform = 'rotate(0deg)';
+                        console.log('→ First choice accordion closed');
+                        try {
+                            const rect = content.getBoundingClientRect();
+                            console.log('First choice content rect after close:', { top: rect.top, left: rect.left, width: rect.width, height: rect.height });
+                        } catch (e) {}
+                        // 祖先の上書きクラスを外す
+                        let n = content.parentElement;
+                        while (n && n !== document.body) {
+                            if (n.classList.contains('force-ancestor-show')) {
+                                n.classList.remove('force-ancestor-show');
+                                if (n.getAttribute('data-removed-hidden') === '1') {
+                                    n.classList.add('hidden');
+                                    n.removeAttribute('data-removed-hidden');
+                                }
+                                if (n.getAttribute('data-removed-hidden-attr') === '1') {
+                                    n.setAttribute('hidden', '');
+                                    n.removeAttribute('data-removed-hidden-attr');
+                                }
+                                if (n.getAttribute('data-changed-aria-hidden') === '1') {
+                                    n.setAttribute('aria-hidden', 'true');
+                                    n.removeAttribute('data-changed-aria-hidden');
+                                }
+                            }
+                            n = n.parentElement;
+                        }
+                    }
+                } else {
+                    console.warn('First choice elements not found:', { hasContent: !!content, hasArrow: !!arrow });
+                }
+                return; // 特別処理終了
+            }
+            
+            // 通常のアコーディオン処理（祖先可視化と詳細ログ付き）
+            const contentId = clinicId + '-content';
+            const arrowId = clinicId + '-arrow';
+            
+            const content = document.getElementById(contentId);
+            const arrow = document.getElementById(arrowId);
+            
+            console.log('Looking for:', contentId, '→', content ? 'FOUND' : 'NOT FOUND');
+            console.log('Looking for:', arrowId, '→', arrow ? 'FOUND' : 'NOT FOUND');
+            
+            if (content && arrow) {
+                const computed = window.getComputedStyle(content);
+                const currentDisplay = computed.display;
+                if (currentDisplay === 'none') {
+                    // 祖先の非表示を検出し、一時的に可視化
+                    const ancestors = [];
+                    let node = content.parentElement;
+                    while (node && node !== document.body) {
+                        const cs = window.getComputedStyle(node);
+                        const isHidden = cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0' || cs.maxHeight === '0px' || cs.height === '0px';
+                        if (isHidden) {
+                            const info = { tag: node.tagName, cls: node.className, id: node.id, display: cs.display, visibility: cs.visibility, opacity: cs.opacity, height: cs.height, maxHeight: cs.maxHeight };
+                            ancestors.push(info);
+                            node.classList.add('force-ancestor-show');
+                            if (node.classList.contains('hidden')) {
+                                node.classList.remove('hidden');
+                                node.setAttribute('data-removed-hidden', '1');
+                            }
+                            if (node.hasAttribute('hidden')) {
+                                node.removeAttribute('hidden');
+                                node.setAttribute('data-removed-hidden-attr', '1');
+                            }
+                            if (node.getAttribute('aria-hidden') === 'true') {
+                                node.setAttribute('aria-hidden', 'false');
+                                node.setAttribute('data-changed-aria-hidden', '1');
+                            }
+                        }
+                        node = node.parentElement;
+                    }
+                    if (ancestors.length) {
+                        try { console.log('Ancestors (general) with potential hidden styles (text):\n' + JSON.stringify(ancestors, null, 2)); } catch (e) { console.log('Ancestors (general):', ancestors); }
+                    }
+                    
+                    // 表示
+                    content.style.display = 'block';
+                    content.style.visibility = 'visible';
+                    content.style.opacity = '1';
+                    arrow.style.transform = 'rotate(180deg)';
+                    console.log('→ General accordion opened:', clinicId);
+                    try {
+                        const rect = content.getBoundingClientRect();
+                        console.log('General content rect after open:', { top: rect.top, left: rect.left, width: rect.width, height: rect.height });
+                        const doScroll = () => {
+                            const r2 = content.getBoundingClientRect();
+                            const targetTop = r2.top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) - 80;
+                            window.scrollTo({ top: targetTop, behavior: 'auto' });
+                            setTimeout(() => {
+                                const r3 = content.getBoundingClientRect();
+                                console.log('After scroll check (general):', { pageYOffset: window.pageYOffset, rectTop: r3.top, rectHeight: r3.height });
+                            }, 120);
+                        };
+                        doScroll();
+                    } catch (e) {}
+                } else {
+                    // 非表示（クリーンアップ含む）
+                    content.style.display = 'none';
+                    content.style.visibility = '';
+                    content.style.opacity = '';
+                    arrow.style.transform = 'rotate(0deg)';
+                    console.log('→ General accordion closed:', clinicId);
+                    // 祖先の上書きクラスを外す
+                    let n = content.parentElement;
+                    while (n && n !== document.body) {
+                        if (n.classList.contains('force-ancestor-show')) {
+                            n.classList.remove('force-ancestor-show');
+                            if (n.getAttribute('data-removed-hidden') === '1') {
+                                n.classList.add('hidden');
+                                n.removeAttribute('data-removed-hidden');
+                            }
+                            if (n.getAttribute('data-removed-hidden-attr') === '1') {
+                                n.setAttribute('hidden', '');
+                                n.removeAttribute('data-removed-hidden-attr');
+                            }
+                            if (n.getAttribute('data-changed-aria-hidden') === '1') {
+                                n.setAttribute('aria-hidden', 'true');
+                                n.removeAttribute('data-changed-aria-hidden');
+                            }
+                        }
+                        n = n.parentElement;
+                    }
+                }
+            }
+        }
+
+        // ディオクリニックの確認事項ボタンに直接イベントリスナーを設定
+        // クリックイベントは既にHTML内のonclick属性で設定済みなので、追加の設定は不要
+        // 二重にイベントが発生しないよう、この部分は削除
+        
+        // Add click animation to links
+        document.querySelectorAll('.medical-columns-section .toc-link, .medical-columns-section .contact-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // contact-linkの場合は外部リンクなので、アニメーションのみ実行
+                this.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 150);
+                
+                // toc-linkの場合のみスムーズスクロールを実行
+                if (this.classList.contains('toc-link') && this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // Tips Section Tab Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners for disclaimer accordions
+            const rankingBtn = document.getElementById('ranking-disclaimer-button');
+            if (rankingBtn) {
+                rankingBtn.addEventListener('click', toggleRankingDisclaimer);
+            }
+
+            const comparisonBtn = document.getElementById('comparison-disclaimer-button');
+            if (comparisonBtn) {
+                comparisonBtn.addEventListener('click', toggleComparisonDisclaimer);
+            }
+
+            const tabs = document.querySelectorAll('.tips-container .tab');
+            const tabContents = document.querySelectorAll('.tips-container .tab-content');
+
+            if (tabs.length && tabContents.length) {
+                const activateTab = (index) => {
+                    tabs.forEach((tab, i) => {
+                        tab.classList.toggle('active', i === index);
+                    });
+                    tabContents.forEach((content, i) => {
+                        content.classList.toggle('active', i === index);
+                    });
+                };
+
+                tabs.forEach((tab, index) => {
+                    tab.addEventListener('click', () => activateTab(index));
+                });
+
+                activateTab(0);
+            }
+        });
+    </script>
+    
+    <!-- Clinic URLs are now managed dynamically from CSV database -->
+    
+    <!-- URL Parameter Tracking -->
+    <script src={import.meta.env.BASE_URL + 'url-tracking.js?v=2025092401'} defer></script>
+    
+    <!-- Service Worker登録 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register(window.__BASE_PATH__ + 'sw.js')
+                    .then(registration => {})
+                    .catch(err => {});
+            });
+        }
+    </script>
+    
+    <!-- Load common site data -->
+    <script>
+        // Load common site data
+        fetch((window.__BASE_PATH__ || '/') + 'common_data/data/site-common-texts.json')
+            .then(response => response.json())
+            .then(data => {
+                // Update site logo
+                const siteLogo = document.getElementById('site-logo');
+                if (siteLogo && data.サイト名) {
+                    siteLogo.textContent = data.サイト名;
+                }
+
+                // Update favicon
+                const favicon = document.getElementById('header-logo-icon');
+                if (favicon && data.ファビコン画像パス) {
+                    favicon.src = (window.__BASE_PATH__ || '/') + (data.ファビコン画像パス || '').replace(/^\/+/, '');
+                }
+
+                // Update footer site name (copyright text contains both site name and copyright)
+                const footerSiteName = document.querySelector('.copyright');
+                if (footerSiteName && data.サイト名) {
+                    footerSiteName.textContent = '© 2025 ' + data.サイト名;
+                }
+                
+            })
+            .catch(error => {
+                console.error('Error loading common site data:', error);
+            });
+    </script>
+    <script src={import.meta.env.BASE_URL + 'tracking-params.js'} defer></script>
+    
+    <!-- トップに戻るボタン -->
+    <button id="back-to-top" class="back-to-top" aria-label="トップに戻る">
+        <span>^</span>
+    </button>
+    
+    <script>
+        // トップに戻るボタンの機能
+        (function() {
+            const backToTopBtn = document.getElementById('back-to-top');
+            
+            // スクロール時の表示/非表示制御
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+            
+            // クリック時のスムーズスクロール
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        })();
+    </script>
+    
+
+</BaseLayout>

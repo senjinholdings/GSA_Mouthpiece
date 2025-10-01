@@ -627,16 +627,17 @@ class DataManager {
         this.siteTexts = {}; // サイトテキストデータ（旧）
         this.clinicTexts = {}; // クリニック別テキストデータ
         this.structureConfig = {};
-        // Handle subdirectory paths
+        // Handle subdirectory paths with Astro base path
+        const basePath = (typeof window !== 'undefined' && window.__BASE_PATH__) ? window.__BASE_PATH__ : '/';
         if (window.SITE_CONFIG) {
-            this.dataPath = window.SITE_CONFIG.dataPath + '/';
+            this.dataPath = basePath + window.SITE_CONFIG.dataPath + '/';
         } else {
-            this.dataPath = './data/';
+            this.dataPath = basePath + 'data/';
         }
         // 地域データ用のパス（data/rankingを使用）
-        this.regionDataPath = './data/ranking/';
+        this.regionDataPath = basePath + 'data/ranking/';
         // 共通データ用のパス（common_data/data を使用）
-        this.commonDataPath = '../common_data/data/';
+        this.commonDataPath = basePath + 'common_data/data/';
     }
 
     buildCacheKey(suffix) {
@@ -759,7 +760,7 @@ class DataManager {
                 console.warn('⚠️ ローカル site-common-texts.csv 読込エラー:', e);
             }
             try {
-                const respCommon = await fetch('../../../common_data/data/site-common-texts.json');
+                const respCommon = await fetch((window.__BASE_PATH__ || '/') + 'common_data/data/site-common-texts.json');
                 if (respCommon.ok) {
                     const jsonText = await respCommon.text();
                     try {
