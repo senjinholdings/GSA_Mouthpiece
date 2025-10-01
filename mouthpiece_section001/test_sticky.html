@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Header Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { margin: 0; padding: 20px; }
+        .test-info {
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: yellow;
+            padding: 10px;
+            z-index: 1000;
+            font-size: 12px;
+            max-width: 300px;
+        }
+        .scroll-spacer {
+            height: 500px;
+            background: linear-gradient(to bottom, #fff, #f0f0f0);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <strong>Sticky Header Test</strong><br>
+        Scroll down to test if header sticks<br>
+        <span id="sticky-status"></span>
+    </div>
+    
+    <div class="scroll-spacer">Scroll down ↓</div>
+    
+    <div class="medical-columns-section">
+        <h2>Test Table</h2>
+        <table class="comparison-table">
+            <thead class="table-header">
+                <tr class="table-row">
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                    <th>Column 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="table-row">
+                    <td class="row-header">Row 1</td>
+                    <td>Data 1</td>
+                    <td>Data 2</td>
+                </tr>
+                <tr class="table-row">
+                    <td class="row-header">Row 2</td>
+                    <td>Data 3</td>
+                    <td>Data 4</td>
+                </tr>
+                <tr class="table-row">
+                    <td class="row-header">Row 3</td>
+                    <td>Data 5</td>
+                    <td>Data 6</td>
+                </tr>
+                <tr class="table-row">
+                    <td class="row-header">Row 4</td>
+                    <td>Data 7</td>
+                    <td>Data 8</td>
+                </tr>
+                <tr class="table-row">
+                    <td class="row-header">Row 5</td>
+                    <td>Data 9</td>
+                    <td>Data 10</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="height: 1000px; background: linear-gradient(to bottom, #f0f0f0, #fff);">
+            Scroll down to see more content...
+        </div>
+    </div>
+    
+    <script>
+        // Check computed styles
+        window.addEventListener('DOMContentLoaded', () => {
+            const thead = document.querySelector('.table-header');
+            const th = document.querySelector('.table-header th');
+            const statusEl = document.getElementById('sticky-status');
+            
+            if (thead && th) {
+                const theadStyles = window.getComputedStyle(thead);
+                const thStyles = window.getComputedStyle(th);
+                
+                const info = [
+                    'thead position: ' + theadStyles.position,
+                    'thead top: ' + theadStyles.top,
+                    'thead z-index: ' + theadStyles.zIndex,
+                    'th position: ' + thStyles.position,
+                    'th top: ' + thStyles.top,
+                    'th background: ' + thStyles.backgroundColor
+                ];
+                
+                statusEl.innerHTML = info.join('<br>');
+                
+                // Check if sticky is working
+                if (theadStyles.position === 'sticky' || thStyles.position === 'sticky') {
+                    statusEl.innerHTML += '<br><strong style="color: green;">✓ Sticky is applied!</strong>';
+                } else {
+                    statusEl.innerHTML += '<br><strong style="color: red;">✗ Sticky NOT applied</strong>';
+                }
+            }
+        });
+        
+        // Monitor scroll position
+        let lastScrollY = 0;
+        window.addEventListener('scroll', () => {
+            const thead = document.querySelector('.table-header');
+            if (thead) {
+                const rect = thead.getBoundingClientRect();
+                if (rect.top <= 0 && rect.top > -50) {
+                    console.log('Header is sticking at top!');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

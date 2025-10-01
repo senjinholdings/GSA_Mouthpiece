@@ -1,29 +1,110 @@
----
-import '../styles/styles.css';
-import BaseLayout from '../layouts/BaseLayout.astro';
-
-const pageTitle = '2025年最新版｜おすすめ比較ランキング';
-const pageDescription = '全国の人気クリニックを徹底比較！料金・特徴・口コミ・アクセス情報などをわかりやすく一覧でご紹介。あなたにぴったりのクリニック選びをサポートします。';
-
-// Asset path helper function
-const basePath = import.meta.env.BASE_URL ?? '/';
-const normalizedBasePath = basePath.endsWith('/') ? basePath : `${basePath}/`;
-const asset = (path: string) => {
-  if (!path) return normalizedBasePath;
-  return `${normalizedBasePath}${path.replace(/^\/+/, '')}`;
-};
----
-<BaseLayout title={pageTitle} description={pageDescription} bodyClass="is-loading">
-  <Fragment slot="head">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script src="../common_data/js/gtm-loader.js" defer></script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>2025年最新版｜おすすめ比較ランキング</title>
+    <!-- Vercel deployment: 2025-07-21 23:40 -->
+    <!-- Map modal feature added: 2024-01-29 15:30 -->
+    <meta name="description" content="全国の人気クリニックを徹底比較！料金・特徴・口コミ・アクセス情報などをわかりやすく一覧でご紹介。あなたにぴったりのクリニック選びをサポートします。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
-    <script is:inline>
-      'fonts' in document && document.fonts.ready.then(function(){document.documentElement.classList.add('fonts-loaded')})
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <style>
+        :root { color-scheme: light; }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+        }
+        body.is-loading {
+            overflow: hidden;
+        }
+        body > *:not(.sidebar-menu):not(.sidebar-overlay):not(.map-modal):not(.disclaimer-modal):not(.banner-modal):not(.scroll-bottom-modal) {
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        .container {
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 0 12px; }
+        }
+        .ranking-loading { opacity: 0; transition: opacity 0.3s ease; }
+        .ranking-loaded { opacity: 1; }
+        #initial-loader {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            color: #2cc7c5;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        #initial-loader .loader-text {
+            margin: 0;
+            font-size: clamp(16px, 4vw, 20px);
+        }
+        body.is-loading > :not(#initial-loader):not(script) {
+            visibility: hidden;
+        }
+        body:not(.is-loading) #initial-loader {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    </style>
+    <!-- 重要なリソースのpreload -->
+    <link rel="preload" as="image" href="images/mv.webp" fetchpriority="high" type="image/webp">
+
+    <!-- スタイルシートを遅延読み込み（開発/本番自動切り替え） -->
+    <script>
+        // 開発環境(localhost)では非圧縮版、本番環境では圧縮版を使用
+        (function() {
+            const isDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+            const cssFile = isDev ? 'styles.css' : 'styles.min.css';
+            const version = '2025092402';
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.href = cssFile + '?v=' + version;
+            link.as = 'style';
+            link.onload = function() { this.onload = null; this.rel = 'stylesheet'; };
+            document.head.appendChild(link);
+        })();
     </script>
-  </Fragment>
+    <noscript><link rel="stylesheet" href="styles.min.css?v=2025092402"></noscript>
 
-
+    <!-- Google Fontsは最後に読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="icon" type="image/png" href="../common_data/images/favicon.png" id="favicon">
+    <!-- Critical CSS -->
+    <!-- Font loading detection -->
+    <script>'fonts' in document&&document.fonts.ready.then(function(){document.documentElement.classList.add('fonts-loaded')})</script>
+    
+</head>
+<body class="is-loading">
     <div id="initial-loader" aria-live="polite">
         <p class="loader-text">読み込み中…</p>
     </div>
@@ -35,7 +116,7 @@ const asset = (path: string) => {
                 <div class="logo-section">
                     <a href="/" class="logo-link">
                         <div class="logo-main">
-                            <span class="logo-icon"><img src={import.meta.env.BASE_URL + 'common_data/images/favicon.png'} alt="医療ダイエット比較.com" id="header-logo-icon"></span>
+                            <span class="logo-icon"><img src="../common_data/images/favicon.png" alt="医療ダイエット比較.com" id="header-logo-icon"></span>
                             <h1 class="site-logo" id="site-logo">おすすめ比較.com</h1>
                         </div>
                     </a>
@@ -54,7 +135,7 @@ const asset = (path: string) => {
         <section class="hero-section">
             <div class="hero-image-wrapper">
                 <picture>
-                    <img src={import.meta.env.BASE_URL + 'images/mv.webp'} alt="おすすめ比較ランキング - 2025年最新版" class="hero-image" loading="eager" fetchpriority="high" decoding="async" width="1500" height="928">
+                    <img src="images/mv.webp" alt="おすすめ比較ランキング - 2025年最新版" class="hero-image" loading="eager" fetchpriority="high" decoding="async" width="1500" height="928">
                 </picture>
                 <svg id="mv-main-svg-text">
                     <text id="mv-region-text" x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#4c4c4c" stroke="white" stroke-width="6px" paint-order="stroke"></text>
@@ -71,7 +152,7 @@ const asset = (path: string) => {
             <!-- ランキング表示セクション -->
             <section class="clinic-rankings ranking-section">
                 <div class="ranking-header-banner">
-                    <img src={import.meta.env.BASE_URL + 'images/ranking_header_banner.webp'} alt="" class="ranking-banner-image" loading="lazy" decoding="async">
+                    <img src="images/ranking_header_banner.webp" alt="" class="ranking-banner-image" loading="lazy" decoding="async">
                 </div>
                 <div id="rank-region-name"></div>
                 <div id="ranking-list" class="ranking-container ranking-loading">
@@ -116,21 +197,21 @@ const asset = (path: string) => {
                         <div class="tab-contents">
                             <div class="tab-content active" data-tab="0">
                                 <div class="tab-figure">
-                                    <img src={import.meta.env.BASE_URL + 'images/Tips1.webp'} alt="効果" class="tab-image" loading="lazy" decoding="async">
+                                    <img src="images/Tips1.webp" alt="効果" class="tab-image" loading="lazy" decoding="async">
                                 </div>
                                 <p class="tab-description"></p>
                             </div>
 
                             <div class="tab-content" data-tab="1">
                                 <div class="tab-figure">
-                                    <img src={import.meta.env.BASE_URL + 'images/Tips2.webp'} alt="クリニック選びのポイント" class="tab-image" loading="lazy" decoding="async">
+                                    <img src="images/Tips2.webp" alt="クリニック選びのポイント" class="tab-image" loading="lazy" decoding="async">
                                 </div>
                                 <p class="tab-description"></p>
                             </div>
 
                             <div class="tab-content" data-tab="2">
                                 <div class="tab-figure">
-                                    <img src={import.meta.env.BASE_URL + 'images/Tips3.webp'} alt="今がおすすめの理由" class="tab-image" loading="lazy" decoding="async">
+                                    <img src="images/Tips3.webp" alt="今がおすすめの理由" class="tab-image" loading="lazy" decoding="async">
                                 </div>
                                 <p class="tab-description"></p>
                             </div>
@@ -156,13 +237,13 @@ const asset = (path: string) => {
                     <article class="tips-step" aria-label="マウスピース矯正の特徴と効果">
                         <div class="tips-step-content">
                             <figure class="tips-step-figure">
-                                <img src={import.meta.env.BASE_URL + 'images/Tips1.webp'} alt="マウスピース矯正の特徴" loading="lazy" decoding="async">
+                                <img src="images/Tips1.webp" alt="マウスピース矯正の特徴" loading="lazy" decoding="async">
                             </figure>
                             <p>
                                 専門の歯科医師が歯並びや咬合を確認しながら、<span class="tips-highlight">透明なマウスピースを段階的に交換して歯を移動</span>。装着中も目立ちにくく、食事や歯磨きの際は取り外せるのが魅力です。<br><br>軽度〜中等度の歯列不正であれば、最短2ヶ月（平均9ヶ月）で効果を実感できる方も多く、ワイヤー矯正と遜色ない結果が期待できます。<br><br>（※効果には個人差があり、すべての方に同様の結果を保証するものではありません）
                             </p>
                             <figure class="tips-ba-figure">
-                                <img src={import.meta.env.BASE_URL + 'images/tips-ba.webp'} alt="マウスピース矯正のビフォーアフター" loading="lazy" decoding="async">
+                                <img src="images/tips-ba.webp" alt="マウスピース矯正のビフォーアフター" loading="lazy" decoding="async">
                             </figure>
                         </div>
                     </article>
@@ -173,7 +254,7 @@ const asset = (path: string) => {
                                 ワイヤー矯正は金属ブラケットを歯に固定して力をかけますが、マウスピース矯正は<span class="tips-highlight">透明なマウスピースを段階的に交換して徐々に歯を移動</span>させるアプローチ。<br><br>取り外し式なので衛生的で、痛みや違和感も比較的少ないのがメリットです。また、矯正していることが周囲に気づかれにくいため、仕事や学校でも安心して続けられます。
                             </p>
                             <figure class="tips-type-figure">
-                                <img src={import.meta.env.BASE_URL + 'images/tips-type-chart.webp'} alt="マウスピース矯正ブランド比較" loading="lazy" decoding="async">
+                                <img src="images/tips-type-chart.webp" alt="マウスピース矯正ブランド比較" loading="lazy" decoding="async">
                             </figure>
                         </div>
                     </article>
@@ -184,7 +265,7 @@ const asset = (path: string) => {
                                 「どのクリニックを選べばいいの？」と迷う方のために、編集部が厳選したクリニックを紹介！一目でわかる早見表でチェックしてみてください。
                             </p>
                             <figure class="tips-step-figure">
-                                <img src={import.meta.env.BASE_URL + 'images/tips-matrix.webp'} alt="クリニック比較マトリクス" loading="lazy" decoding="async">
+                                <img src="images/tips-matrix.webp" alt="クリニック比較マトリクス" loading="lazy" decoding="async">
                             </figure>
                             <p>
                                 さらに詳しく知りたい方は、<span class="tips-highlight">料金・矯正ブランド・サポート体制・追加費用</span>まで比較した表をご用意しました。<br><br>気になるクリニックをチェックして、自分に合った1院を見つけましょう。初回カウンセリングで気になる点を相談し、納得してからスタートすれば安心です。
@@ -236,7 +317,7 @@ const asset = (path: string) => {
             <section class="comparison-section">
                 <div class="comparison-header">
                     <div class="comparison-headline">
-                        <img src={import.meta.env.BASE_URL + 'images/comparison_header_banner.webp'} alt="比較見出し" class="comparison-headline-image" loading="lazy" decoding="async">
+                        <img src="images/comparison_header_banner.webp" alt="比較見出し" class="comparison-headline-image" loading="lazy" decoding="async">
                         <h2 class="comparison-title">ー<span id="comparison-region-name">地域</span>で人気の脂肪冷却ー</h2>
                     </div>
                 </div>
@@ -272,7 +353,7 @@ const asset = (path: string) => {
             <!-- 案件詳細セクション -->
             <section class="clinic-details-section">
                 <div class="details-header-banner">
-                    <img src={import.meta.env.BASE_URL + 'images/details_header_bannar3.webp'} alt="コスパ×効果×通いやすさで選ぶ医療痩身クリニックBEST3" class="details-banner-image" loading="lazy" decoding="async">
+                    <img src="images/details_header_bannar3.webp" alt="コスパ×効果×通いやすさで選ぶ医療痩身クリニックBEST3" class="details-banner-image" loading="lazy" decoding="async">
                     <div id="detail-region-name">地域で人気のクリニック</div>
                     <div id="detail-rank-best">3<span style="font-size: 0.6em;"> 選！</span></div>
                 </div>
@@ -284,7 +365,7 @@ const asset = (path: string) => {
 
             <!-- 医療情報コラムセクション（外部JSで挿入） -->
             <div id="medical-columns-root"></div>
-            <script src={import.meta.env.BASE_URL + 'columns/columns.js?v=2025091701'} defer></script>
+            <script src="columns/columns.js?v=2025091701" defer></script>
 
             <!-- 医療情報コラムセクション（旧：非表示） -->
             <!-- 医療情報コラムセクション -->
@@ -295,7 +376,7 @@ const asset = (path: string) => {
    <!-- 迷ったら1位クリニックセクション -->
             <div id="first-choice-recommendation-section">
                 <div style="position: relative; display: inline-block; width: 100%;">
-                    <img src={import.meta.env.BASE_URL + 'images/ranking_header_banner.webp'} alt="" class="ranking-banner-image" loading="lazy" decoding="async">
+                    <img src="images/ranking_header_banner.webp" alt="" class="ranking-banner-image" loading="lazy" decoding="async">
                     <div id="first-choice-region-text" style="position: absolute;bottom: 44%;left: 6%;text-align: center;color: rgb(255, 255, 255);font-size: clamp(16px, 5vw, 38px);font-weight: 600;z-index: 10;pointer-events: none;">迷ったら<span id="first-choice-clinic-name"></span>がおすすめ</div>
                 </div><section class="first-choice-recommendation-section" style="border: 5px solid rgb(253 208 124);border-radius: -5px;padding: 5px 5px 10px 5px;margin: 0px 20px;background-color: #fffef8;">
                                 
@@ -317,7 +398,7 @@ text-align: center;
             <div class="ribbon_point_box_no" id="first-choice-points">
                 
                     <div class="ribbon_point_title2_s">
-                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong id="point1-title"></strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -325,7 +406,7 @@ text-align: center;
                     </div>
                     
                     <div class="ribbon_point_title2_s">
-                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong id="point2-title"></strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -333,7 +414,7 @@ text-align: center;
                     </div>
                     
                     <div class="ribbon_point_title2_s">
-                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong id="point3-title"></strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -524,11 +605,11 @@ text-align: center;
 
     <!-- Slick Carousel JS -->
     <!-- Slick.js削除済み／jQueryは未使用のため読み込み削除 -->
-    <script src={import.meta.env.BASE_URL + 'app.js?v=2025081417'} defer></script>
+    <script src="app.js?v=2025081417" defer></script>
     
 
     <!-- 1位クリニック動的表示機能 -->
-    <script is:inline>
+    <script>
         function shouldHandleClinicLink(link) {
             if (!link) return false;
             if (link.hasAttribute('data-handle-clinic-click')) return true;
@@ -1399,7 +1480,7 @@ text-align: center;
             reasons.forEach((reason, idx) => {
                 html += `
                     <div class="ribbon_point_title2_s">
-                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong>${dm.processDecoTags ? dm.processDecoTags(reason.title) : reason.title}</strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -2049,13 +2130,13 @@ text-align: center;
     <!-- Clinic URLs are now managed dynamically from CSV database -->
     
     <!-- URL Parameter Tracking -->
-    <script src={import.meta.env.BASE_URL + 'url-tracking.js?v=2025092401'} defer></script>
+    <script src="/url-tracking.js?v=2025092401" defer></script>
     
     <!-- Service Worker登録 -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register(window.__BASE_PATH__ + 'sw.js')
+                navigator.serviceWorker.register('/sw.js')
                     .then(registration => {})
                     .catch(err => {});
             });
@@ -2065,7 +2146,7 @@ text-align: center;
     <!-- Load common site data -->
     <script>
         // Load common site data
-        fetch((window.__BASE_PATH__ || '/') + 'common_data/data/site-common-texts.json')
+        fetch('../../../common_data/data/site-common-texts.json')
             .then(response => response.json())
             .then(data => {
                 // Update site logo
@@ -2077,7 +2158,7 @@ text-align: center;
                 // Update favicon
                 const favicon = document.getElementById('header-logo-icon');
                 if (favicon && data.ファビコン画像パス) {
-                    favicon.src = (window.__BASE_PATH__ || '/') + (data.ファビコン画像パス || '').replace(/^\/+/, '');
+                    favicon.src = data.ファビコン画像パス;
                 }
 
                 // Update footer site name (copyright text contains both site name and copyright)
@@ -2091,7 +2172,7 @@ text-align: center;
                 console.error('Error loading common site data:', error);
             });
     </script>
-    <script src={import.meta.env.BASE_URL + 'tracking-params.js'} defer></script>
+    <script src="/tracking-params.js" defer></script>
     
     <!-- トップに戻るボタン -->
     <button id="back-to-top" class="back-to-top" aria-label="トップに戻る">
@@ -2122,5 +2203,5 @@ text-align: center;
         })();
     </script>
     
-
-</BaseLayout>
+</body>
+</html>
