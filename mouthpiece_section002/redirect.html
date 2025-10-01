@@ -243,7 +243,7 @@
                     async loadCompiledData() {
                         console.log('📊 クリニック一覧をCSVから読み込み中...');
                         try {
-                            const clinics = await this.loadCsv('../common_data/data/出しわけSS - items.csv');
+                            const clinics = await this.loadCsv('/mouthpiece_section002/common_data/data/出しわけSS - items.csv');
                             this.clinics = clinics.map(row => ({ id: row.clinic_id, name: row.clinic_name, code: row.code }));
                             console.log('📊 クリニック数:', this.clinics.length);
                         } catch (error) {

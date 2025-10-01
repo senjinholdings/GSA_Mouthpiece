@@ -394,7 +394,7 @@ class DisplayManager {
             // バナー画像をclinic-texts.jsonから取得
             const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
             const clinicCodeForImage = window.dataManager.getClinicCodeById(clinic.id);
-            let bannerImage = `../common_data/images/clinics/tcb/tcb-logo.webp`; // デフォルト
+            let bannerImage = `/mouthpiece_section002/common_data/images/clinics/tcb/tcb-logo.webp`; // デフォルト
             
             if (clinicCodeForImage) {
                 // clinic-texts.jsonからパスを取得
@@ -403,7 +403,7 @@ class DisplayManager {
                     bannerImage = imagePath;
                 } else {
                     // フォールバック：コードベースのパス
-                    bannerImage = `../common_data/images/clinics/${clinicCodeForImage}/${clinicCodeForImage}-logo.webp`;
+                    bannerImage = `/mouthpiece_section002/common_data/images/clinics/${clinicCodeForImage}/${clinicCodeForImage}-logo.webp`;
                 }
             }
 
@@ -438,13 +438,13 @@ class DisplayManager {
                     // フォールバック：コードベースのパス
                     // キレイラインの特別処理
                     const logoFolder = clinicCode;
-                    clinicLogoPath = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
+                    clinicLogoPath = `/mouthpiece_section002/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
                 }
             }
 
             rankingItem.innerHTML = `
                 <div class="rank-medal ${medalClass}">
-                    <img src="../common_data/images/badges/rank-${rankNum}.svg" alt="${medalText}" class="medal-image">
+                    <img src="/mouthpiece_section002/common_data/images/badges/rank-${rankNum}.svg" alt="${medalText}" class="medal-image">
                 </div>
                 <div class="clinic-card">
                     <div class="satisfaction-badge">
@@ -1019,7 +1019,7 @@ class DataManager {
         const primaryPath = this.dataPath + 'structure.csv';
         let loaded = await loadFromPath(primaryPath);
         if (!loaded) {
-            const fallbackPath = (this.commonDataPath || '../common_data/data/') + 'structure.csv';
+            const fallbackPath = (this.commonDataPath || '/mouthpiece_section002/common_data/data/') + 'structure.csv';
             await loadFromPath(fallbackPath);
         }
 
@@ -1692,7 +1692,7 @@ class DataManager {
                         </div>
                     </div>
                     <a class="shop-btn map-toggle-btn" href="javascript:void(0);" data-store-id="${storeId}-${index}">
-                        <img src="../common_data/images/icon/map_pin.svg" class="btn-icon" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/map_pin.svg" class="btn-icon" alt="" aria-hidden="true">
                         地図
                     </a>
                 </div>
@@ -1724,7 +1724,7 @@ class DataManager {
                         </div>
                     </div>
                     <a class="shop-btn map-toggle-btn" href="javascript:void(0);" data-store-id="${storeId}-${index + 3}">
-                        <img src="../common_data/images/icon/map_pin.svg" class="btn-icon" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/map_pin.svg" class="btn-icon" alt="" aria-hidden="true">
                         地図
                     </a>
                 </div>
@@ -1811,7 +1811,7 @@ class DataManager {
     getClinicLogoPath(clinicCode) {
         // キレイラインの特別処理
         const logoFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
-        return this.getClinicText(clinicCode, 'クリニックロゴ画像パス', `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`);
+        return this.getClinicText(clinicCode, 'クリニックロゴ画像パス', `/mouthpiece_section002/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`);
     }
 
     // クリニック詳細データを動的に取得
@@ -1862,7 +1862,7 @@ class DataManager {
             link: `${clinicName} ＞`,
             banner: this.getClinicText(clinicCode, '詳細バナー画像パス', (() => {
                 const bannerFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
-                return `../common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr.webp`;
+                return `/mouthpiece_section002/common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr.webp`;
             })()),
             features: (() => {
                 const tagsText = this.getClinicText(clinicCode, '詳細_特徴タグ', '# 医療ダイエット<br># 医療痩身<br># リバウンド防止');
@@ -2420,7 +2420,7 @@ class RankingApp {
                     let logoPath = this.dataManager.getClinicText(clinicCode, 'meta13', '') || this.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '');
                     if (!logoPath) {
                         const logoFolder = clinicCode;
-                        logoPath = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
+                        logoPath = `/mouthpiece_section002/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
                     }
                     td.innerHTML = `
                         <img src="${logoPath}" alt="${clinic.name}" width="80" height="80">
@@ -3494,7 +3494,7 @@ class RankingApp {
             let logoPath = this.dataManager.getClinicText(clinicCode, 'meta13', '') || this.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '');
             if (!logoPath) {
                 const logoFolder = clinicCode;
-                logoPath = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
+                logoPath = `/mouthpiece_section002/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
             }
 
             const redirectUrl = `./redirect.html#clinic_id=${clinic.id}&rank=${rankNum}&region_id=${regionId}`;
@@ -4012,7 +4012,7 @@ class RankingApp {
         if (bannerImage) {
             const csvBannerPath = window.dataManager.getClinicText(clinicCode, '詳細バナー画像パス', '');
             const bannerPath = csvBannerPath ||
-                             `../common_data/images//clinics/${clinicCode}/${clinicCode}_detail_bnr.webp`;
+                             `/mouthpiece_section002/common_data/images//clinics/${clinicCode}/${clinicCode}_detail_bnr.webp`;
 
             // console.log(`[DEBUG] Clinic: ${clinicCode}, CSV Banner Path: "${csvBannerPath}", Final Path: "${bannerPath}"`);
 
@@ -4048,7 +4048,7 @@ class RankingApp {
             const iconElems = document.querySelectorAll('#first-choice-points .point-icon-inline');
             iconElems.forEach((el) => {
                 if (el.tagName && el.tagName.toLowerCase() === 'img') {
-                    el.src = '../common_data/images/icon/point_circle.svg';
+                    el.src = '/mouthpiece_section002/common_data/images/icon/point_circle.svg';
                     el.alt = '';
                 }
             });
@@ -4059,7 +4059,7 @@ class RankingApp {
         if (infoLogo) {
             const logoFolder = clinicCode;
             const logoPath = window.dataManager.getClinicText(clinicCode, 'meta13', '') || window.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '') || 
-                            `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
+                            `/mouthpiece_section002/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
             infoLogo.src = logoPath;
             infoLogo.alt = topClinic.name;
         }
@@ -4458,7 +4458,7 @@ class RankingApp {
             if (!data.banner) {
                 const clinicCode = this.dataManager.getClinicCodeById(clinicId);
                 const bannerFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
-                data.banner = `../common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr.webp`;
+                data.banner = `/mouthpiece_section002/common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr.webp`;
             }
             
             // 店舗データを動的に取得（store_view.csvに基づいてフィルタリング）
@@ -4472,7 +4472,7 @@ class RankingApp {
                 return store.clinicName === storeClinicName;
             });
 
-            const rankIconPath = `../common_data/images/rank_icon/rank${rank}.webp`;
+            const rankIconPath = `/mouthpiece_section002/common_data/images/rank_icon/rank${rank}.webp`;
             const regionNameForStores = this.dataManager.getRegionName(regionId) || '';
             const isNationalForStores = this.isNationalRegion(regionId, { id: regionId, name: regionNameForStores });
             const storeSectionHeading = (isNationalForStores || !regionNameForStores)
@@ -4514,7 +4514,7 @@ class RankingApp {
                         candidates.push(csvBannerRaw);
                     }
                     for (let i = 2; i <= 10; i++) {
-                        candidates.push(`../common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr${i}.webp`);
+                        candidates.push(`/mouthpiece_section002/common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr${i}.webp`);
                     }
                     const bannerImages = Array.from(new Set(candidates));
                     if (!bannerImages.length) return '';
@@ -4604,7 +4604,7 @@ class RankingApp {
                         ${data.points.map((point) => {
                             return `
                             <div class="ribbon_point_title2_s">
-                                <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
+                                <img src="/mouthpiece_section002/common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                                 <strong>${this.dataManager.processDecoTags(point.title)}</strong>
                             </div>
                             <div class="ribbon_point_txt">
@@ -4691,9 +4691,9 @@ class RankingApp {
                                     const clinicCodeForLabels = this.dataManager.getClinicCodeById(clinicId);
                                     const labels = this.dataManager.getReviewTabLabels(clinicCodeForLabels) || [];
                                     const iconPaths = [
-                                        '../common_data/images/icon/yen.svg',
-                                        '../common_data/images/icon/heart.svg',
-                                        '../common_data/images/icon/staff.svg'
+                                        '/mouthpiece_section002/common_data/images/icon/yen.svg',
+                                        '/mouthpiece_section002/common_data/images/icon/heart.svg',
+                                        '/mouthpiece_section002/common_data/images/icon/staff.svg'
                                     ];
                                     if (labels.length === 0) return '';
                                     return labels.map((label, idx) => {
@@ -4709,15 +4709,15 @@ class RankingApp {
                             const clinicCode = this.dataManager.getClinicCodeById(clinicId);
                             const labelList = this.dataManager.getReviewTabLabels(clinicCode) || [];
                             const reviewIcons = [
-                                '../common_data/images/review_icon/review_icon1.webp',
-                                '../common_data/images/review_icon/review_icon2.webp',
-                                '../common_data/images/review_icon/review_icon3.webp',
-                                '../common_data/images/review_icon/review_icon4.webp',
-                                '../common_data/images/review_icon/review_icon5.webp',
-                                '../common_data/images/review_icon/review_icon6.webp',
-                                '../common_data/images/review_icon/review_icon7.webp',
-                                '../common_data/images/review_icon/review_icon8.webp',
-                                '../common_data/images/review_icon/review_icon9.webp'
+                                '/mouthpiece_section002/common_data/images/review_icon/review_icon1.webp',
+                                '/mouthpiece_section002/common_data/images/review_icon/review_icon2.webp',
+                                '/mouthpiece_section002/common_data/images/review_icon/review_icon3.webp',
+                                '/mouthpiece_section002/common_data/images/review_icon/review_icon4.webp',
+                                '/mouthpiece_section002/common_data/images/review_icon/review_icon5.webp',
+                                '/mouthpiece_section002/common_data/images/review_icon/review_icon6.webp',
+                                '/mouthpiece_section002/common_data/images/review_icon/review_icon7.webp',
+                                '/mouthpiece_section002/common_data/images/review_icon/review_icon8.webp',
+                                '/mouthpiece_section002/common_data/images/review_icon/review_icon9.webp'
                             ];
                             
                             // ランク別のレビューアイコン表示順（0始まりのインデックス）
@@ -4798,7 +4798,7 @@ class RankingApp {
                             const ctaText = this.dataManager.getClinicText(clinicCode, 'CTAボタンテキスト', `キャンペーンの詳細を見る`);
                             
                             const logoFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
-                            const logoSrc = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
+                            const logoSrc = `/mouthpiece_section002/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
                             const logoAlt = clinic.name;
                             
                             return `
@@ -4806,7 +4806,7 @@ class RankingApp {
                             <div class="campaign-content">
                                 <div class="camp_header3">
                                     <div class="info_logo">
-                                        <img src="${logoSrc}" alt="${logoAlt}" onerror="this.onerror=null; this.src='../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.jpg';">
+                                        <img src="${logoSrc}" alt="${logoAlt}" onerror="this.onerror=null; this.src='/mouthpiece_section002/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.jpg';">
                                     </div>
                                     <div class="camp_txt">
                                         ${campaignDescription}
@@ -5105,9 +5105,9 @@ class RankingApp {
             imgElement.src = `${imagesPath}/clinics/${clinicName}/${clinicName}_clinic/clinic_image_${paddedNumber}.${extensions[nextExtIndex]}`;
         } else {
             // 全て失敗した場合、ロゴ画像にフォールバック
-            imgElement.src = `../common_data/images/clinics/${clinicName}/${clinicName}-logo.webp`;
+            imgElement.src = `/mouthpiece_section002/common_data/images/clinics/${clinicName}/${clinicName}-logo.webp`;
             imgElement.onerror = () => {
-                imgElement.src = `../common_data/images/clinics/${clinicName}/${clinicName}-logo.jpg`;
+                imgElement.src = `/mouthpiece_section002/common_data/images/clinics/${clinicName}/${clinicName}-logo.jpg`;
             };
         }
     }
@@ -6107,7 +6107,7 @@ function initializeScrollModal() {
         
         const logoPath = clinicMap[clinicName];
         if (logoPath) {
-            clinicLogoUrl = `../common_data/images/clinics/${logoPath}`;
+            clinicLogoUrl = `/mouthpiece_section002/common_data/images/clinics/${logoPath}`;
             // console.log('Logo URL from clinic map:', clinicLogoUrl);
         }
     }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <script src="../common_data/js/gtm-loader.js" defer></script>
+    <script src="/mouthpiece_section002/common_data/js/gtm-loader.js" defer></script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,7 +98,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="icon" type="image/png" href="../common_data/images/favicon.png" id="favicon">
+    <link rel="icon" type="image/png" href="/mouthpiece_section002/common_data/images/favicon.png" id="favicon">
     <!-- Critical CSS -->
     <!-- Font loading detection -->
     <script>'fonts' in document&&document.fonts.ready.then(function(){document.documentElement.classList.add('fonts-loaded')})</script>
@@ -116,7 +116,7 @@
                 <div class="logo-section">
                     <a href="/" class="logo-link">
                         <div class="logo-main">
-                            <span class="logo-icon"><img src="../common_data/images/favicon.png" alt="医療ダイエット比較.com" id="header-logo-icon"></span>
+                            <span class="logo-icon"><img src="/mouthpiece_section002/common_data/images/favicon.png" alt="医療ダイエット比較.com" id="header-logo-icon"></span>
                             <h1 class="site-logo" id="site-logo">おすすめ比較.com</h1>
                         </div>
                     </a>
@@ -398,7 +398,7 @@ text-align: center;
             <div class="ribbon_point_box_no" id="first-choice-points">
                 
                     <div class="ribbon_point_title2_s">
-                        <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong id="point1-title"></strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -406,7 +406,7 @@ text-align: center;
                     </div>
                     
                     <div class="ribbon_point_title2_s">
-                        <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong id="point2-title"></strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -414,7 +414,7 @@ text-align: center;
                     </div>
                     
                     <div class="ribbon_point_title2_s">
-                        <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong id="point3-title"></strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -1480,7 +1480,7 @@ text-align: center;
             reasons.forEach((reason, idx) => {
                 html += `
                     <div class="ribbon_point_title2_s">
-                        <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong>${dm.processDecoTags ? dm.processDecoTags(reason.title) : reason.title}</strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -2146,7 +2146,7 @@ text-align: center;
     <!-- Load common site data -->
     <script>
         // Load common site data
-        fetch('../../../common_data/data/site-common-texts.json')
+        fetch('../..//mouthpiece_section002/common_data/data/site-common-texts.json')
             .then(response => response.json())
             .then(data => {
                 // Update site logo
