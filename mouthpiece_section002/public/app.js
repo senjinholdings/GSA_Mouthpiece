@@ -3222,6 +3222,15 @@ class RankingApp {
             document.body.classList.remove('is-loading');
         }
 
+        const loader = typeof document !== 'undefined' ? document.getElementById('initial-loader') : null;
+        if (loader) {
+            loader.style.opacity = '0';
+            loader.style.visibility = 'hidden';
+            loader.style.pointerEvents = 'none';
+            loader.style.display = 'none';
+            loader.setAttribute('aria-hidden', 'true');
+        }
+
         this.initialRenderCompleted = true;
     }
 
