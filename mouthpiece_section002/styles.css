@@ -252,6 +252,8 @@ a {
     background: #ffffff;
     border-radius: 0px;
     padding: 22px 18px;
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 22px;
@@ -276,6 +278,11 @@ a {
     opacity: 0.55;
     pointer-events: none;
     z-index: 0;
+}
+
+[data-lead-variant="B"] .tips-layout-b .tips-flow > * {
+    position: relative;
+    z-index: 1;
 }
 
 .tips-step:last-of-type {
