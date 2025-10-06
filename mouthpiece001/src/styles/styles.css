@@ -9469,7 +9469,7 @@ body .case-slider .slick-slide img {
     .comparison-table--matrix .comparison-table-wrapper {
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch !important;
-        touch-action: pan-x;
+        touch-action: pan-x pan-y;
         width: 100%;
         max-width: 100%;
     }
