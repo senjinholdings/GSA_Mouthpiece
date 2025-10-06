@@ -3465,6 +3465,12 @@ section.clinic-rankings .ranking-header-banner {
     display: block;
 }
 
+.comparison-table-sticky-header.is-hiding {
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
 .comparison-table-sticky-inner {
     pointer-events: auto;
     will-change: transform;

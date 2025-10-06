@@ -2669,13 +2669,50 @@ class RankingApp {
 
         const offset = this.getComparisonStickyOffset();
         const tableRect = table.getBoundingClientRect();
-        const lastRow = table.querySelector('tbody tr:last-of-type');
-        const lastRowRect = lastRow ? lastRow.getBoundingClientRect() : null;
-        const lastRowTop = lastRowRect ? lastRowRect.top : tableRect.bottom;
-        const stickyHeight = this.comparisonStickyHeader.offsetHeight || 0;
-        // 最終行が固定ヘッダーの下に来たら非表示にする
-        const shouldShow = tableRect.top <= offset && lastRowTop > offset + stickyHeight;
-        this.comparisonStickyHeader.classList.toggle('is-visible', shouldShow);
+
+        // Fix: Get actual height by temporarily showing the element
+        let stickyHeight = this.comparisonStickyHeader.offsetHeight;
+        if (stickyHeight === 0) {
+            const originalDisplay = this.comparisonStickyHeader.style.display;
+            this.comparisonStickyHeader.style.display = 'block';
+            stickyHeight = this.comparisonStickyHeader.offsetHeight || 0;
+            this.comparisonStickyHeader.style.display = originalDisplay;
+        }
+
+        const shouldShow = tableRect.top <= offset && tableRect.bottom > offset + stickyHeight;
+        const isCurrentlyVisible = this.comparisonStickyHeader.classList.contains('is-visible');
+
+        if (shouldShow && !isCurrentlyVisible) {
+            // Show immediately without transition
+            this.comparisonStickyHeader.classList.remove('is-hiding');
+            this.comparisonStickyHeader.style.display = 'block';
+            // Force reflow to reset transform and opacity
+            void this.comparisonStickyHeader.offsetHeight;
+            this.comparisonStickyHeader.classList.add('is-visible');
+        } else if (!shouldShow && isCurrentlyVisible) {
+            // Determine hide reason: top (scroll up) or bottom (scroll down)
+            const isHidingFromTop = tableRect.top > offset;
+            const isHidingFromBottom = tableRect.bottom <= offset + stickyHeight;
+
+            this.comparisonStickyHeader.classList.remove('is-visible');
+
+            if (isHidingFromBottom) {
+                // Hide with smooth transition when scrolling past bottom
+                void this.comparisonStickyHeader.offsetHeight;
+                this.comparisonStickyHeader.classList.add('is-hiding');
+
+                setTimeout(() => {
+                    if (!this.comparisonStickyHeader.classList.contains('is-visible')) {
+                        this.comparisonStickyHeader.style.display = 'none';
+                        this.comparisonStickyHeader.classList.remove('is-hiding');
+                    }
+                }, 300);
+            } else {
+                // Hide immediately when scrolling back to top
+                this.comparisonStickyHeader.style.display = 'none';
+                this.comparisonStickyHeader.classList.remove('is-hiding');
+            }
+        }
     }
 
     handleComparisonStickyScroll() {
