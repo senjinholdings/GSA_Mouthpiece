@@ -3478,7 +3478,8 @@ section.clinic-rankings .ranking-header-banner {
     overflow-x: auto;
     overflow-y: clip;
     -webkit-overflow-scrolling: touch;
-    touch-action: manipulation;
+    touch-action: pan-y pan-x;
+    overscroll-behavior-y: contain;
     width: 100%;
     max-width: 100%;
 }
@@ -9463,7 +9464,8 @@ body .case-slider .slick-slide img {
         overflow-x: auto !important;
         overflow-y: clip !important;
         -webkit-overflow-scrolling: touch !important;
-        touch-action: manipulation;
+        touch-action: pan-y pan-x;
+        overscroll-behavior-y: contain;
         width: 100%;
         max-width: 100%;
     }
