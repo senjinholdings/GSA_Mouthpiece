@@ -23,54 +23,6 @@ const DATA_CACHE_VERSION = 'v1';
 const DATA_CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes
 const DATA_CACHE_PREFIX = 'dir_testsite001::cache::';
 
-// ベースパスを考慮したアセット解決ヘルパー
-const __BASE_PATH_RAW = window.__BASE_PATH__ ?? window.SITE_CONFIG?.basePath ?? '/';
-const __BASE_PATH_PREFIX = (__BASE_PATH_RAW === '/' || __BASE_PATH_RAW === '' ? '' : __BASE_PATH_RAW.replace(/\/+$/, ''));
-
-function resolveAssetPath(resource) {
-    if (typeof resource !== 'string' || resource.length === 0) {
-        return resource;
-    }
-    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|data:|mailto:|tel:)/i.test(resource)) {
-        return resource;
-    }
-
-    let normalized = resource;
-    if (normalized.startsWith('./')) {
-        normalized = normalized.slice(2);
-    }
-
-    try {
-        const url = new URL(normalized, 'https://asset-resolver.local');
-        normalized = url.pathname;
-    } catch (_) {
-        normalized = normalized.replace(/^(?:\.\.\/)+/, '');
-    }
-
-    if (!normalized.startsWith('/')) {
-        normalized = `/${normalized}`;
-    }
-
-    if (__BASE_PATH_PREFIX && normalized.startsWith(`${__BASE_PATH_PREFIX}/`)) {
-        return normalized;
-    }
-
-    return __BASE_PATH_PREFIX ? `${__BASE_PATH_PREFIX}${normalized}` : normalized;
-}
-
-function normalizeAssetPath(value) {
-    if (typeof value !== 'string') return value;
-    const trimmed = value.trim();
-    if (trimmed === '') return trimmed;
-    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|data:|mailto:|tel:)/i.test(trimmed)) {
-        return trimmed;
-    }
-    if (trimmed.startsWith('/') || trimmed.startsWith('./') || trimmed.startsWith('../') || trimmed.includes('common_data/')) {
-        return resolveAssetPath(trimmed);
-    }
-    return trimmed;
-}
-
 const dataCache = (() => {
     if (typeof window === 'undefined' || !window.localStorage) {
         return { get: () => null, set: () => {} };
@@ -442,16 +394,16 @@ class DisplayManager {
             // バナー画像をclinic-texts.jsonから取得
             const imagesPath = window.SITE_CONFIG ? window.SITE_CONFIG.imagesPath + '/images' : '/images';
             const clinicCodeForImage = window.dataManager.getClinicCodeById(clinic.id);
-            let bannerImage = normalizeAssetPath('/common_data/images/clinics/tcb/tcb-logo.webp'); // デフォルト
+            let bannerImage = `../common_data/images/clinics/tcb/tcb-logo.webp`; // デフォルト
             
             if (clinicCodeForImage) {
                 // clinic-texts.jsonからパスを取得
-                const imagePath = normalizeAssetPath(window.dataManager.getClinicText(clinicCodeForImage, 'クリニックロゴ画像パス', ''));
+                const imagePath = window.dataManager.getClinicText(clinicCodeForImage, 'クリニックロゴ画像パス', '');
                 if (imagePath) {
                     bannerImage = imagePath;
                 } else {
                     // フォールバック：コードベースのパス
-                    bannerImage = normalizeAssetPath(`/common_data/images/clinics/${clinicCodeForImage}/${clinicCodeForImage}-logo.webp`);
+                    bannerImage = `../common_data/images/clinics/${clinicCodeForImage}/${clinicCodeForImage}-logo.webp`;
                 }
             }
 
@@ -486,13 +438,13 @@ class DisplayManager {
                     // フォールバック：コードベースのパス
                     // キレイラインの特別処理
                     const logoFolder = clinicCode;
-                    clinicLogoPath = normalizeAssetPath(`/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`);
+                    clinicLogoPath = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
                 }
             }
 
             rankingItem.innerHTML = `
                 <div class="rank-medal ${medalClass}">
-                    <img src="${normalizeAssetPath(`/common_data/images/badges/rank-${rankNum}.svg`)}" alt="${medalText}" class="medal-image">
+                    <img src="../common_data/images/badges/rank-${rankNum}.svg" alt="${medalText}" class="medal-image">
                 </div>
                 <div class="clinic-card">
                     <div class="satisfaction-badge">
@@ -677,23 +629,14 @@ class DataManager {
         this.structureConfig = {};
         // Handle subdirectory paths
         if (window.SITE_CONFIG) {
-            this.dataPath = normalizeAssetPath(window.SITE_CONFIG.dataPath + '/');
+            this.dataPath = window.SITE_CONFIG.dataPath + '/';
         } else {
-            this.dataPath = normalizeAssetPath('./data/');
-        }
-        if (typeof this.dataPath === 'string' && !this.dataPath.endsWith('/')) {
-            this.dataPath += '/';
+            this.dataPath = './data/';
         }
         // 地域データ用のパス（data/rankingを使用）
-        this.regionDataPath = normalizeAssetPath('./data/ranking/');
-        if (typeof this.regionDataPath === 'string' && !this.regionDataPath.endsWith('/')) {
-            this.regionDataPath += '/';
-        }
+        this.regionDataPath = './data/ranking/';
         // 共通データ用のパス（common_data/data を使用）
-        this.commonDataPath = normalizeAssetPath('/common_data/data/');
-        if (typeof this.commonDataPath === 'string' && !this.commonDataPath.endsWith('/')) {
-            this.commonDataPath += '/';
-        }
+        this.commonDataPath = '../common_data/data/';
     }
 
     buildCacheKey(suffix) {
@@ -718,55 +661,49 @@ class DataManager {
             await this.loadCommonTextsFromCsv();
 
             setTimeout(() => {
-                const mvImagePath = normalizeAssetPath(this.commonTexts['MV画像パス']);
-                if (mvImagePath) {
+                if (this.commonTexts['MV画像パス']) {
                     const heroImage = document.querySelector('.hero-image');
                     const heroSource = document.querySelector('.hero-image-wrapper source');
                     if (heroImage) {
-                        heroImage.src = mvImagePath;
+                        heroImage.src = this.commonTexts['MV画像パス'];
                     }
                     if (heroSource) {
-                        heroSource.srcset = mvImagePath;
+                        heroSource.srcset = this.commonTexts['MV画像パス'];
                     }
                 }
 
-                const rankingBannerPath = normalizeAssetPath(this.commonTexts['ランキングバナー画像パス']);
-                if (rankingBannerPath) {
+                if (this.commonTexts['ランキングバナー画像パス']) {
                     const rankingBanners = document.querySelectorAll('.ranking-banner-image');
                     rankingBanners.forEach(img => {
-                        img.src = rankingBannerPath;
+                        img.src = this.commonTexts['ランキングバナー画像パス'];
                     });
                 }
 
-                const tips1Path = normalizeAssetPath(this.commonTexts['Tips1画像パス']);
-                if (tips1Path) {
+                if (this.commonTexts['Tips1画像パス']) {
                     const tips1Img = document.querySelector('.tab-content[data-tab="0"] img');
                     if (tips1Img) {
-                        tips1Img.src = tips1Path;
+                        tips1Img.src = this.commonTexts['Tips1画像パス'];
                     }
                 }
 
-                const tips2Path = normalizeAssetPath(this.commonTexts['Tips2画像パス']);
-                if (tips2Path) {
+                if (this.commonTexts['Tips2画像パス']) {
                     const tips2Img = document.querySelector('.tab-content[data-tab="1"] img');
                     if (tips2Img) {
-                        tips2Img.src = tips2Path;
+                        tips2Img.src = this.commonTexts['Tips2画像パス'];
                     }
                 }
 
-                const tips3Path = normalizeAssetPath(this.commonTexts['Tips3画像パス']);
-                if (tips3Path) {
+                if (this.commonTexts['Tips3画像パス']) {
                     const tips3Img = document.querySelector('.tab-content[data-tab="2"] img');
                     if (tips3Img) {
-                        tips3Img.src = tips3Path;
+                        tips3Img.src = this.commonTexts['Tips3画像パス'];
                     }
                 }
 
-                const detailsBannerPath = normalizeAssetPath(this.commonTexts['詳細バナー画像パス']);
-                if (detailsBannerPath) {
+                if (this.commonTexts['詳細バナー画像パス']) {
                     const detailsBanner = document.querySelector('.details-banner-image');
                     if (detailsBanner) {
-                        detailsBanner.src = detailsBannerPath;
+                        detailsBanner.src = this.commonTexts['詳細バナー画像パス'];
                     }
                 }
             }, 100);
@@ -822,8 +759,7 @@ class DataManager {
                 console.warn('⚠️ ローカル site-common-texts.csv 読込エラー:', e);
             }
             try {
-                const siteCommonJsonPath = normalizeAssetPath('/common_data/data/site-common-texts.json');
-                const respCommon = await fetch(siteCommonJsonPath);
+                const respCommon = await fetch('../../../common_data/data/site-common-texts.json');
                 if (respCommon.ok) {
                     const jsonText = await respCommon.text();
                     try {
@@ -842,22 +778,16 @@ class DataManager {
             }
         }
 
-        const normalizedCommonTexts = {};
-        Object.entries(commonTexts || {}).forEach(([key, value]) => {
-            normalizedCommonTexts[key] = normalizeAssetPath(value);
-        });
+        this.commonTexts = commonTexts || {};
 
-        this.commonTexts = normalizedCommonTexts;
-
-        const faviconPath = normalizeAssetPath(this.commonTexts['ファビコン画像パス']);
-        if (faviconPath) {
+        if (this.commonTexts['ファビコン画像パス']) {
             const faviconElement = document.getElementById('favicon');
             if (faviconElement) {
-                faviconElement.href = faviconPath;
+                faviconElement.href = this.commonTexts['ファビコン画像パス'];
             }
             const headerLogoIcon = document.getElementById('header-logo-icon');
             if (headerLogoIcon) {
-                headerLogoIcon.src = faviconPath;
+                headerLogoIcon.src = this.commonTexts['ファビコン画像パス'];
             }
         }
     }
@@ -978,7 +908,7 @@ class DataManager {
                     for (let j = 0; j < clinicNames.length; j++) {
                         const clinicName = clinicNames[j];
                         const value = row[j + 3] || '';
-                        clinicsData[clinicName][fieldName] = normalizeAssetPath(value);
+                        clinicsData[clinicName][fieldName] = value;
                     }
                 } else if (listName.startsWith('detail')) {
                     let mappingKey = '';
@@ -997,19 +927,19 @@ class DataManager {
                     for (let j = 0; j < clinicNames.length; j++) {
                         const clinicName = clinicNames[j];
                         const value = row[j + 3] || '';
-                        clinicsData[clinicName][`詳細_${fieldName}`] = normalizeAssetPath(value);
+                        clinicsData[clinicName][`詳細_${fieldName}`] = value;
                     }
                 } else if (listName.startsWith('tags')) {
                     for (let j = 0; j < clinicNames.length; j++) {
                         const clinicName = clinicNames[j];
                         const value = row[j + 3] || '';
-                        clinicsData[clinicName][`詳細_${fieldName}`] = normalizeAssetPath(value);
+                        clinicsData[clinicName][`詳細_${fieldName}`] = value;
                     }
                 } else if (listName.startsWith('meta')) {
                     for (let j = 0; j < clinicNames.length; j++) {
                         const clinicName = clinicNames[j];
                         const value = row[j + 3] || '';
-                        clinicsData[clinicName][fieldName] = normalizeAssetPath(value);
+                        clinicsData[clinicName][fieldName] = value;
                     }
                 } else {
                     const clinicCodeToName = {
@@ -1022,13 +952,13 @@ class DataManager {
                     if (clinicCodeToName[listName]) {
                         const target = clinicCodeToName[listName];
                         if (clinicsData[target]) {
-                            clinicsData[target][fieldName] = normalizeAssetPath(row[3] || '');
+                            clinicsData[target][fieldName] = row[3] || '';
                         }
                     } else {
                         for (let j = 0; j < clinicNames.length; j++) {
                             const clinicName = clinicNames[j];
                             const value = row[j + 3] || '';
-                            clinicsData[clinicName][fieldName] = normalizeAssetPath(value);
+                            clinicsData[clinicName][fieldName] = value;
                         }
                     }
                 }
@@ -1088,8 +1018,7 @@ class DataManager {
         const primaryPath = this.dataPath + 'structure.csv';
         let loaded = await loadFromPath(primaryPath);
         if (!loaded) {
-            const fallbackBase = this.commonDataPath || normalizeAssetPath('/common_data/data/');
-            const fallbackPath = fallbackBase.endsWith('/') ? `${fallbackBase}structure.csv` : `${fallbackBase}/structure.csv`;
+            const fallbackPath = (this.commonDataPath || '../common_data/data/') + 'structure.csv';
             await loadFromPath(fallbackPath);
         }
 
@@ -1232,7 +1161,6 @@ class DataManager {
         try {
             const candidates = [];
             if (filename.includes('ranking.csv')) {
-                candidates.push(this.commonDataPath + filename);
                 candidates.push(this.dataPath + filename);
                 candidates.push(this.regionDataPath + filename);
             } else if (filename.includes('items.csv') || filename.includes('region.csv') || filename.includes('store_view.csv') || filename.includes('stores.csv')) {
@@ -1763,7 +1691,7 @@ class DataManager {
                         </div>
                     </div>
                     <a class="shop-btn map-toggle-btn" href="javascript:void(0);" data-store-id="${storeId}-${index}">
-                        <img src="${normalizeAssetPath('/common_data/images/icon/map_pin.svg')}" class="btn-icon" alt="" aria-hidden="true">
+                        <img src="../common_data/images/icon/map_pin.svg" class="btn-icon" alt="" aria-hidden="true">
                         地図
                     </a>
                 </div>
@@ -1795,7 +1723,7 @@ class DataManager {
                         </div>
                     </div>
                     <a class="shop-btn map-toggle-btn" href="javascript:void(0);" data-store-id="${storeId}-${index + 3}">
-                        <img src="${normalizeAssetPath('/common_data/images/icon/map_pin.svg')}" class="btn-icon" alt="" aria-hidden="true">
+                        <img src="../common_data/images/icon/map_pin.svg" class="btn-icon" alt="" aria-hidden="true">
                         地図
                     </a>
                 </div>
@@ -1882,9 +1810,7 @@ class DataManager {
     getClinicLogoPath(clinicCode) {
         // キレイラインの特別処理
         const logoFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
-        const fallbackLogo = normalizeAssetPath(`/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`);
-        const raw = this.getClinicText(clinicCode, 'クリニックロゴ画像パス', fallbackLogo);
-        return normalizeAssetPath(raw);
+        return this.getClinicText(clinicCode, 'クリニックロゴ画像パス', `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`);
     }
 
     // クリニック詳細データを動的に取得
@@ -1933,12 +1859,10 @@ class DataManager {
             title: this.getClinicText(clinicCode, '詳細タイトル', '医療痩せプログラム'),
             subtitle: this.getClinicText(clinicCode, '詳細サブタイトル', '効果的な痩身治療'),
             link: `${clinicName} ＞`,
-            banner: (() => {
+            banner: this.getClinicText(clinicCode, '詳細バナー画像パス', (() => {
                 const bannerFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
-                const fallbackBanner = normalizeAssetPath(`/common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr.webp`);
-                const rawBanner = this.getClinicText(clinicCode, '詳細バナー画像パス', fallbackBanner);
-                return normalizeAssetPath(rawBanner);
-            })(),
+                return `../common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr.webp`;
+            })()),
             features: (() => {
                 const tagsText = this.getClinicText(clinicCode, '詳細_特徴タグ', '# 医療ダイエット<br># 医療痩身<br># リバウンド防止');
                 // <br>で分割し、#と空白を削除
@@ -2493,10 +2417,9 @@ class RankingApp {
                 if (field === 'クリニック名') {
                     td.classList.add('ranking-table_td1');
                     let logoPath = this.dataManager.getClinicText(clinicCode, 'meta13', '') || this.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '');
-                    logoPath = normalizeAssetPath(logoPath);
                     if (!logoPath) {
                         const logoFolder = clinicCode;
-                        logoPath = normalizeAssetPath(`/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`);
+                        logoPath = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
                     }
                     td.innerHTML = `
                         <img src="${logoPath}" alt="${clinic.name}" width="80" height="80">
@@ -2740,55 +2663,19 @@ class RankingApp {
         }
 
         const containerRect = matrix.getBoundingClientRect();
-        this.comparisonStickyHeader.style.setProperty('--comparison-sticky-left', `${containerRect.left}px`);
+        const leftOffset = window.innerWidth >= 768 ? containerRect.left + 10 : containerRect.left;
+        this.comparisonStickyHeader.style.setProperty('--comparison-sticky-left', `${leftOffset}px`);
         this.comparisonStickyHeader.style.setProperty('--comparison-sticky-width', `${containerRect.width}px`);
 
         const offset = this.getComparisonStickyOffset();
         const tableRect = table.getBoundingClientRect();
-
-        // Fix: Get actual height by temporarily showing the element
-        let stickyHeight = this.comparisonStickyHeader.offsetHeight;
-        if (stickyHeight === 0) {
-            const originalDisplay = this.comparisonStickyHeader.style.display;
-            this.comparisonStickyHeader.style.display = 'block';
-            stickyHeight = this.comparisonStickyHeader.offsetHeight || 0;
-            this.comparisonStickyHeader.style.display = originalDisplay;
-        }
-
-        const shouldShow = tableRect.top <= offset && tableRect.bottom > offset + stickyHeight;
-        const isCurrentlyVisible = this.comparisonStickyHeader.classList.contains('is-visible');
-
-        if (shouldShow && !isCurrentlyVisible) {
-            // Show immediately without transition
-            this.comparisonStickyHeader.classList.remove('is-hiding');
-            this.comparisonStickyHeader.style.display = 'block';
-            // Force reflow to reset transform and opacity
-            void this.comparisonStickyHeader.offsetHeight;
-            this.comparisonStickyHeader.classList.add('is-visible');
-        } else if (!shouldShow && isCurrentlyVisible) {
-            // Determine hide reason: top (scroll up) or bottom (scroll down)
-            const isHidingFromTop = tableRect.top > offset;
-            const isHidingFromBottom = tableRect.bottom <= offset + stickyHeight;
-
-            this.comparisonStickyHeader.classList.remove('is-visible');
-
-            if (isHidingFromBottom) {
-                // Hide with smooth transition when scrolling past bottom
-                void this.comparisonStickyHeader.offsetHeight;
-                this.comparisonStickyHeader.classList.add('is-hiding');
-
-                setTimeout(() => {
-                    if (!this.comparisonStickyHeader.classList.contains('is-visible')) {
-                        this.comparisonStickyHeader.style.display = 'none';
-                        this.comparisonStickyHeader.classList.remove('is-hiding');
-                    }
-                }, 300);
-            } else {
-                // Hide immediately when scrolling back to top
-                this.comparisonStickyHeader.style.display = 'none';
-                this.comparisonStickyHeader.classList.remove('is-hiding');
-            }
-        }
+        const lastRow = table.querySelector('tbody tr:last-of-type');
+        const lastRowRect = lastRow ? lastRow.getBoundingClientRect() : null;
+        const lastRowTop = lastRowRect ? lastRowRect.top : tableRect.bottom;
+        const stickyHeight = this.comparisonStickyHeader.offsetHeight || 0;
+        // 最終行が固定ヘッダーの下に来たら非表示にする
+        const shouldShow = tableRect.top <= offset && lastRowTop > offset + stickyHeight;
+        this.comparisonStickyHeader.classList.toggle('is-visible', shouldShow);
     }
 
     handleComparisonStickyScroll() {
@@ -3264,15 +3151,6 @@ class RankingApp {
             document.body.classList.remove('is-loading');
         }
 
-        const loader = typeof document !== 'undefined' ? document.getElementById('initial-loading') : null;
-        if (loader) {
-            loader.classList.add('is-hidden');
-            setTimeout(() => {
-                loader.style.display = 'none';
-                loader.setAttribute('aria-hidden', 'true');
-            }, 300);
-        }
-
         this.initialRenderCompleted = true;
     }
 
@@ -3618,10 +3496,9 @@ class RankingApp {
             }
 
             let logoPath = this.dataManager.getClinicText(clinicCode, 'meta13', '') || this.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '');
-            logoPath = normalizeAssetPath(logoPath);
             if (!logoPath) {
                 const logoFolder = clinicCode;
-                logoPath = normalizeAssetPath(`/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`);
+                logoPath = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
             }
 
             const redirectUrl = `./redirect.html#clinic_id=${clinic.id}&rank=${rankNum}&region_id=${regionId}`;
@@ -4137,9 +4014,9 @@ class RankingApp {
         // バナー画像を更新
         const bannerImage = document.getElementById('first-choice-banner-image');
         if (bannerImage) {
-            const csvBannerPath = normalizeAssetPath(window.dataManager.getClinicText(clinicCode, '詳細バナー画像パス', ''));
-            const fallbackBannerPath = normalizeAssetPath(`/common_data/images/clinics/${clinicCode}/${clinicCode}_detail_bnr.webp`);
-            const bannerPath = csvBannerPath || fallbackBannerPath;
+            const csvBannerPath = window.dataManager.getClinicText(clinicCode, '詳細バナー画像パス', '');
+            const bannerPath = csvBannerPath ||
+                             `../common_data/images//clinics/${clinicCode}/${clinicCode}_detail_bnr.webp`;
 
             // console.log(`[DEBUG] Clinic: ${clinicCode}, CSV Banner Path: "${csvBannerPath}", Final Path: "${bannerPath}"`);
 
@@ -4175,7 +4052,7 @@ class RankingApp {
             const iconElems = document.querySelectorAll('#first-choice-points .point-icon-inline');
             iconElems.forEach((el) => {
                 if (el.tagName && el.tagName.toLowerCase() === 'img') {
-                    el.src = normalizeAssetPath('/common_data/images/icon/point_circle.svg');
+                    el.src = '../common_data/images/icon/point_circle.svg';
                     el.alt = '';
                 }
             });
@@ -4185,11 +4062,8 @@ class RankingApp {
         const infoLogo = document.getElementById('first-choice-info-logo');
         if (infoLogo) {
             const logoFolder = clinicCode;
-            let logoPath = window.dataManager.getClinicText(clinicCode, 'meta13', '') || window.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '');
-            logoPath = normalizeAssetPath(logoPath);
-            if (!logoPath) {
-                logoPath = normalizeAssetPath(`/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`);
-            }
+            const logoPath = window.dataManager.getClinicText(clinicCode, 'meta13', '') || window.dataManager.getClinicText(clinicCode, 'クリニックロゴ画像パス', '') || 
+                            `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
             infoLogo.src = logoPath;
             infoLogo.alt = topClinic.name;
         }
@@ -4584,12 +4458,11 @@ class RankingApp {
             }
             data.regionId = regionId;
             
-            // バナーパスを正規化し、なければデフォルトにフォールバック
-            data.banner = normalizeAssetPath(data.banner);
+            // バナーがない場合はデフォルトパスを設定
             if (!data.banner) {
                 const clinicCode = this.dataManager.getClinicCodeById(clinicId);
                 const bannerFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
-                data.banner = normalizeAssetPath(`/common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr.webp`);
+                data.banner = `../common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr.webp`;
             }
             
             // 店舗データを動的に取得（store_view.csvに基づいてフィルタリング）
@@ -4603,7 +4476,7 @@ class RankingApp {
                 return store.clinicName === storeClinicName;
             });
 
-            const rankIconPath = normalizeAssetPath(`/common_data/images/rank_icon/rank${rank}.webp`);
+            const rankIconPath = `../common_data/images/rank_icon/rank${rank}.webp`;
             const regionNameForStores = this.dataManager.getRegionName(regionId) || '';
             const isNationalForStores = this.isNationalRegion(regionId, { id: regionId, name: regionNameForStores });
             const storeSectionHeading = (isNationalForStores || !regionNameForStores)
@@ -4641,14 +4514,13 @@ class RankingApp {
                     // ベース（*_detail_bnr.webp）は使用しない。CSV指定と *_detail_bnr2.webp 以降を使用
                     const candidates = [];
                     const csvBannerRaw = this.dataManager.getClinicText(clinicCode, '詳細バナー画像パス', '');
-                    const csvBannerPath = normalizeAssetPath(csvBannerRaw);
-                    if (csvBannerPath) {
-                        candidates.push(csvBannerPath);
+                    if (csvBannerRaw) {
+                        candidates.push(csvBannerRaw);
                     }
                     for (let i = 2; i <= 10; i++) {
-                        candidates.push(normalizeAssetPath(`/common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr${i}.webp`));
+                        candidates.push(`../common_data/images/clinics/${bannerFolder}/${bannerFolder}_detail_bnr${i}.webp`);
                     }
-                    const bannerImages = Array.from(new Set(candidates.filter(Boolean)));
+                    const bannerImages = Array.from(new Set(candidates));
                     if (!bannerImages.length) return '';
 
                     return `
@@ -4736,7 +4608,7 @@ class RankingApp {
                         ${data.points.map((point) => {
                             return `
                             <div class="ribbon_point_title2_s">
-                                <img src="${normalizeAssetPath('/common_data/images/icon/point_circle.svg')}" class="point-icon-inline" alt="" aria-hidden="true">
+                                <img src="../common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                                 <strong>${this.dataManager.processDecoTags(point.title)}</strong>
                             </div>
                             <div class="ribbon_point_txt">
@@ -4777,7 +4649,7 @@ class RankingApp {
                             : '';
                         return `
                             <div class=\"case-slide\" style=\"min-width:100%;box-sizing:border-box;\">
-                                <img src=\"${img.fallbacks[0]}\" alt=\"${img.alt}\" loading=\"eager\" decoding=\"async\" style=\"width:100%;height:auto;object-fit:contain;\"${fallbackAttr}>
+                                <img src=\"${img.fallbacks[0]}\" alt=\"${img.alt}\" loading=\"lazy\" style=\"width:100%;height:auto;object-fit:contain;\"${fallbackAttr}>
                                 <div class=\"case-info\" style=\"margin-top: 5px; padding: 0 5%; text-align: left; font-size: 12px; line-height: 1.6; width: 100%;\">
                                     <table class=\"case-table\" style=\"width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; line-height: 1.6 !important; display: table !important; table-layout: fixed !important;\">
                                         <tbody>
@@ -4823,9 +4695,9 @@ class RankingApp {
                                     const clinicCodeForLabels = this.dataManager.getClinicCodeById(clinicId);
                                     const labels = this.dataManager.getReviewTabLabels(clinicCodeForLabels) || [];
                                     const iconPaths = [
-                                        normalizeAssetPath('/common_data/images/icon/yen.svg'),
-                                        normalizeAssetPath('/common_data/images/icon/heart.svg'),
-                                        normalizeAssetPath('/common_data/images/icon/staff.svg')
+                                        '../common_data/images/icon/yen.svg',
+                                        '../common_data/images/icon/heart.svg',
+                                        '../common_data/images/icon/staff.svg'
                                     ];
                                     if (labels.length === 0) return '';
                                     return labels.map((label, idx) => {
@@ -4841,15 +4713,15 @@ class RankingApp {
                             const clinicCode = this.dataManager.getClinicCodeById(clinicId);
                             const labelList = this.dataManager.getReviewTabLabels(clinicCode) || [];
                             const reviewIcons = [
-                                normalizeAssetPath('/common_data/images/review_icon/review_icon1.webp'),
-                                normalizeAssetPath('/common_data/images/review_icon/review_icon2.webp'),
-                                normalizeAssetPath('/common_data/images/review_icon/review_icon3.webp'),
-                                normalizeAssetPath('/common_data/images/review_icon/review_icon4.webp'),
-                                normalizeAssetPath('/common_data/images/review_icon/review_icon5.webp'),
-                                normalizeAssetPath('/common_data/images/review_icon/review_icon6.webp'),
-                                normalizeAssetPath('/common_data/images/review_icon/review_icon7.webp'),
-                                normalizeAssetPath('/common_data/images/review_icon/review_icon8.webp'),
-                                normalizeAssetPath('/common_data/images/review_icon/review_icon9.webp')
+                                '../common_data/images/review_icon/review_icon1.webp',
+                                '../common_data/images/review_icon/review_icon2.webp',
+                                '../common_data/images/review_icon/review_icon3.webp',
+                                '../common_data/images/review_icon/review_icon4.webp',
+                                '../common_data/images/review_icon/review_icon5.webp',
+                                '../common_data/images/review_icon/review_icon6.webp',
+                                '../common_data/images/review_icon/review_icon7.webp',
+                                '../common_data/images/review_icon/review_icon8.webp',
+                                '../common_data/images/review_icon/review_icon9.webp'
                             ];
                             
                             // ランク別のレビューアイコン表示順（0始まりのインデックス）
@@ -4930,7 +4802,7 @@ class RankingApp {
                             const ctaText = this.dataManager.getClinicText(clinicCode, 'CTAボタンテキスト', `キャンペーンの詳細を見る`);
                             
                             const logoFolder = clinicCode === 'kireiline' ? 'kireiline' : clinicCode;
-                            const logoSrc = normalizeAssetPath(`/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`);
+                            const logoSrc = `../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.webp`;
                             const logoAlt = clinic.name;
                             
                             return `
@@ -4938,7 +4810,7 @@ class RankingApp {
                             <div class="campaign-content">
                                 <div class="camp_header3">
                                     <div class="info_logo">
-                                        <img src="${logoSrc}" alt="${logoAlt}" onerror="this.onerror=null; this.src='${normalizeAssetPath(`/common_data/images/clinics/${logoFolder}/${logoFolder}-logo.jpg`)}';">
+                                        <img src="${logoSrc}" alt="${logoAlt}" onerror="this.onerror=null; this.src='../common_data/images/clinics/${logoFolder}/${logoFolder}-logo.jpg';">
                                     </div>
                                     <div class="camp_txt">
                                         ${campaignDescription}
@@ -5237,9 +5109,9 @@ class RankingApp {
             imgElement.src = `${imagesPath}/clinics/${clinicName}/${clinicName}_clinic/clinic_image_${paddedNumber}.${extensions[nextExtIndex]}`;
         } else {
             // 全て失敗した場合、ロゴ画像にフォールバック
-            imgElement.src = normalizeAssetPath(`/common_data/images/clinics/${clinicName}/${clinicName}-logo.webp`);
+            imgElement.src = `../common_data/images/clinics/${clinicName}/${clinicName}-logo.webp`;
             imgElement.onerror = () => {
-                imgElement.src = normalizeAssetPath(`/common_data/images/clinics/${clinicName}/${clinicName}-logo.jpg`);
+                imgElement.src = `../common_data/images/clinics/${clinicName}/${clinicName}-logo.jpg`;
             };
         }
     }
@@ -5803,35 +5675,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const app = new RankingApp();
     window.app = app; // グローバルアクセス用
     
-    // ローディング要素の取得
-    const loadingEl = document.getElementById('initial-loading');
-    const loadingMessage = loadingEl?.querySelector('[data-loading-message]');
-    const loadingSpinner = loadingEl?.querySelector('[data-loading-spinner]');
-    const retryButton = loadingEl?.querySelector('[data-loading-retry]');
-    
-    // 再読み込みボタンのイベントハンドラー
-    if (retryButton) {
-        retryButton.addEventListener('click', () => {
-            location.reload();
-        });
-    }
-    
-    app.init().catch((error) => {
-        console.error('初期化エラー:', error);
-        
-        // エラー状態の表示
-        if (loadingEl) {
-            loadingEl.classList.add('has-error');
-        }
-        if (loadingMessage) {
-            loadingMessage.textContent = 'データの読み込みに失敗しました';
-        }
-        if (loadingSpinner) {
-            loadingSpinner.classList.add('is-hidden');
-        }
-        if (retryButton) {
-            retryButton.removeAttribute('hidden');
-        }
+    app.init().catch(() => {
+        // 例外は個別のエラーハンドリングで通知済み
     });
     
     // デバッグ用：グローバル関数として公開
@@ -6266,7 +6111,7 @@ function initializeScrollModal() {
         
         const logoPath = clinicMap[clinicName];
         if (logoPath) {
-            clinicLogoUrl = normalizeAssetPath(`/common_data/images/clinics/${logoPath}`);
+            clinicLogoUrl = `../common_data/images/clinics/${logoPath}`;
             // console.log('Logo URL from clinic map:', clinicLogoUrl);
         }
     }
@@ -6488,7 +6333,7 @@ if (document.readyState === 'loading') {
     }, 2000);
 }
 
-// 症例スライダーの初期化
+// 症例スライダー初期化
 function initTipsBASlider() {
     const tabs = document.querySelectorAll('.tips-ba-tab');
     const categories = document.querySelectorAll('.tips-ba-category');

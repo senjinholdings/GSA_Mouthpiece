@@ -31,7 +31,8 @@ function convertAllCsvToJson() {
         { csv: '出しわけSS - items.csv', json: '出しわけSS - items.json' },
         { csv: '出しわけSS - region.csv', json: '出しわけSS - region.json' },
         { csv: '出しわけSS - stores.csv', json: '出しわけSS - stores.json' },
-        { csv: '出しわけSS - store_view.csv', json: '出しわけSS - store_view.json' }
+        { csv: '出しわけSS - store_view.csv', json: '出しわけSS - store_view.json' },
+        { csv: '出しわけSS - ranking.csv', json: '出しわけSS - ranking.json' }
     ];
 
     let successCount = 0;

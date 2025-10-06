@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "devtools-serp": {
+      "command": "node",
+      "args": [
+        "mcp/devtools-serp/index.mjs",
+        "--stdio"
+      ]
+    }
+  }
+}

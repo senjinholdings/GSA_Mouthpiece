@@ -8,7 +8,8 @@
     "build": "bash ./scripts/build-all.sh",
     "preview": "astro preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "serve:orthodontic": "node ./scripts/serve-static.js"
   },
   "dependencies": {
     "astro": "^4.16.0",

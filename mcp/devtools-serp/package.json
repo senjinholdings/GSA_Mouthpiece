@@ -1,0 +1,16 @@
+{
+  "name": "devtools-serp-scraper",
+  "version": "0.1.0",
+  "description": "CLI utility and MCP server for retrieving SERP data via DuckDuckGo HTML endpoint.",
+  "type": "module",
+  "main": "index.mjs",
+  "bin": {
+    "devtools-serp": "index.mjs"
+  },
+  "scripts": {
+    "format": "prettier --write index.mjs"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
+  }
+}
