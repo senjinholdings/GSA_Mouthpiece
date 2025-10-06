@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <script>
-        window.__BASE_PATH__ = '/mouthpiece_section002/';
-    </script>
     <script src="/mouthpiece_section002/common_data/js/gtm-loader.js" defer></script>
     
     <meta charset="UTF-8">

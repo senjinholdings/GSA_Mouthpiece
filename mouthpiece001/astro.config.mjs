@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   srcDir: 'src',
   publicDir: 'public',
-  base: '/mouthpiece001/',
+  base: '/mouthpiece_section002/',
   image: {
     service: {
       entrypoint: 'astro/assets/services/sharp'
@@ -12,7 +12,7 @@ export default defineConfig({
   },
   build: {
     format: 'file',
-    inlineStylesheets: 'always' // すべてのCSSを強制的にインライン化
+    inlineStylesheets: 'always'
   },
   vite: {
     build: {
