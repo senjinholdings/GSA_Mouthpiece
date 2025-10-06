@@ -35,7 +35,7 @@ const asset = (path: string) => {
                 <div class="logo-section">
                     <a href="/" class="logo-link">
                         <div class="logo-main">
-                            <span class="logo-icon"><img src={import.meta.env.BASE_URL + 'common_data/images/favicon.png'} alt="医療ダイエット比較.com" id="header-logo-icon"></span>
+                            <span class="logo-icon"><img src="/mouthpiece_section002/common_data/images/favicon.webp" alt="医療ダイエット比較.com" id="header-logo-icon"></span>
                             <h1 class="site-logo" id="site-logo">おすすめ比較.com</h1>
                         </div>
                     </a>
@@ -161,9 +161,194 @@ const asset = (path: string) => {
                             <p>
                                 専門の歯科医師が歯並びや咬合を確認しながら、<span class="tips-highlight">透明なマウスピースを段階的に交換して歯を移動</span>。装着中も目立ちにくく、食事や歯磨きの際は取り外せるのが魅力です。<br><br>軽度〜中等度の歯列不正であれば、最短2ヶ月（平均9ヶ月）で効果を実感できる方も多く、ワイヤー矯正と遜色ない結果が期待できます。<br><br>（※効果には個人差があり、すべての方に同様の結果を保証するものではありません）
                             </p>
-                            <figure class="tips-ba-figure">
-                                <img src={import.meta.env.BASE_URL + 'images/tips-ba.webp'} alt="マウスピース矯正のビフォーアフター" loading="lazy" decoding="async">
-                            </figure>
+                            <p class="tips-ba-intro">
+                                実際にマウスピース矯正を受けた方のビフォーアフターを紹介します。症例のタイプごとに、治療前と治療後の変化をご確認いただけます。
+                            </p>
+                            <div class="tips-ba-slider">
+                                <div class="tips-ba-tabs">
+                                    <button class="tips-ba-tab active" data-category="gatagata">ガタガタ</button>
+                                    <button class="tips-ba-tab" data-category="sukippa">すきっ歯</button>
+                                    <button class="tips-ba-tab" data-category="deppa">出っ歯</button>
+                                    <button class="tips-ba-tab" data-category="complex">複雑な形</button>
+                                </div>
+                                <div class="tips-ba-content">
+                                    <div class="tips-ba-category active" data-category="gatagata">
+                                        <div class="tips-ba-slider-wrapper">
+                                            <button class="tips-ba-prev" aria-label="前へ">‹</button>
+                                            <div class="tips-ba-slides">
+                                                <div class="tips-ba-slide active">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-gatagata-1-before.webp" alt="ガタガタ Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-gatagata-1-after.webp" alt="ガタガタ After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-gatagata-2-before.webp" alt="ガタガタ Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-gatagata-2-after.webp" alt="ガタガタ After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-gatagata-3-before.webp" alt="ガタガタ Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-gatagata-3-after.webp" alt="ガタガタ After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="tips-ba-next" aria-label="次へ">›</button>
+                                        </div>
+                                        <div class="tips-ba-dots">
+                                            <span class="tips-ba-dot active" data-index="0"></span>
+                                            <span class="tips-ba-dot" data-index="1"></span>
+                                            <span class="tips-ba-dot" data-index="2"></span>
+                                        </div>
+                                    </div>
+                                    <div class="tips-ba-category" data-category="sukippa">
+                                        <div class="tips-ba-slider-wrapper">
+                                            <button class="tips-ba-prev" aria-label="前へ">‹</button>
+                                            <div class="tips-ba-slides">
+                                                <div class="tips-ba-slide active">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-sukippa-1-before.webp" alt="すきっ歯 Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-sukippa-1-after.webp" alt="すきっ歯 After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-sukippa-2-before.webp" alt="すきっ歯 Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-sukippa-2-after.webp" alt="すきっ歯 After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-sukippa-3-before.webp" alt="すきっ歯 Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-sukippa-3-after.webp" alt="すきっ歯 After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="tips-ba-next" aria-label="次へ">›</button>
+                                        </div>
+                                        <div class="tips-ba-dots">
+                                            <span class="tips-ba-dot active" data-index="0"></span>
+                                            <span class="tips-ba-dot" data-index="1"></span>
+                                            <span class="tips-ba-dot" data-index="2"></span>
+                                        </div>
+                                    </div>
+                                    <div class="tips-ba-category" data-category="deppa">
+                                        <div class="tips-ba-slider-wrapper">
+                                            <button class="tips-ba-prev" aria-label="前へ">‹</button>
+                                            <div class="tips-ba-slides">
+                                                <div class="tips-ba-slide active">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-deppa-1-before.webp" alt="出っ歯 Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-deppa-1-after.webp" alt="出っ歯 After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-deppa-2-before.webp" alt="出っ歯 Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-deppa-2-after.webp" alt="出っ歯 After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-deppa-3-before.webp" alt="出っ歯 Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-deppa-3-after.webp" alt="出っ歯 After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="tips-ba-next" aria-label="次へ">›</button>
+                                        </div>
+                                        <div class="tips-ba-dots">
+                                            <span class="tips-ba-dot active" data-index="0"></span>
+                                            <span class="tips-ba-dot" data-index="1"></span>
+                                            <span class="tips-ba-dot" data-index="2"></span>
+                                        </div>
+                                    </div>
+                                    <div class="tips-ba-category" data-category="complex">
+                                        <div class="tips-ba-slider-wrapper">
+                                            <button class="tips-ba-prev" aria-label="前へ">‹</button>
+                                            <div class="tips-ba-slides">
+                                                <div class="tips-ba-slide active">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-complex-1-before.webp" alt="複雑な形 Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-complex-1-after.webp" alt="複雑な形 After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-complex-2-before.webp" alt="複雑な形 Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-complex-2-after.webp" alt="複雑な形 After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-complex-3-before.webp" alt="複雑な形 Before" loading="lazy" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-complex-3-after.webp" alt="複雑な形 After" loading="lazy" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="tips-ba-next" aria-label="次へ">›</button>
+                                        </div>
+                                        <div class="tips-ba-dots">
+                                            <span class="tips-ba-dot active" data-index="0"></span>
+                                            <span class="tips-ba-dot" data-index="1"></span>
+                                            <span class="tips-ba-dot" data-index="2"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="tips-ba-credit">
+                                提供：Oh my teeth　※効果には個人差があり、すべての方に同様の結果を保証するものではありません。
+                            </p>
                         </div>
                     </article>
 
@@ -317,7 +502,7 @@ text-align: center;
             <div class="ribbon_point_box_no" id="first-choice-points">
                 
                     <div class="ribbon_point_title2_s">
-                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong id="point1-title"></strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -325,7 +510,7 @@ text-align: center;
                     </div>
                     
                     <div class="ribbon_point_title2_s">
-                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong id="point2-title"></strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -333,7 +518,7 @@ text-align: center;
                     </div>
                     
                     <div class="ribbon_point_title2_s">
-                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong id="point3-title"></strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -525,6 +710,7 @@ text-align: center;
     <!-- Slick Carousel JS -->
     <!-- Slick.js削除済み／jQueryは未使用のため読み込み削除 -->
     <script src={import.meta.env.BASE_URL + 'app.js?v=2025081417'} defer></script>
+    <script src={import.meta.env.BASE_URL + 'sticky-header.js'} defer></script>
     
 
     <!-- 1位クリニック動的表示機能 -->
@@ -1399,7 +1585,7 @@ text-align: center;
             reasons.forEach((reason, idx) => {
                 html += `
                     <div class="ribbon_point_title2_s">
-                        <img src={import.meta.env.BASE_URL + 'common_data/images/icon/point_circle.svg'} class="point-icon-inline" alt="" aria-hidden="true">
+                        <img src="/mouthpiece_section002/common_data/images/icon/point_circle.svg" class="point-icon-inline" alt="" aria-hidden="true">
                         <strong>${dm.processDecoTags ? dm.processDecoTags(reason.title) : reason.title}</strong>
                     </div>
                     <div class="ribbon_point_txt">
@@ -2077,7 +2263,7 @@ text-align: center;
                 // Update favicon
                 const favicon = document.getElementById('header-logo-icon');
                 if (favicon && data.ファビコン画像パス) {
-                    favicon.src = (window.__BASE_PATH__ || '/') + (data.ファビコン画像パス || '').replace(/^\/+/, '');
+                    favicon.src = (window.__BASE_PATH__ || '/') + (data.ファビコン画像パス || '').replace(/^(\.\.\/)+/, '').replace(/^\/+/, '');
                 }
 
                 // Update footer site name (copyright text contains both site name and copyright)
