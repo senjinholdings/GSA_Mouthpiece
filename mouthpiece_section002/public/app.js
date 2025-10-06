@@ -3263,13 +3263,13 @@ class RankingApp {
             document.body.classList.remove('is-loading');
         }
 
-        const loader = typeof document !== 'undefined' ? document.getElementById('initial-loader') : null;
+        const loader = typeof document !== 'undefined' ? document.getElementById('initial-loading') : null;
         if (loader) {
-            loader.style.opacity = '0';
-            loader.style.visibility = 'hidden';
-            loader.style.pointerEvents = 'none';
-            loader.style.display = 'none';
-            loader.setAttribute('aria-hidden', 'true');
+            loader.classList.add('is-hidden');
+            setTimeout(() => {
+                loader.style.display = 'none';
+                loader.setAttribute('aria-hidden', 'true');
+            }, 300);
         }
 
         this.initialRenderCompleted = true;
@@ -5802,8 +5802,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const app = new RankingApp();
     window.app = app; // グローバルアクセス用
     
-    app.init().catch(() => {
-        // 例外は個別のエラーハンドリングで通知済み
+    // ローディング要素の取得
+    const loadingEl = document.getElementById('initial-loading');
+    const loadingMessage = loadingEl?.querySelector('[data-loading-message]');
+    const loadingSpinner = loadingEl?.querySelector('[data-loading-spinner]');
+    const retryButton = loadingEl?.querySelector('[data-loading-retry]');
+    
+    // 再読み込みボタンのイベントハンドラー
+    if (retryButton) {
+        retryButton.addEventListener('click', () => {
+            location.reload();
+        });
+    }
+    
+    app.init().catch((error) => {
+        console.error('初期化エラー:', error);
+        
+        // エラー状態の表示
+        if (loadingEl) {
+            loadingEl.classList.add('has-error');
+        }
+        if (loadingMessage) {
+            loadingMessage.textContent = 'データの読み込みに失敗しました';
+        }
+        if (loadingSpinner) {
+            loadingSpinner.classList.add('is-hidden');
+        }
+        if (retryButton) {
+            retryButton.removeAttribute('hidden');
+        }
     });
     
     // デバッグ用：グローバル関数として公開
