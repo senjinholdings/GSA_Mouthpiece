@@ -89,14 +89,15 @@ a {
     top: 10%;
     left: 52%;
     white-space: nowrap;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%,-50%);
     text-align: center;
-    color: #ffffff;
-    font-size: clamp(14px, 5.2vw, 38px);
+    color: #fff;
+    font-size: clamp(14px, 4.8vw, 35px);
     font-weight: 600;
     z-index: 10;
     pointer-events: none;
 }
+
 
 /* ランキング注意事項 */
 .disclaimers-section {

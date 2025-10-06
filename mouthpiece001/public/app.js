@@ -678,6 +678,8 @@ class DataManager {
         this.siteTexts = {}; // サイトテキストデータ（旧）
         this.clinicTexts = {}; // クリニック別テキストデータ
         this.structureConfig = {};
+        this.defaultMvImagePath = null;
+        this.nationalMvImagePath = null;
         // Handle subdirectory paths
         if (window.SITE_CONFIG) {
             this.dataPath = normalizeAssetPath(window.SITE_CONFIG.dataPath + '/');
@@ -720,8 +722,14 @@ class DataManager {
             this.commonTexts = {};
             await this.loadCommonTextsFromCsv();
 
+            const fallbackMvPath = normalizeAssetPath('./images/mv.webp');
+            const defaultMvPath = this.commonTexts['MV画像パス'] ? normalizeAssetPath(this.commonTexts['MV画像パス']) : fallbackMvPath;
+            const nationalMvPath = this.commonTexts['MV全国画像パス'] ? normalizeAssetPath(this.commonTexts['MV全国画像パス']) : normalizeAssetPath('./images/mv2.webp');
+            this.defaultMvImagePath = defaultMvPath || fallbackMvPath;
+            this.nationalMvImagePath = nationalMvPath || this.defaultMvImagePath;
+
             setTimeout(() => {
-                const mvImagePath = normalizeAssetPath(this.commonTexts['MV画像パス']);
+                const mvImagePath = this.defaultMvImagePath;
                 if (mvImagePath) {
                     const heroImage = document.querySelector('.hero-image');
                     const heroSource = document.querySelector('.hero-image-wrapper source');
@@ -2557,11 +2565,52 @@ class RankingApp {
         const normalizedId = this.normalizeRegionId(regionIdRaw);
         const regionName = region && region.name ? region.name : '';
         const isNational = this.isNationalRegion(normalizedId, region);
+        const isTokyo = normalizedId === '013' || regionName === '東京';
+
+        const heroImage = document.querySelector('.hero-image');
+        const heroSource = document.querySelector('.hero-image-wrapper source');
+        if (heroImage || heroSource) {
+            const defaultHero = this.dataManager?.defaultMvImagePath || normalizeAssetPath('./images/mv.webp');
+            const nationalHero = this.dataManager?.nationalMvImagePath || defaultHero;
+            const heroPath = isNational ? nationalHero : defaultHero;
+            if (heroImage && heroPath) {
+                heroImage.src = heroPath;
+            }
+            if (heroSource && heroPath) {
+                heroSource.srcset = heroPath;
+            }
+        }
+
+        const mvRegionElement = document.getElementById('mv-region-text');
+        if (mvRegionElement) {
+            if (isNational) {
+                mvRegionElement.textContent = '';
+                mvRegionElement.style.display = 'none';
+            } else {
+                if (regionName) {
+                    mvRegionElement.textContent = regionName;
+                }
+                mvRegionElement.style.removeProperty('display');
+            }
+        }
+
+        const mvServiceElement = document.getElementById('mv-service-text');
+        if (mvServiceElement) {
+            if (isNational) {
+                mvServiceElement.textContent = '';
+                mvServiceElement.style.display = 'none';
+            } else {
+                mvServiceElement.style.removeProperty('display');
+            }
+        }
 
         const detailRegionElement = document.getElementById('detail-region-name');
         if (detailRegionElement) {
             if (isNational) {
                 detailRegionElement.textContent = '[最新版] 人気のクリニック';
+                detailRegionElement.style.left = '3%';
+            } else if (isTokyo) {
+                detailRegionElement.textContent = 'おすすめマウスピース矯正';
                 detailRegionElement.style.left = '3%';
             } else {
                 detailRegionElement.textContent = `${regionName}で人気のクリニック`;
@@ -2589,12 +2638,17 @@ class RankingApp {
 
         const rankRegionElement = document.getElementById('rank-region-name');
         if (rankRegionElement) {
+            const defaultRankingText = 'で人気のマウスピース矯正はココ！';
             const baseText = (this.dataManager && typeof this.dataManager.getCommonText === 'function')
-                ? this.dataManager.getCommonText('ランキング地域名テキスト', 'で人気の脂肪溶解注射はココ！')
-                : 'で人気の脂肪溶解注射はココ！';
+                ? this.dataManager.getCommonText('ランキング地域名テキスト', defaultRankingText)
+                : defaultRankingText;
+
             if (isNational) {
                 const suffix = baseText.replace(/^で/, '');
                 rankRegionElement.textContent = `いま${suffix}`;
+                rankRegionElement.style.left = '52%';
+            } else if (isTokyo) {
+                rankRegionElement.textContent = 'いま人気のマウスピース矯正はココ！';
                 rankRegionElement.style.left = '52%';
             } else {
                 rankRegionElement.textContent = `${regionName}${baseText}`;
@@ -3167,7 +3221,15 @@ class RankingApp {
             //SVGの地域テキストも更新
             const mvRegionTextElement = document.getElementById('mv-region-text');
             if (mvRegionTextElement) {
-                mvRegionTextElement.textContent = region.name;
+                const normalizedForMv = this.normalizeRegionId(region?.id ?? regionId);
+                const shouldHideMvRegion = this.isNationalRegion(normalizedForMv, region);
+                if (shouldHideMvRegion) {
+                    mvRegionTextElement.textContent = '';
+                    mvRegionTextElement.style.display = 'none';
+                } else {
+                    mvRegionTextElement.textContent = region.name || '';
+                    mvRegionTextElement.style.removeProperty('display');
+                }
             }
 
             // 地域表記のバリエーションを適用
@@ -3341,8 +3403,14 @@ class RankingApp {
             // SVGテキストの更新（共通テキスト）
             const svgRegionElement = document.getElementById('mv-region-text');
             if (svgRegionElement) {
-                const regionLabel = isNational ? this.dataManager.getCommonText('MV全国表示テキスト', '全国') : (regionForDisplay?.name || region?.name || '');
-                svgRegionElement.textContent = regionLabel;
+                if (isNational) {
+                    svgRegionElement.textContent = '';
+                    svgRegionElement.style.display = 'none';
+                } else {
+                    const regionText = regionForDisplay?.name || region?.name || '';
+                    svgRegionElement.textContent = regionText;
+                    svgRegionElement.style.removeProperty('display');
+                }
             }
 
             const normalizedRankingRegionId = String(parseInt(regionId, 10));
@@ -3366,7 +3434,13 @@ class RankingApp {
                 const processedServiceText = this.dataManager.processTemplateString
                     ? this.dataManager.processTemplateString(serviceText, { RANK_COUNT: rankCount, REGION_NAME: regionForDisplay?.name || region?.name || '' })
                     : serviceText.replace(/{{\s*RANK_COUNT\s*}}/g, String(rankCount));
-                svgServiceElement.textContent = processedServiceText;
+                if (isNational) {
+                    svgServiceElement.textContent = '';
+                    svgServiceElement.style.display = 'none';
+                } else {
+                    svgServiceElement.textContent = processedServiceText;
+                    svgServiceElement.style.removeProperty('display');
+                }
             }
 
             // detail-rank-best要素の更新（従来機能の互換性保持）
