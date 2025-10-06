@@ -154,7 +154,7 @@ const asset = (path: string) => {
             <!-- ランキング表示セクション -->
             <section class="clinic-rankings ranking-section">
                 <div class="ranking-header-banner">
-                    <img src={import.meta.env.BASE_URL + 'images/ranking_header_banner.webp'} alt="" class="ranking-banner-image" loading="lazy" decoding="async">
+                    <img src={import.meta.env.BASE_URL + 'images/ranking_header_banner.webp'} alt="" class="ranking-banner-image" loading="eager" decoding="async">
                 </div>
                 <div id="rank-region-name"></div>
                 <div id="ranking-list" class="ranking-container ranking-loading">
@@ -199,21 +199,21 @@ const asset = (path: string) => {
                         <div class="tab-contents">
                             <div class="tab-content active" data-tab="0">
                                 <div class="tab-figure">
-                                    <img src={import.meta.env.BASE_URL + 'images/Tips1.webp'} alt="効果" class="tab-image" loading="lazy" decoding="async">
+                                    <img src={import.meta.env.BASE_URL + 'images/Tips1.webp'} alt="効果" class="tab-image" loading="eager" decoding="async">
                                 </div>
                                 <p class="tab-description"></p>
                             </div>
 
                             <div class="tab-content" data-tab="1">
                                 <div class="tab-figure">
-                                    <img src={import.meta.env.BASE_URL + 'images/Tips2.webp'} alt="クリニック選びのポイント" class="tab-image" loading="lazy" decoding="async">
+                                    <img src={import.meta.env.BASE_URL + 'images/Tips2.webp'} alt="クリニック選びのポイント" class="tab-image" loading="eager" decoding="async">
                                 </div>
                                 <p class="tab-description"></p>
                             </div>
 
                             <div class="tab-content" data-tab="2">
                                 <div class="tab-figure">
-                                    <img src={import.meta.env.BASE_URL + 'images/Tips3.webp'} alt="今がおすすめの理由" class="tab-image" loading="lazy" decoding="async">
+                                    <img src={import.meta.env.BASE_URL + 'images/Tips3.webp'} alt="今がおすすめの理由" class="tab-image" loading="eager" decoding="async">
                                 </div>
                                 <p class="tab-description"></p>
                             </div>
@@ -239,7 +239,7 @@ const asset = (path: string) => {
                     <article class="tips-step" aria-label="マウスピース矯正の特徴と効果">
                         <div class="tips-step-content">
                             <figure class="tips-step-figure">
-                                <img src={import.meta.env.BASE_URL + 'images/Tips1.webp'} alt="マウスピース矯正の特徴" loading="lazy" decoding="async">
+                                <img src={import.meta.env.BASE_URL + 'images/Tips1.webp'} alt="マウスピース矯正の特徴" loading="eager" decoding="async">
                             </figure>
                             <p>
                                 専門の歯科医師が歯並びや咬合を確認しながら、<span class="tips-highlight">透明なマウスピースを段階的に交換して歯を移動</span>。装着中も目立ちにくく、食事や歯磨きの際は取り外せるのが魅力です。<br><br>軽度〜中等度の歯列不正であれば、最短2ヶ月（平均9ヶ月）で効果を実感できる方も多く、ワイヤー矯正と遜色ない結果が期待できます。<br><br>（※効果には個人差があり、すべての方に同様の結果を保証するものではありません）
@@ -262,30 +262,30 @@ const asset = (path: string) => {
                                                 <div class="tips-ba-slide active">
                                                     <div class="tips-ba-pair">
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-gatagata-1-before.webp" alt="ガタガタ Before" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-gatagata-1-before.webp" alt="ガタガタ Before" loading="eager" decoding="async">
                                                         </div>
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-gatagata-1-after.webp" alt="ガタガタ After" loading="lazy" decoding="async">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tips-ba-slide">
-                                                    <div class="tips-ba-pair">
-                                                        <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-gatagata-2-before.webp" alt="ガタガタ Before" loading="lazy" decoding="async">
-                                                        </div>
-                                                        <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-gatagata-2-after.webp" alt="ガタガタ After" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-gatagata-1-after.webp" alt="ガタガタ After" loading="eager" decoding="async">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="tips-ba-slide">
                                                     <div class="tips-ba-pair">
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-gatagata-3-before.webp" alt="ガタガタ Before" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-gatagata-2-before.webp" alt="ガタガタ Before" loading="eager" decoding="async">
                                                         </div>
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-gatagata-3-after.webp" alt="ガタガタ After" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-gatagata-2-after.webp" alt="ガタガタ After" loading="eager" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-gatagata-3-before.webp" alt="ガタガタ Before" loading="eager" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-gatagata-3-after.webp" alt="ガタガタ After" loading="eager" decoding="async">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -305,30 +305,30 @@ const asset = (path: string) => {
                                                 <div class="tips-ba-slide active">
                                                     <div class="tips-ba-pair">
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-sukippa-1-before.webp" alt="すきっ歯 Before" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-sukippa-1-before.webp" alt="すきっ歯 Before" loading="eager" decoding="async">
                                                         </div>
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-sukippa-1-after.webp" alt="すきっ歯 After" loading="lazy" decoding="async">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tips-ba-slide">
-                                                    <div class="tips-ba-pair">
-                                                        <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-sukippa-2-before.webp" alt="すきっ歯 Before" loading="lazy" decoding="async">
-                                                        </div>
-                                                        <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-sukippa-2-after.webp" alt="すきっ歯 After" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-sukippa-1-after.webp" alt="すきっ歯 After" loading="eager" decoding="async">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="tips-ba-slide">
                                                     <div class="tips-ba-pair">
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-sukippa-3-before.webp" alt="すきっ歯 Before" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-sukippa-2-before.webp" alt="すきっ歯 Before" loading="eager" decoding="async">
                                                         </div>
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-sukippa-3-after.webp" alt="すきっ歯 After" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-sukippa-2-after.webp" alt="すきっ歯 After" loading="eager" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-sukippa-3-before.webp" alt="すきっ歯 Before" loading="eager" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-sukippa-3-after.webp" alt="すきっ歯 After" loading="eager" decoding="async">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -348,30 +348,30 @@ const asset = (path: string) => {
                                                 <div class="tips-ba-slide active">
                                                     <div class="tips-ba-pair">
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-deppa-1-before.webp" alt="出っ歯 Before" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-deppa-1-before.webp" alt="出っ歯 Before" loading="eager" decoding="async">
                                                         </div>
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-deppa-1-after.webp" alt="出っ歯 After" loading="lazy" decoding="async">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tips-ba-slide">
-                                                    <div class="tips-ba-pair">
-                                                        <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-deppa-2-before.webp" alt="出っ歯 Before" loading="lazy" decoding="async">
-                                                        </div>
-                                                        <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-deppa-2-after.webp" alt="出っ歯 After" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-deppa-1-after.webp" alt="出っ歯 After" loading="eager" decoding="async">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="tips-ba-slide">
                                                     <div class="tips-ba-pair">
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-deppa-3-before.webp" alt="出っ歯 Before" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-deppa-2-before.webp" alt="出っ歯 Before" loading="eager" decoding="async">
                                                         </div>
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-deppa-3-after.webp" alt="出っ歯 After" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-deppa-2-after.webp" alt="出っ歯 After" loading="eager" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-deppa-3-before.webp" alt="出っ歯 Before" loading="eager" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-deppa-3-after.webp" alt="出っ歯 After" loading="eager" decoding="async">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -391,30 +391,30 @@ const asset = (path: string) => {
                                                 <div class="tips-ba-slide active">
                                                     <div class="tips-ba-pair">
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-complex-1-before.webp" alt="複雑な形 Before" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-complex-1-before.webp" alt="複雑な形 Before" loading="eager" decoding="async">
                                                         </div>
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-complex-1-after.webp" alt="複雑な形 After" loading="lazy" decoding="async">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tips-ba-slide">
-                                                    <div class="tips-ba-pair">
-                                                        <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-complex-2-before.webp" alt="複雑な形 Before" loading="lazy" decoding="async">
-                                                        </div>
-                                                        <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-complex-2-after.webp" alt="複雑な形 After" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-complex-1-after.webp" alt="複雑な形 After" loading="eager" decoding="async">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="tips-ba-slide">
                                                     <div class="tips-ba-pair">
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-complex-3-before.webp" alt="複雑な形 Before" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-complex-2-before.webp" alt="複雑な形 Before" loading="eager" decoding="async">
                                                         </div>
                                                         <div class="tips-ba-image">
-                                                            <img src="images/tips-ba-complex-3-after.webp" alt="複雑な形 After" loading="lazy" decoding="async">
+                                                            <img src="images/tips-ba-complex-2-after.webp" alt="複雑な形 After" loading="eager" decoding="async">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tips-ba-slide">
+                                                    <div class="tips-ba-pair">
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-complex-3-before.webp" alt="複雑な形 Before" loading="eager" decoding="async">
+                                                        </div>
+                                                        <div class="tips-ba-image">
+                                                            <img src="images/tips-ba-complex-3-after.webp" alt="複雑な形 After" loading="eager" decoding="async">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -441,7 +441,7 @@ const asset = (path: string) => {
                                 ワイヤー矯正は金属ブラケットを歯に固定して力をかけますが、マウスピース矯正は<span class="tips-highlight">透明なマウスピースを段階的に交換して徐々に歯を移動</span>させるアプローチ。<br><br>取り外し式なので衛生的で、痛みや違和感も比較的少ないのがメリットです。また、矯正していることが周囲に気づかれにくいため、仕事や学校でも安心して続けられます。
                             </p>
                             <figure class="tips-type-figure">
-                                <img src={import.meta.env.BASE_URL + 'images/tips-type-chart.webp'} alt="マウスピース矯正ブランド比較" loading="lazy" decoding="async">
+                                <img src={import.meta.env.BASE_URL + 'images/tips-type-chart.webp'} alt="マウスピース矯正ブランド比較" loading="eager" decoding="async">
                             </figure>
                         </div>
                     </article>
@@ -452,7 +452,7 @@ const asset = (path: string) => {
                                 「どのクリニックを選べばいいの？」と迷う方のために、編集部が厳選したクリニックを紹介！一目でわかる早見表でチェックしてみてください。
                             </p>
                             <figure class="tips-step-figure">
-                                <img src={import.meta.env.BASE_URL + 'images/tips-matrix.webp'} alt="クリニック比較マトリクス" loading="lazy" decoding="async">
+                                <img src={import.meta.env.BASE_URL + 'images/tips-matrix.webp'} alt="クリニック比較マトリクス" loading="eager" decoding="async">
                             </figure>
                             <p>
                                 さらに詳しく知りたい方は、<span class="tips-highlight">料金・矯正ブランド・サポート体制・追加費用</span>まで比較した表をご用意しました。<br><br>気になるクリニックをチェックして、自分に合った1院を見つけましょう。初回カウンセリングで気になる点を相談し、納得してからスタートすれば安心です。
@@ -504,7 +504,7 @@ const asset = (path: string) => {
             <section class="comparison-section">
                 <div class="comparison-header">
                     <div class="comparison-headline">
-                        <img src={import.meta.env.BASE_URL + 'images/comparison_header_banner.webp'} alt="比較見出し" class="comparison-headline-image" loading="lazy" decoding="async">
+                        <img src={import.meta.env.BASE_URL + 'images/comparison_header_banner.webp'} alt="比較見出し" class="comparison-headline-image" loading="eager" decoding="async">
                         <h2 class="comparison-title">ー<span id="comparison-region-name">地域</span>で人気の脂肪冷却ー</h2>
                     </div>
                 </div>
@@ -540,7 +540,7 @@ const asset = (path: string) => {
             <!-- 案件詳細セクション -->
             <section class="clinic-details-section">
                 <div class="details-header-banner">
-                    <img src={import.meta.env.BASE_URL + 'images/details_header_bannar3.webp'} alt="コスパ×効果×通いやすさで選ぶ医療痩身クリニックBEST3" class="details-banner-image" loading="lazy" decoding="async">
+                    <img src={import.meta.env.BASE_URL + 'images/details_header_bannar3.webp'} alt="コスパ×効果×通いやすさで選ぶ医療痩身クリニックBEST3" class="details-banner-image" loading="eager" decoding="async">
                     <div id="detail-region-name">地域で人気のクリニック</div>
                     <div id="detail-rank-best">3<span style="font-size: 0.6em;"> 選！</span></div>
                 </div>
@@ -563,7 +563,7 @@ const asset = (path: string) => {
    <!-- 迷ったら1位クリニックセクション -->
             <div id="first-choice-recommendation-section">
                 <div style="position: relative; display: inline-block; width: 100%;">
-                    <img src={import.meta.env.BASE_URL + 'images/ranking_header_banner.webp'} alt="" class="ranking-banner-image" loading="lazy" decoding="async">
+                    <img src={import.meta.env.BASE_URL + 'images/ranking_header_banner.webp'} alt="" class="ranking-banner-image" loading="eager" decoding="async">
                     <div id="first-choice-region-text" style="position: absolute;bottom: 44%;left: 6%;text-align: center;color: rgb(255, 255, 255);font-size: clamp(16px, 5vw, 38px);font-weight: 600;z-index: 10;pointer-events: none;">迷ったら<span id="first-choice-clinic-name"></span>がおすすめ</div>
                 </div><section class="first-choice-recommendation-section" style="border: 5px solid rgb(253 208 124);border-radius: -5px;padding: 5px 5px 10px 5px;margin: 0px 20px;background-color: #fffef8;">
                                 

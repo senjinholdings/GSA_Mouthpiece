@@ -4776,7 +4776,7 @@ class RankingApp {
                             : '';
                         return `
                             <div class=\"case-slide\" style=\"min-width:100%;box-sizing:border-box;\">
-                                <img src=\"${img.fallbacks[0]}\" alt=\"${img.alt}\" loading=\"lazy\" style=\"width:100%;height:auto;object-fit:contain;\"${fallbackAttr}>
+                                <img src=\"${img.fallbacks[0]}\" alt=\"${img.alt}\" loading=\"eager\" decoding=\"async\" style=\"width:100%;height:auto;object-fit:contain;\"${fallbackAttr}>
                                 <div class=\"case-info\" style=\"margin-top: 5px; padding: 0 5%; text-align: left; font-size: 12px; line-height: 1.6; width: 100%;\">
                                     <table class=\"case-table\" style=\"width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; line-height: 1.6 !important; display: table !important; table-layout: fixed !important;\">
                                         <tbody>
