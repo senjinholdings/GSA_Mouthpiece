@@ -397,17 +397,161 @@ a {
     display: block;
 }
 
-.tips-ba-figure {
-    margin: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 10px 24px rgba(44, 199, 197, 0.12);
+.tips-ba-intro {
+    margin: 20px 0;
+    padding: 16px 20px;
+    background: #e8f5f4;
+    border-left: 4px solid #2cc7c5;
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333;
 }
 
-.tips-ba-figure img {
+.tips-ba-slider {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.tips-ba-credit {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #666;
+    text-align: right;
+    line-height: 1.6;
+}
+
+.tips-ba-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.tips-ba-tab {
+    padding: 10px 24px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s;
+}
+
+.tips-ba-tab:hover {
+    border-color: #2cc7c5;
+    color: #2cc7c5;
+}
+
+.tips-ba-tab.active {
+    background: #2cc7c5;
+    color: white;
+    border-color: #2cc7c5;
+}
+
+.tips-ba-content {
+    position: relative;
+}
+
+.tips-ba-category {
+    display: none;
+}
+
+.tips-ba-category.active {
+    display: block;
+}
+
+.tips-ba-slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tips-ba-slides {
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+}
+
+.tips-ba-slide {
+    display: none;
+}
+
+.tips-ba-slide.active {
+    display: block;
+}
+
+.tips-ba-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.tips-ba-image {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tips-ba-image img {
     width: 100%;
     height: auto;
     display: block;
+}
+
+.tips-ba-prev,
+.tips-ba-next {
+    background: #2cc7c5;
+    color: white;
+    border: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+    flex-shrink: 0;
+}
+
+.tips-ba-prev:hover,
+.tips-ba-next:hover {
+    background: #25b3b1;
+}
+
+.tips-ba-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.tips-ba-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d0d0d0;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tips-ba-dot:hover {
+    background: #a0a0a0;
+}
+
+.tips-ba-dot.active {
+    background: #2cc7c5;
+    width: 12px;
+    height: 12px;
 }
 
 @media (max-width: 480px) {
@@ -1986,7 +2130,7 @@ body > .container main section {
 .container {
     max-width: 768px !important;
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 0 0px;
     box-sizing: border-box;
 }
 
@@ -2131,14 +2275,13 @@ body > .container main section {
 /* ===== メインコンテンツ ===== */
 main {
     display: grid;
-    gap: 30px;
+    gap: 0px;
     margin-bottom: 40px;
 }
 
 /* セクション共通 */
 section {
     background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     border: 1px solid #e3f2fd;
 }
 
@@ -3816,7 +3959,7 @@ section.clinic-rankings .ranking-header-banner {
 /* ===== 案件詳細セクション ===== */
 .clinic-details-section {
     max-width: 768px;
-    margin: 60px auto;
+    margin: 0px auto;
     position: relative;
 }
 
@@ -9658,4 +9801,68 @@ body .case-slider .slick-slide img {
 .ctaBtn-direct .cta-subtext {
     display: block;
     margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+    .tips-ba-tab {
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+
+    .tips-ba-slider {
+        padding: 10px;
+    }
+
+    .tips-ba-slider-wrapper {
+        gap: 6px;
+    }
+
+    .tips-ba-pair {
+        gap: 6px;
+    }
+
+    .tips-ba-prev,
+    .tips-ba-next {
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+    }
+
+    .tips-ba-dots {
+        margin-top: 12px;
+    }
+}
+
+@media (max-width: 400px) {
+    .tips-ba-tab {
+        font-size: 10px;
+        padding: 6px 10px;
+    }
+
+    .tips-ba-tabs {
+        gap: 4px;
+    }
+
+    .tips-ba-slider {
+        padding: 8px;
+    }
+
+    .tips-ba-slider-wrapper {
+        gap: 4px;
+    }
+
+    .tips-ba-pair {
+        gap: 4px;
+    }
+
+    .tips-ba-prev,
+    .tips-ba-next {
+        width: 20px;
+        height: 20px;
+        font-size: 18px;
+    }
+
+    .tips-ba-dots {
+        margin-top: 8px;
+    }
 }
