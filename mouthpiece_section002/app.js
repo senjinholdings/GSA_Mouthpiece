@@ -2744,9 +2744,50 @@ class RankingApp {
 
         const offset = this.getComparisonStickyOffset();
         const tableRect = table.getBoundingClientRect();
-        const stickyHeight = this.comparisonStickyHeader.offsetHeight || 0;
+
+        // Fix: Get actual height by temporarily showing the element
+        let stickyHeight = this.comparisonStickyHeader.offsetHeight;
+        if (stickyHeight === 0) {
+            const originalDisplay = this.comparisonStickyHeader.style.display;
+            this.comparisonStickyHeader.style.display = 'block';
+            stickyHeight = this.comparisonStickyHeader.offsetHeight || 0;
+            this.comparisonStickyHeader.style.display = originalDisplay;
+        }
+
         const shouldShow = tableRect.top <= offset && tableRect.bottom > offset + stickyHeight;
-        this.comparisonStickyHeader.classList.toggle('is-visible', shouldShow);
+        const isCurrentlyVisible = this.comparisonStickyHeader.classList.contains('is-visible');
+
+        if (shouldShow && !isCurrentlyVisible) {
+            // Show immediately without transition
+            this.comparisonStickyHeader.classList.remove('is-hiding');
+            this.comparisonStickyHeader.style.display = 'block';
+            // Force reflow to reset transform and opacity
+            void this.comparisonStickyHeader.offsetHeight;
+            this.comparisonStickyHeader.classList.add('is-visible');
+        } else if (!shouldShow && isCurrentlyVisible) {
+            // Determine hide reason: top (scroll up) or bottom (scroll down)
+            const isHidingFromTop = tableRect.top > offset;
+            const isHidingFromBottom = tableRect.bottom <= offset + stickyHeight;
+
+            this.comparisonStickyHeader.classList.remove('is-visible');
+
+            if (isHidingFromBottom) {
+                // Hide with smooth transition when scrolling past bottom
+                void this.comparisonStickyHeader.offsetHeight;
+                this.comparisonStickyHeader.classList.add('is-hiding');
+
+                setTimeout(() => {
+                    if (!this.comparisonStickyHeader.classList.contains('is-visible')) {
+                        this.comparisonStickyHeader.style.display = 'none';
+                        this.comparisonStickyHeader.classList.remove('is-hiding');
+                    }
+                }, 300);
+            } else {
+                // Hide immediately when scrolling back to top
+                this.comparisonStickyHeader.style.display = 'none';
+                this.comparisonStickyHeader.classList.remove('is-hiding');
+            }
+        }
     }
 
     handleComparisonStickyScroll() {
@@ -6417,4 +6458,82 @@ if (document.readyState === 'loading') {
     setTimeout(() => {
         initializeScrollModal();
     }, 2000);
+}
+
+// 症例スライダーの初期化
+function initTipsBASlider() {
+    const tabs = document.querySelectorAll('.tips-ba-tab');
+    const categories = document.querySelectorAll('.tips-ba-category');
+
+    // タブ切り替え
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const category = tab.dataset.category;
+
+            // タブのアクティブ状態
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // カテゴリの表示切り替え
+            categories.forEach(cat => {
+                if (cat.dataset.category === category) {
+                    cat.classList.add('active');
+                } else {
+                    cat.classList.remove('active');
+                }
+            });
+        });
+    });
+
+    // スライダー制御
+    categories.forEach(category => {
+        const prevBtn = category.querySelector('.tips-ba-prev');
+        const nextBtn = category.querySelector('.tips-ba-next');
+        const slides = category.querySelectorAll('.tips-ba-slide');
+        const dots = category.querySelectorAll('.tips-ba-dot');
+        let currentIndex = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            showSlide(currentIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        });
+
+        // ドットクリック処理
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                showSlide(currentIndex);
+            });
+        });
+    });
+}
+
+// DOMContentLoaded時に症例スライダーを初期化
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTipsBASlider);
+} else {
+    initTipsBASlider();
 }
