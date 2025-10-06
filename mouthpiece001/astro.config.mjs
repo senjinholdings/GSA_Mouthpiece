@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   srcDir: 'src',
   publicDir: 'public',
-  base: '/mouthpiece_section002/',
+  base: '/mouthpiece001/',
   image: {
     service: {
       entrypoint: 'astro/assets/services/sharp'

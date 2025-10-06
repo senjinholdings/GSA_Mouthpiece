@@ -19,7 +19,7 @@ function getClinicUrlFromConfig(clinicId, rank = 1) {
 
 // URLパラメータ処理クラス
 // CSV等の読み込み結果を短期間ブラウザにキャッシュして初期描画の待ち時間を短縮する
-const DATA_CACHE_VERSION = 'v1';
+const DATA_CACHE_VERSION = 'v2';
 const DATA_CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes
 const DATA_CACHE_PREFIX = 'dir_testsite001::cache::';
 
@@ -65,10 +65,13 @@ function normalizeAssetPath(value) {
     if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|data:|mailto:|tel:)/i.test(trimmed)) {
         return trimmed;
     }
-    if (trimmed.startsWith('/') || trimmed.startsWith('./') || trimmed.startsWith('../') || trimmed.includes('common_data/')) {
-        return resolveAssetPath(trimmed);
+    const sanitized = trimmed
+        .replace(/\/mouthpiece_section002\//g, '/mouthpiece001/')
+        .replace(/\/mouthpiece001copy\//g, '/mouthpiece001/');
+    if (sanitized.startsWith('/') || sanitized.startsWith('./') || sanitized.startsWith('../') || sanitized.includes('common_data/')) {
+        return resolveAssetPath(sanitized);
     }
-    return trimmed;
+    return sanitized;
 }
 
 const dataCache = (() => {
@@ -2513,7 +2516,7 @@ class RankingApp {
                     td.innerHTML = `
                         <div class="classic-cta">
                             <a class="link_btn" href="${this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank || rankNum)}" target="_blank" rel="noopener">公式サイト &gt;</a><br>
-                            <a class="detail_btn detail-scroll-link" href="#clinic${rankNum}" data-rank="${rankNum}">詳細を見る</a>
+                            <button type="button" class="detail_btn detail-scroll-link" data-rank="${rankNum}">詳細を見る</button>
                         </div>
                     `;
                 } else if (field.startsWith('comparison')) {
@@ -3688,7 +3691,7 @@ class RankingApp {
                     cell.innerHTML = `
                         <div class="comparison-cta">
                             <a class="link_btn" href="${officialLink}" target="_blank" rel="noopener">公式サイト &gt;</a>
-                            <a class="detail_btn detail-scroll-link" href="#clinic${rankNum}" data-rank="${rankNum}">詳細を見る</a>
+                            <button type="button" class="detail_btn detail-scroll-link" data-rank="${rankNum}">詳細を見る</button>
                         </div>
                     `;
                 } else {
@@ -4292,7 +4295,7 @@ class RankingApp {
                 <td>
                     <div class="cta-cell">
                         <a href="${this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank)}" class="cta-button" target="_blank" rel="noopener">公式サイト</a>
-                        <a href="#clinic${clinic.rank}" class="cta-link detail-scroll-link" data-rank="${clinic.rank}">詳細を見る</a>
+                        <button type="button" class="cta-link detail-scroll-link" data-rank="${clinic.rank}">詳細を見る</button>
                     </div>
                 </td>
             `;
@@ -4325,7 +4328,7 @@ class RankingApp {
                 <td>
                     <div class="cta-cell">
                         <a href="${this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank)}" class="cta-button" target="_blank" rel="noopener">公式サイト</a>
-                        <a href="#clinic${clinic.rank}" class="cta-link detail-scroll-link" data-rank="${clinic.rank}">詳細を見る</a>
+                        <button type="button" class="cta-link detail-scroll-link" data-rank="${clinic.rank}">詳細を見る</button>
                     </div>
                 </td>
             `;
@@ -4358,7 +4361,7 @@ class RankingApp {
                 <td>
                     <div class="cta-cell">
                         <a href="${this.urlHandler.getClinicUrlWithRegionId(clinic.id, clinic.rank)}" class="cta-button" target="_blank" rel="noopener">公式サイト</a>
-                        <a href="#clinic${clinic.rank}" class="cta-link detail-scroll-link" data-rank="${clinic.rank}">詳細を見る</a>
+                        <button type="button" class="cta-link detail-scroll-link" data-rank="${clinic.rank}">詳細を見る</button>
                     </div>
                 </td>
             `;
@@ -4717,11 +4720,11 @@ class RankingApp {
                     }
                     const baseVideoPath = (window.SITE_CONFIG && window.SITE_CONFIG.imagesPath) ? window.SITE_CONFIG.imagesPath : './images';
                     const videoSrcMp4 = `${baseVideoPath}/${sanitizedClinicCode}_treatment.mp4`;
-                    const videoHtml = `<div class=\"procedure-video-embed\" data-clinic-code=\"${sanitizedClinicCode}\" data-video-src=\"${videoSrcMp4}\">\n                            <video class=\"procedure-video\" controls playsinline preload=\"auto\" tabindex=\"0\" aria-label=\"${clinic.name}の施術風景\">\n                                <source src=\"${videoSrcMp4}\" type=\"video/mp4\">\n                                お使いのブラウザでは動画を再生できません。\n                            </video>\n                            <button type=\"button\" class=\"procedure-video-toggle\" aria-label=\"再生\">\n                                <span class=\"procedure-video-toggle-icon\"></span>\n                            </button>\n                        </div>`;
+                    const videoHtml = `<div class=\"procedure-video-embed\" data-clinic-code=\"${sanitizedClinicCode}\" data-video-src=\"${videoSrcMp4}\">\n                            <video class=\"procedure-video\" controls playsinline preload=\"auto\" tabindex=\"0\" aria-label=\"${clinic.name}の診察風景\">\n                                <source src=\"${videoSrcMp4}\" type=\"video/mp4\">\n                                お使いのブラウザでは動画を再生できません。\n                            </video>\n                            <button type=\"button\" class=\"procedure-video-toggle\" aria-label=\"再生\">\n                                <span class=\"procedure-video-toggle-icon\"></span>\n                            </button>\n                        </div>`;
 
                     return `
                 <div class="clinic-procedure-section" data-procedure-section style="display:none;">
-                    <h4 class="section-title">施術風景</h4>
+                    <h4 class="section-title">診察風景</h4>
                     <div class="procedure-video-wrapper">
                         ${videoHtml}
                     </div>
@@ -6217,6 +6220,40 @@ document.addEventListener('click', function(e) {
         e.stopPropagation();
         if (typeof createAndShowModal === 'function') {
             createAndShowModal(urls, startIndex);
+        }
+    } catch (_) {}
+}, true);
+
+document.addEventListener('click', (event) => {
+    try {
+        const logo = event.target && event.target.closest && event.target.closest('#comparison-table .comparison-logo');
+        if (logo) {
+            const rankAttr = logo.getAttribute('data-rank');
+            const rank = rankAttr ? parseInt(rankAttr, 10) : NaN;
+            if (rank && !Number.isNaN(rank)) {
+                event.preventDefault();
+                event.stopPropagation();
+                openClinicDetailModal(rank);
+                return;
+            }
+        }
+
+        const detailTrigger = event.target && event.target.closest && event.target.closest('.detail-scroll-link');
+        if (detailTrigger) {
+            let rankAttr = detailTrigger.getAttribute('data-rank');
+            let rank = rankAttr ? parseInt(rankAttr, 10) : NaN;
+            if (!rank || Number.isNaN(rank)) {
+                const href = detailTrigger.getAttribute('href') || '';
+                const match = href.match(/#clinic(\d+)/);
+                if (match) {
+                    rank = parseInt(match[1], 10);
+                }
+            }
+            if (rank && !Number.isNaN(rank)) {
+                event.preventDefault();
+                event.stopPropagation();
+                openClinicDetailModal(rank);
+            }
         }
     } catch (_) {}
 }, true);

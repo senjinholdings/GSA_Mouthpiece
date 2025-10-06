@@ -1274,7 +1274,7 @@ select {
     font-size: 0.9rem;
 }
 
-/* 施術風景セクション */
+/* 診察風景セクション */
 .clinic-procedure-section {
     margin: 20px 0;
     padding: 2%;
@@ -2128,9 +2128,9 @@ body > .container main section {
 
 /* コンテナ */
 .container {
-    max-width: 768px !important;
+    max-width: 768px!important;
     margin: 0 auto;
-    padding: 0 0px;
+    /* padding: 0 20px; */
     box-sizing: border-box;
 }
 
@@ -2281,8 +2281,8 @@ main {
 
 /* セクション共通 */
 section {
-    background-color: #fff;
-    border: 1px solid #e3f2fd;
+    /* background-color: #fff; */
+    /* border: 1px solid #e3f2fd; */
 }
 
 /* ===== 地域表示セクション ===== */
@@ -3310,6 +3310,11 @@ section.clinic-rankings .ranking-header-banner {
     border-radius: 15px;
     font-size: 0.75rem;
     transition: all 0.3s;
+    cursor: pointer;
+    font: inherit;
+    line-height: 1.4;
+    appearance: none;
+    -webkit-appearance: none;
 }
 
 .comparison-table .detail_btn:hover,
@@ -3956,6 +3961,11 @@ section.clinic-rankings .ranking-header-banner {
     border-radius: 15px;
     font-size: 0.75rem;
     transition: all 0.3s;
+    cursor: pointer;
+    font: inherit;
+    line-height: 1.4;
+    appearance: none;
+    -webkit-appearance: none;
 }
 
 .comparison-table .cta-link.detail-scroll-link:hover {
@@ -4711,7 +4721,11 @@ body.no-scroll { overflow: hidden; }
 
 /* ===== 医療情報コラムセクション ===== */
 .medical-columns-section {
-    padding: 40px 0;
+    /* padding: 0px 0; */
+}
+
+.medical-columns-section {
+    /* padding: 40px 0; */
     background-color: #f8f9fa;
 }
 
@@ -7511,7 +7525,7 @@ body.no-scroll { overflow: hidden; }
 /* 医療情報コラムセクションのモバイル対応 */
 @media (max-width: 480px) {
     .medical-columns-section {
-        padding: 20px 0;
+        /* padding: 20px 0; */
     }
     
     .medical-columns-section .columns-container {

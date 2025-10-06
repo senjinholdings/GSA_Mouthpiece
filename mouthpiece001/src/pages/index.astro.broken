@@ -173,7 +173,7 @@ const asset = (resource: string) => {
                                 <img src="images/Tips1.webp" alt="マウスピース矯正の特徴" loading="lazy" decoding="async">
                             </figure>
                             <p>
-                                専門の歯科医師が歯並びや咬合を確認しながら、<span class="tips-highlight">透明なマウスピースを段階的に交換して歯を移動</span>。装着中も目立ちにくく、食事や歯磨きの際は取り外せるのが魅力です。<br><br>軽度〜中等度の歯列不正であれば、最短2ヶ月（平均9ヶ月）で効果を実感できる方も多く、ワイヤー矯正と遜色ない結果が期待できます。<br><br>（※効果には個人差があり、すべての方に同様の結果を保証するものではありません）
+                                専門の歯科医師が歯並びや咬合を確認しながら、<span class="tips-highlight">透明なマウスピースを段階的に交換して歯を移動</span>。装着中も目立ちにくく、食事や歯磨きの際は取り外せるのが魅力です。<br><br>軽度〜中等度の歯列不正であれば、最短2ヶ月（平均9ヶ月）で効果を実感できる方も多く、ワイヤー矯正と遜色ない結果が期待できます。
                             </p>
                             <figure class="tips-ba-figure">
                                 <img src="images/tips-ba.webp" alt="マウスピース矯正のビフォーアフター" loading="lazy" decoding="async">
