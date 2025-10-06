@@ -2663,7 +2663,8 @@ class RankingApp {
         }
 
         const containerRect = matrix.getBoundingClientRect();
-        this.comparisonStickyHeader.style.setProperty('--comparison-sticky-left', `${containerRect.left}px`);
+        const leftOffset = window.innerWidth >= 768 ? containerRect.left + 10 : containerRect.left;
+        this.comparisonStickyHeader.style.setProperty('--comparison-sticky-left', `${leftOffset}px`);
         this.comparisonStickyHeader.style.setProperty('--comparison-sticky-width', `${containerRect.width}px`);
 
         const offset = this.getComparisonStickyOffset();
@@ -6330,4 +6331,82 @@ if (document.readyState === 'loading') {
     setTimeout(() => {
         initializeScrollModal();
     }, 2000);
+}
+
+// 症例スライダー初期化
+function initTipsBASlider() {
+    const tabs = document.querySelectorAll('.tips-ba-tab');
+    const categories = document.querySelectorAll('.tips-ba-category');
+
+    // タブ切り替え
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const category = tab.dataset.category;
+
+            // タブのアクティブ状態
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // カテゴリの表示切り替え
+            categories.forEach(cat => {
+                if (cat.dataset.category === category) {
+                    cat.classList.add('active');
+                } else {
+                    cat.classList.remove('active');
+                }
+            });
+        });
+    });
+
+    // スライダー制御
+    categories.forEach(category => {
+        const prevBtn = category.querySelector('.tips-ba-prev');
+        const nextBtn = category.querySelector('.tips-ba-next');
+        const slides = category.querySelectorAll('.tips-ba-slide');
+        const dots = category.querySelectorAll('.tips-ba-dot');
+        let currentIndex = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            showSlide(currentIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        });
+
+        // ドットクリック処理
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                showSlide(currentIndex);
+            });
+        });
+    });
+}
+
+// DOMContentLoaded時に症例スライダーを初期化
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTipsBASlider);
+} else {
+    initTipsBASlider();
 }
