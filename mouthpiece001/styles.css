@@ -3477,7 +3477,7 @@ section.clinic-rankings .ranking-header-banner {
 .comparison-table--matrix .comparison-table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
+    touch-action: pan-x pan-y;
     width: 100%;
     max-width: 100%;
 }
