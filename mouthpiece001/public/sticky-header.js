@@ -105,6 +105,29 @@
         // 初期化時に一度実行
         updateStickyHeader();
         
+        // 固定ヘッダーのロゴ画像にクリックイベントを追加
+        function attachLogoClickEvents() {
+            const stickyHeader = document.getElementById('sticky-comparison-header');
+            if (!stickyHeader) return;
+
+            const logoImgs = stickyHeader.querySelectorAll('.comparison-logo');
+            logoImgs.forEach(img => {
+                if (!img.hasAttribute('data-click-attached')) {
+                    img.setAttribute('data-click-attached', 'true');
+                    img.style.cursor = 'pointer';
+                    img.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const rankAttr = img.getAttribute('data-rank');
+                        const rank = parseInt(rankAttr, 10);
+                        if (rank && !Number.isNaN(rank) && typeof window.openClinicDetailModal === 'function') {
+                            window.openClinicDetailModal(rank);
+                        }
+                    });
+                }
+            });
+        }
+
         // MutationObserverでテーブル内容の変更を監視
         const observer = new MutationObserver(() => {
             const stickyHeader = document.getElementById('sticky-comparison-header');
@@ -114,6 +137,8 @@
                 if (headerTable) {
                     headerTable.innerHTML = '';
                     headerTable.appendChild(headerThead);
+                    // クローン後にイベントを再アタッチ
+                    attachLogoClickEvents();
                 }
             }
             updateStickyHeader();
@@ -121,7 +146,12 @@
         
         observer.observe(thead, { childList: true, subtree: true });
         observer.observe(tbody, { childList: true });
-        
+
+        // 初期化時にもイベントを設定
+        setTimeout(() => {
+            attachLogoClickEvents();
+        }, 100);
+
         console.log('Sticky header initialized');
     }
     

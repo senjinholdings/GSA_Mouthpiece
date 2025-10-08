@@ -2756,6 +2756,24 @@ class RankingApp {
             stickyRow.appendChild(clone);
         });
 
+        // Attach click events to cloned logo images in sticky header
+        const logoImgs = stickyRow.querySelectorAll('.comparison-logo');
+        logoImgs.forEach(img => {
+            if (!img.hasAttribute('data-sticky-click-attached')) {
+                img.setAttribute('data-sticky-click-attached', 'true');
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const rankAttr = img.getAttribute('data-rank');
+                    const rank = parseInt(rankAttr, 10);
+                    if (rank && !Number.isNaN(rank) && typeof window.openClinicDetailModal === 'function') {
+                        window.openClinicDetailModal(rank);
+                    }
+                });
+            }
+        });
+
         const tableWidth = table.getBoundingClientRect().width;
         if (tableWidth > 0) {
             stickyTable.style.minWidth = `${tableWidth}px`;

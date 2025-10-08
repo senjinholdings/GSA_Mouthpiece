@@ -2620,6 +2620,21 @@ class RankingApp {
             }
 
             stickyRow.appendChild(clone);
+
+            const stickyLogo = clone.querySelector('.comparison-logo');
+            if (stickyLogo && !stickyLogo.hasAttribute('data-listener-attached')) {
+                stickyLogo.setAttribute('data-listener-attached', 'true');
+                stickyLogo.style.cursor = 'pointer';
+                stickyLogo.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const rankAttr = stickyLogo.getAttribute('data-rank');
+                    const rank = parseInt(rankAttr, 10);
+                    if (rank && !Number.isNaN(rank)) {
+                        openClinicDetailModal(rank);
+                    }
+                });
+            }
         });
 
         const tableWidth = table.getBoundingClientRect().width;
