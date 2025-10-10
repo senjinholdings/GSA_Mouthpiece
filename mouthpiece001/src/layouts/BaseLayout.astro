@@ -30,6 +30,7 @@ const asset = (path: string) => {
     <script define:vars={{ normalizedBasePath }}>
       window.__BASE_PATH__ = normalizedBasePath;
     </script>
+    <script src="/mouthpiece001/common_data/js/gtm-loader.js" defer></script>
     <slot name="head" />
   </head>
   <body class={bodyClass} data-base-path={normalizedBasePath}>
